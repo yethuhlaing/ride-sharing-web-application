@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl= env("DIRECT_URL")
+}
+
+model User {
+  id             String    @id @unique
+  email          String    @unique
+  fullName       String?
+  phone          String?   @unique
+  userBio        String?
+  profileImage   String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  ridesAsDriver  Ride[]    @relation("DriverRides")
+  ridesAsPassenger Ride[]  @relation("PassengerRides")
+  vehicles       Vehicle[]
+  payments       Payment[]
+  reviewsGiven   Review[]  @relation("ReviewFrom")
+  reviewsReceived Review[] @relation("ReviewTo")
+}
+
+model Vehicle {
+  id          Int      @id @default(autoincrement())
+  make        String
+  model       String
+  year        Int
+  licensePlate String
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  rides       Ride[]
+}
+
+model Ride {
+  id            Int      @id @default(autoincrement())
+  driverId      String
+  driver        User     @relation("DriverRides", fields: [driverId], references: [id])
+  passengerId   String
+  passenger     User     @relation("PassengerRides", fields: [passengerId], references: [id])
+  vehicleId     Int
+  vehicle       Vehicle  @relation(fields: [vehicleId], references: [id])
+  startLocationId Int
+  startLocation Location @relation("StartLocation", fields: [startLocationId], references: [id])
+  endLocationId Int
+  endLocation   Location @relation("EndLocation", fields: [endLocationId], references: [id])
+  startTime     DateTime
+  endTime       DateTime
+  fare          Float
+  status        RideStatus @default(PENDING)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  payment       Payment?
+  reviews       Review[]
+}
+
+model Location {
+  id        Int      @id @default(autoincrement())
+  latitude  Float
+  longitude Float
+  address   String
+  startRides  Ride[] @relation("StartLocation")
+  endRides    Ride[] @relation("EndLocation")
+}
+
+model Payment {
+  id        Int      @id @default(autoincrement())
+  amount    Float
+  method    PaymentMethod
+  rideId    Int      @unique
+  ride      Ride     @relation(fields: [rideId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  rating    Int
+  comment   String
+  fromUserId String
+  fromUser  User     @relation("ReviewFrom", fields: [fromUserId], references: [id])
+  toUserId  String
+  toUser    User     @relation("ReviewTo", fields: [toUserId], references: [id])
+  rideId    Int      @unique
+  ride      Ride     @relation(fields: [rideId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+enum RideStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  DEBIT_CARD
+  PAYPAL
+  CASH
+}
