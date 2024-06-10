@@ -1,11 +1,11 @@
-import HeroSection from '../pages/home-page/HeroSection';
-import { Features } from '../pages/home-page/FeatureSection';
-import { FAQ } from '../pages/home-page/FAQSection';
-import { Team } from '../pages/home-page/TeamSection';
-import Footer from '../pages/home-page/FooterSection';
-import { ScrollToTop } from '../components/ScrollToTop';
-import { Newsletter } from '../pages/home-page/NewsletterSection';
-import { AnimatedSection } from '../pages/home-page/AnimatedSection';
+import HeroSection from '../pages/HeroSection';
+import { Features } from '../pages/FeatureSection';
+import { FAQ } from '../pages/FAQSection';
+import { Team } from '../pages/TeamSection';
+import Footer from '../pages/FooterSection';
+import { ScrollToTop } from '../components/specific/ScrollToTop';
+import { Newsletter } from '../pages/NewsletterSection';
+import { AnimatedSection } from '../pages/AnimatedSection';
 
 export default async function Home() {
     // const { isAuthenticated } = getKindeServerSession()

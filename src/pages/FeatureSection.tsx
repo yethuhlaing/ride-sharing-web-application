@@ -1,3 +1,5 @@
+"use server"
+
 import { Badge } from '@/components/ui/badge';
 import {
     Card,
@@ -6,9 +8,9 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import image from '@/assets/growth.png';
-import image3 from '@/assets/reflecting.png';
-import image4 from '@/assets/looking-ahead.png';
+import image from './../../public/assets/growth.png';
+import image3 from './../../public/assets/reflecting.png';
+import image4 from './../../public/assets/looking-ahead.png';
 import { StaticImageData } from 'next/image';
 interface FeatureProps {
     title: string;

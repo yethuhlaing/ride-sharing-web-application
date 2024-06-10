@@ -2,10 +2,10 @@
 
 import React, { useContext, useEffect, useState } from 'react';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
-import { SourceContext } from '@/app/context/SourceContext';
-import { DestinationContext } from '@/app/context/DestinationContext';
+import { SourceContext } from '@/context/SourceContext';
+import { DestinationContext } from '@/context/DestinationContext';
 
-export default function GoogleMapPage() {
+export default function GoogleMapSection() {
     const { source, setSource } = useContext(SourceContext);
     const { destination, setDestination } = useContext(DestinationContext);
 
@@ -36,12 +36,12 @@ export default function GoogleMapPage() {
     }, [destination]);
     const [map, setMap] = React.useState(null);
 
-    // const onLoad = React.useCallback(function callback(map) {
-    //     const bounds = new window.google.maps.LatLngBounds(center);
-    //     map.fitBounds(bounds);
+    const onLoad = React.useCallback(function callback(map) {
+        const bounds = new window.google.maps.LatLngBounds(center);
+        map.fitBounds(bounds);
 
-    //     setMap(map)
-    // }, [])
+        setMap(map)
+    }, [])
 
     const onUnmount = React.useCallback(function callback(map) {
         setMap(null);

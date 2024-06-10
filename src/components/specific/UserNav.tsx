@@ -8,10 +8,10 @@ import {
     DropdownMenuSeparator,
     DropdownMenuItem,
     DropdownMenuGroup,
-} from './ui/dropdown-menu';
-import { Avatar } from './ui/avatar';
+} from '../ui/dropdown-menu';
+import { Avatar } from '../ui/avatar';
 import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import Link from 'next/link';
 import {
     CreditCard,

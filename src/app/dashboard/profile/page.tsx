@@ -12,10 +12,10 @@ import { Label } from '@/components/ui/label';
 import prisma from '@/libs/db';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
-import { SubmitButton } from '@/components/SubmitButton';
+import { SubmitButton } from '@/components/specific/SubmitButton';
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 import { Textarea } from '@/components/ui/textarea';
-import AddVehicleDialog from '@/components/AddVehicleDialog';
+import AddVehicleDialog from '@/components/specific/AddVehicleDialog';
 
 async function getData(userId: string) {
     noStore();

@@ -6,20 +6,16 @@ import {
     CardContent,
     CardHeader,
     CardTitle,
-} from '@/app/components/UI/card';
-import { Button } from '@/app/components/UI/button';
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { MapPin } from 'lucide-react';
 import React, { useContext, useEffect, useState } from 'react';
 import GooglePlacesAutocomplete, {
     geocodeByPlaceId,
 } from 'react-google-places-autocomplete';
-import {
-    GooglePlaceData,
-    GooglePlaceDetail,
-} from 'react-google-places-autocomplete';
 
-import { SourceContext } from '@/app/context/SourceContext';
-import { DestinationContext } from '@/app/context/DestinationContext';
+import { SourceContext } from '@/context/SourceContext';
+import { DestinationContext } from '@/context/DestinationContext';
 
 export default function PublishRideForm() {
     const [pickUpValue, setpickUpValue] = useState('');
@@ -67,25 +63,13 @@ export default function PublishRideForm() {
             }
         });
     };
-    const handlePickUpSelect = (place, type) => {
-        // Call your function with the correct types
+    const handlePickUpSelect = (place) => {
         getLatAndLng(place, type);
-        // Set the state
-        if (type == 'source') {
-            setpickUpValue(place);
-        } else {
-            setdropOffValue(place);
-        }
+        setpickUpValue(place);
     };
-    const handleDropOffSelect = (place, type) => {
-        // Call your function with the correct types
+    const handleDropOffSelect = (place) => {
         getLatAndLng(place, type);
-        // Set the state
-        if (type == 'source') {
-            setpickUpValue(place);
-        } else {
-            setdropOffValue(place);
-        }
+        setdropOffValue(place);
     };
     return (
         <Card>

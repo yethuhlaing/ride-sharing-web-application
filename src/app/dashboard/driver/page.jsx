@@ -1,12 +1,11 @@
 'use client';
 
-import PublishRideForm from '@/app/components/Dashboard/PublishRideForm';
-import GoogleMapPage from '@/app/components/Dashboard/GoogleMapInput';
-import GoogleMap from '@/app/components/Dashboard/GoogleMapInput';
-import { DestinationContext } from '@/app/context/DestinationContext';
-import { SourceContext } from '@/app/context/SourceContext';
 import { useState } from 'react';
 import { LoadScript } from '@react-google-maps/api';
+import PublishRideForm from './PublishRideForm';
+import { SourceContext } from '@/context/SourceContext'
+import { DestinationContext } from '@/context/DestinationContext'
+import GoogleMapSection from './GoogleMap';
 
 export default function DriverPage() {
     const [source, setSource] = useState(null);
@@ -25,7 +24,7 @@ export default function DriverPage() {
                             <aside className="w-[350px] flex-col">
                                 <PublishRideForm />
                             </aside>
-                            <GoogleMapPage />
+                            <GoogleMapSection />
                         </div>
                     </div>
                 </LoadScript>
