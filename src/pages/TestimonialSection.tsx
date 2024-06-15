@@ -84,7 +84,7 @@ const Notification = ({ name, description, icon, color, time }: Item) => {
 
 export function AnimatedSection() {
     return (
-        <section id="features" className="container py-24 sm:py-32 space-y-8">
+        <section id="testimonials" className="container py-24 sm:py-32 space-y-8">
             <div className="flex justify-between">
                 <div>Hello Tesxt</div>
                 <div className="relative flex max-h-[500px] min-h-[500px] w-full max-w-[32rem] flex-col overflow-hidden rounded-lg bg-background p-6">

@@ -21,6 +21,7 @@
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-toggle": "^1.0.3",
+    "@react-email/components": "^0.0.19",
     "@react-google-maps/api": "^2.19.3",
     "@tabler/icons-react": "^3.5.0",
     "class-variance-authority": "^0.7.0",
@@ -34,6 +35,8 @@
     "react-dom": "^18",
     "react-google-places-autocomplete": "^4.0.1",
     "react-hook-form": "^7.51.5",
+    "react-hot-toast": "^2.4.1",
+    "resend": "^3.3.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"

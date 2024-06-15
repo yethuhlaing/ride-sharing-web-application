@@ -3,8 +3,12 @@
 import { Button } from '@/components/ui/button';
 import { Loader2, Trash } from 'lucide-react';
 import { useFormStatus } from 'react-dom';
+import { Send } from 'lucide-react';
 
-export function SubmitButton() {
+type Prop = {
+    buttonName: string
+}
+export function SubmitButton({ buttonName }: Prop) {
     const { pending } = useFormStatus();
     return (
         <>
@@ -14,9 +18,12 @@ export function SubmitButton() {
                     Wait
                 </Button>
             ) : (
-                <Button className="w-fit" type="submit">
-                    Save Now
-                </Button>
+                <div>
+                    <Button className="w-fit" type="submit">
+                        {buttonName}
+                    </Button>
+                </div>
+
             )}
         </>
     );

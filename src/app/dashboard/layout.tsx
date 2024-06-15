@@ -76,5 +76,7 @@ export default async function DashboardLayout({
         lastName: user.family_name as string,
         profileImage: user.picture as string,
     });
-    return <>{children}</>;
+    return <>
+        {children}
+    </>;
 }

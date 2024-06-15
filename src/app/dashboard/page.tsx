@@ -1,3 +1,7 @@
-export default function DashboardPage() {
-    return <h1>This page will show List cards</h1>;
+export default function DashboardPage(){
+    return(
+        <h1>
+            HEllo THis is dashbaord apge
+        </h1>
+    )
 }

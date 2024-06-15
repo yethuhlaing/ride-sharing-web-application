@@ -1,16 +1,38 @@
-import Link from 'next/link';
+"use client"
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import subscribeEmail from '@/actions/subscribeEmail';
+
 export default function Footer() {
+
     return (
         <footer id="footer">
             <hr className="w-11/12 mx-auto" />
 
             <section className="container py-20 grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-x-12 gap-y-8">
                 <div className="col-span-full xl:col-span-2">
-                    <Link href="/">
-                        <h1 className="font-bold text-3xl">
-                            We<span className="text-primary">Go</span>
-                        </h1>
-                    </Link>
+                    <h3 className="text-left text-2xl md:text-3xl font-bold">
+                        Join Our Daily{' '}
+                        <span className="bg-gradient-to-b from-primary/60 to-primary text-transparent bg-clip-text">
+                            Newsletter
+                        </span>
+                    </h3>
+                    <p className="text-lg md:text-xl text-left text-muted-foreground mt-4 mb-8">
+                        Lorem ipsum dolor sit amet consectetur.
+                    </p>
+
+                    <form
+                        className="flex w-full flex-row mx-auto gap-4 md:gap-2"
+                        onSubmit={subscribeEmail}
+                    >
+                        <Input
+                            placeholder="leomirandadev@gmail.com"
+                            className="bg-muted/50 dark:bg-muted/80 "
+                            aria-label="email"
+                        />
+                        <Button>Subscribe</Button>
+                    </form>
                 </div>
 
                 <div className="flex flex-col gap-2">
