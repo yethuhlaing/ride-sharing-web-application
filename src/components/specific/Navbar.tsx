@@ -19,31 +19,11 @@ export async function Navbar() {
                 </Link>
                 <div className="flex items-center gap-x-3">
                     <ThemeToggle />
-                    {(await isAuthenticated()) ? (
-                        <div className="flex items-center gap-x-2">
-                            <Button>
-                                <Link href="/dashboard/driver">
-                                    Driver
-                                </Link>
-                            </Button>
-                            <Button>
-                                <Link href="/dashboard/passenger">
-                                    Passenger
-                                </Link>
-                            </Button>
-                            <UserNav
-                                email={user?.email as string}
-                                image={user?.picture as string}
-                                name={user?.given_name as string}
-                            />
-                        </div>
-                    ) : (
-                        <div className="flex items-center gap-x-3">
-                            <LoginLink>
-                                <Button>Sign in</Button>
-                            </LoginLink>
-                        </div>
-                    )}
+                    <div className="flex items-center gap-x-3">
+                        <LoginLink>
+                            <Button>Sign in</Button>
+                        </LoginLink>
+                    </div>
                 </div>
             </div>
         </nav>

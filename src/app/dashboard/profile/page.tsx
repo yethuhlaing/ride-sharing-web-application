@@ -124,12 +124,13 @@ export default async function ProfilePage() {
                                     defaultValue={data?.userBio as string}
                                 />
                             </div>
-                            <AddVehicleDialog />
                         </div>
                     </CardContent>
-
+                    <CardContent>
+                        <AddVehicleDialog />
+                    </CardContent>
                     <CardFooter>
-                        <SubmitButton />
+                        <SubmitButton buttonName="Save Button"/>
                     </CardFooter>
                 </form>
             </Card>

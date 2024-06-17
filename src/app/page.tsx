@@ -6,6 +6,7 @@ import Footer from '../pages/FooterSection';
 import { ScrollToTop } from '../components/specific/ScrollToTop';
 import { AnimatedSection } from '../pages/TestimonialSection';
 import ContactSection from '@/pages/ContactSection';
+import { Navbar } from '@/components/specific/Navbar';
 
 export default async function Home() {
     // const { isAuthenticated } = getKindeServerSession()
@@ -15,6 +16,7 @@ export default async function Home() {
     // }
     return (
         <>
+            <Navbar />
             <ScrollToTop />
             <HeroSection />
             <Features />

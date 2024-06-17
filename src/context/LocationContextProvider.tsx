@@ -2,26 +2,26 @@
 
 import React, { useState, createContext, useContext } from "react";
 
-export const SourceDestinationContext = createContext<SourceDestinationContextType | null>(null);
+export const LocationContext = createContext<LocationContextType | null>(null);
 
-type SourceDestinationContextType = {
+type LocationContextType = {
     source: string | null;
     setSource: React.Dispatch<React.SetStateAction<string | null>>;
     destination: string | null;
     setDestination: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-type SourceDestinationContextProviderProps = {
+type LocationContextProviderProps = {
     children: React.ReactNode;
 };
 
-export default function SourceDestinationContextProvider({
+export default function LocationContextProvider({
     children,
-}: SourceDestinationContextProviderProps) {
+}: LocationContextProviderProps) {
     const [destination, setDestination] = useState<string | null> (null);
     const [source, setSource] = useState< string | null>(null);
     return (
-        <SourceDestinationContext.Provider
+        <LocationContext.Provider
             value={{
                 source,
                 setSource,
@@ -30,12 +30,12 @@ export default function SourceDestinationContextProvider({
             }}
         >
             {children}
-        </SourceDestinationContext.Provider>
+        </LocationContext.Provider>
     );
 }
 
 export function useActiveSectionContext() {
-    const context = useContext(SourceDestinationContext);
+    const context = useContext(LocationContext);
 
     if (context === null) {
         throw new Error(

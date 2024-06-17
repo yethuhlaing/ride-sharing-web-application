@@ -20,17 +20,14 @@ export default function RootLayout({
     return (
         <html lang="en" className="!scroll-smooth">
             <body className={inter.className}>
-                <main className="relative flex flex-col min-h-screen">
+                <main className="relative overflow-hidden">
                     <ThemeProvider
                         attribute="class"
                         defaultTheme="system"
                         enableSystem
                         disableTransitionOnChange
                     >
-                        <Navbar />
-                        <main className="relative overflow-hidden">
-                            {children}
-                        </main>
+                        {children}
                     </ThemeProvider>
                 </main>
             </body>

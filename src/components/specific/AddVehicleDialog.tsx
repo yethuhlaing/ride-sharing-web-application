@@ -10,17 +10,20 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Plus } from 'lucide-react';
 
 export default function AddVehicleDialog() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline">Edit Profile</Button>
+                <Button variant="outline">
+                    <Plus size={20} />
+                    Add Vehicle
+                </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <Label>Your Vechicle</Label>
-                    <DialogTitle>Add vehicle</DialogTitle>
+                    <DialogTitle className='p-3'>Your vehicle</DialogTitle>
                     <DialogDescription>
                         Make changes to your profile here. Click save when
                         you're done.
@@ -28,22 +31,47 @@ export default function AddVehicleDialog() {
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="name" className="text-right">
-                            Name
+                        <Label htmlFor="brand" className="text-right">
+                            brand
                         </Label>
                         <Input
-                            id="name"
-                            value="Pedro Duarte"
+                            id="brand"
                             className="col-span-3"
                         />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="username" className="text-right">
-                            Username
+                        <Label htmlFor="model" className="text-right">
+                            Model
                         </Label>
                         <Input
-                            id="username"
-                            value="@peduarte"
+                            id="model"
+                            className="col-span-3"
+                        />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="color" className="text-right">
+                            Color
+                        </Label>
+                        <Input
+                            id="color"
+                            className="col-span-3"
+                        />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="year" className="text-right">
+                            Year
+                        </Label>
+                        <Input
+                            id="year"
+                            className="col-span-3"
+                        />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="licensePlate" className="text-right">
+                            LicensePlate
+                        </Label>
+                        <Input
+                            id="licensePlate"
                             className="col-span-3"
                         />
                     </div>
@@ -53,5 +81,5 @@ export default function AddVehicleDialog() {
                 </DialogFooter>
             </DialogContent>
         </Dialog>
-    );
+    )
 }

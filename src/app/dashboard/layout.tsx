@@ -5,6 +5,9 @@ import { redirect } from 'next/navigation';
 import prisma from '@/libs/db';
 // import { stripe } from "../lib/stripe";
 import { unstable_noStore as noStore } from 'next/cache';
+import { Navbar } from '@/components/specific/Navbar';
+import { DashboardNav } from '@/components/specific/DashboardNavbar';
+import LocationContextProvider from '@/context/LocationContextProvider';
 
 interface UserData {
     email: string;
@@ -76,7 +79,11 @@ export default async function DashboardLayout({
         lastName: user.family_name as string,
         profileImage: user.picture as string,
     });
-    return <>
-        {children}
-    </>;
+    return<>
+        <DashboardNav />
+        <LocationContextProvider>
+            {children}
+        </LocationContextProvider>
+    </>
+    
 }
