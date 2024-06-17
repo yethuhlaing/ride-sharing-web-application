@@ -9,6 +9,9 @@
     "lint": "next lint",
     "prettier": "prettier --write ."
   },
+  "prisma": {
+    "schema": "./src/prisma/schema.prisma"
+  },
   "dependencies": {
     "@hookform/resolvers": "^3.4.2",
     "@kinde-oss/kinde-auth-nextjs": "^2.2.10",
@@ -38,6 +41,7 @@
     "react-hook-form": "^7.51.5",
     "react-hot-toast": "^2.4.1",
     "resend": "^3.3.0",
+    "stripe": "^15.11.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"

@@ -3,7 +3,7 @@ import { GoogleMap, MarkerF, OverlayViewF, OverlayView, DirectionsRenderer } fro
 import { LocationContext } from '@/context/LocationContextProvider';
 const containerStyle = {
     width: '100%',
-    height: '100%'
+    height: '50vh'
 };
 
 function GoogleMapSection() {

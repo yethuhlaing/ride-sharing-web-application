@@ -12,10 +12,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { MapPin } from 'lucide-react';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
-import GoogleMapSection from "@/components/specific/GoogleMapSection"
 import toast, { Toaster } from 'react-hot-toast';
 import { LocationContext } from '@/context/LocationContextProvider';
-
+import GoogleMapSection from "@/components/specific/GoogleMapSection"
 
 export default function DriverPage() {
     const { source, setSource, destination, setDestination } = useContext(LocationContext)
@@ -25,11 +24,11 @@ export default function DriverPage() {
 
 
 
-    const onSubmit = (e) => {
-        e.preventDefault();
-        pickupValue
-        dropOffValue
-    };
+    // const onSubmit = () => {
+    //     e.preventDefault();
+    //     console.log(pickUpValue)
+    //     console.log(dropOffValue)
+    // };
 
     const getLatAndLng = (place, type) => {
         const placeId = place.value.place_id;
@@ -77,16 +76,16 @@ export default function DriverPage() {
             googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY}
             libraries={['places']}
         >
-            <div className="container flex flex-col gap-6 md:gap-12 flex-wrap h-[90vh]">
-                <aside className="flex flex-col md:flex-row gap-6 justify-center bg-white p-4">
-                    <Card className='max-w-[400px]'>
+            <div className="container flex flex-col gap-3 md:gap-12 flex-wrap h-full">
+                <aside className="flex flex-col max-w-[400px] flex-wrap gap-6 justify-center bg-white p-4">
+                    <Card>
                         <CardHeader>
                             <CardTitle>
                                 Publish your Ride
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <form className="space-y-8" action={onSubmit}>
+                            <form className="space-y-8">
                                 <div className="flex items-center space-x-2">
                                     <Navigation />
                                     <GooglePlacesAutocomplete
@@ -131,7 +130,7 @@ export default function DriverPage() {
                     </Card>
                     <Toaster position="top-center"/>
                 </aside>
-                <main className='flex-1 p-4 mt-2'>
+                <main className='w-full'>
                     <GoogleMapSection />
                 </main>
             </div>

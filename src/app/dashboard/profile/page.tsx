@@ -12,10 +12,11 @@ import { Label } from '@/components/ui/label';
 import prisma from '@/libs/db';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
-import { SubmitButton } from '@/components/specific/SubmitButton';
+import { SubmitButton, TrashDelete } from '@/components/specific/SubmitButton';
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 import { Textarea } from '@/components/ui/textarea';
 import AddVehicleDialog from '@/components/specific/AddVehicleDialog';
+import Link from 'next/link';
 
 async function getData(userId: string) {
     noStore();
@@ -36,9 +37,11 @@ async function getData(userId: string) {
 }
 
 export default async function ProfilePage() {
+    noStore();
     const { getUser } = getKindeServerSession();
     const user = await getUser();
     const data = await getData(user?.id as string);
+    const vehicles = await getVehicles(user?.id as string);
 
     async function postData(formData: FormData) {
         'use server';
@@ -62,16 +65,45 @@ export default async function ProfilePage() {
 
         revalidatePath('/', 'layout');
     }
+    async function getVehicles(userId: string){
+        const vehicles = await prisma.vehicle.findMany({
+            where: {
+                userId: userId,
+            },
+            select: {
+                id: true,
+                brand: true,
+                model: true,
+                color: true,
+                year: true,
+                licensePlate: true,
+            },
+        });
+        console.log(vehicles)
+        return vehicles;    
+    }
 
+    async function deleteVehicle(formData: FormData) {
+        "use server";
+
+        const vehicleId = Number(formData.get("vehicleId")) as number;
+
+        await prisma.vehicle.delete({
+            where: {
+                id: vehicleId,
+            },
+        });
+
+        revalidatePath("/dasboard");
+    }
     return (
-        <div className="container flex flex-col items-center justify-center">
+        <div className="container flex flex-col md:flex-row gap-5 justify-center">
             <Card className="max-w-lg">
                 <form action={postData}>
                     <CardHeader>
                         <CardTitle>Your Profile</CardTitle>
                         <CardDescription>
                             Please provide general information about yourself.
-                            Please dont forget to save.
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -126,13 +158,59 @@ export default async function ProfilePage() {
                             </div>
                         </div>
                     </CardContent>
-                    <CardContent>
-                        <AddVehicleDialog />
-                    </CardContent>
-                    <CardFooter>
+
+                    {/* {
+                        vehicles?.length == 0  (
+                            {
+                                vehicles.map((vehicle, index) => {
+                                    <div>Helllo</div>
+                                })
+                            }
+                        ):(
+                            <div>Loading</div>
+                        )
+                    } */}
+                    <CardFooter className='mt-auto'>
                         <SubmitButton buttonName="Save Button"/>
                     </CardFooter>
                 </form>
+            </Card>
+            <Card className="max-w-lg">
+                <CardHeader>
+                    <CardTitle>Your Vehicle</CardTitle>
+                    <CardDescription>
+                        Please provide general information about your car.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <AddVehicleDialog />
+                </CardContent>
+                <div className="flex flex-col px-6 gap-2 mt-4 sm:mt-auto justify-center items-left">
+                    {vehicles?.map((vehicle) => (
+                        <Card
+                            key={vehicle.id}
+                            className="flex items-center justify-between p-4"
+                        >
+                            <div>
+                                <h2 className="font-semibold text-normal text-primary">
+                                    {vehicle.brand} | {vehicle.model}
+                                </h2>
+                                <p className='text-slate-600'>
+                                    {vehicle.year} {" "}
+                                    {vehicle.licensePlate}
+                                    
+                                </p>
+                            </div>
+
+                            <div className="flex gap-x-4">
+                                <form action={deleteVehicle}>
+                                    <input type="hidden" name="vehicleId" value={vehicle.id} />
+                                    <TrashDelete />
+                                </form>
+                            </div>
+                        </Card>
+                    ))}
+                </div>
             </Card>
         </div>
     );

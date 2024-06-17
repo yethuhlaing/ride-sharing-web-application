@@ -36,6 +36,6 @@
         "app/dashboard/driver/page.jsx",
         "components/Navbar.tsx",
         "components/UploadProfileButton.jsx"
-    ],
+, "src/components/specific/AddVehicleDialog.jsx"    ],
     "exclude": ["node_modules"]
 }

@@ -17,6 +17,8 @@ model User {
   profileImage   String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+  stripeCustomerId String?       @unique
+  Subscription   Subscription?
   ridesAsDriver  Ride[]    @relation("DriverRides")
   ridesAsPassenger Ride[]  @relation("PassengerRides")
   vehicles       Vehicle[]
@@ -27,10 +29,11 @@ model User {
 
 model Vehicle {
   id          Int      @id @default(autoincrement())
-  brand        String
-  model       String
-  year        Int
-  licensePlate String
+  brand       String
+  model       String?
+  color       String?
+  year        Int?
+  licensePlate String?
   userId      String
   user        User     @relation(fields: [userId], references: [id])
   rides       Ride[]
@@ -77,7 +80,18 @@ model Payment {
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
 }
-
+model Subscription {
+  stripeSubscriptionId String   @id @unique
+  interval             String
+  status               String
+  planId               String
+  currentPeriodStart   Int
+  currentPeriodEnd     Int
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  userId               String   @unique
+  user                 User     @relation(fields: [userId], references: [id])
+}
 model Review {
   id        Int      @id @default(autoincrement())
   rating    Int

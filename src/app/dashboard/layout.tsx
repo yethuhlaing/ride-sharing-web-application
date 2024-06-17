@@ -1,11 +1,9 @@
 import { ReactNode } from 'react';
-// import { DashboardNav } from "../components/DashboardNav";
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { redirect } from 'next/navigation';
 import prisma from '@/libs/db';
-// import { stripe } from "../lib/stripe";
+import { stripe } from "@/libs/stripe";
 import { unstable_noStore as noStore } from 'next/cache';
-import { Navbar } from '@/components/specific/Navbar';
 import { DashboardNav } from '@/components/specific/DashboardNavbar';
 import LocationContextProvider from '@/context/LocationContextProvider';
 
@@ -31,6 +29,7 @@ async function getData({
         },
         select: {
             id: true,
+            stripeCustomerId: true,
         },
     });
     if (!user) {
@@ -46,19 +45,19 @@ async function getData({
             },
         });
     }
-    // if (!user?.stripeCustomerId) {
-    //     const data = await stripe.customers.create({
-    //         email: email,
-    //     })
-    //     await prisma.user.update({
-    //         where: {
-    //             id: id
-    //         },
-    //         data: {
-    //             stripeCustomerId: data.id
-    //         }
-    //     })
-    // }
+    if (!user?.stripeCustomerId) {
+        const data = await stripe.customers.create({
+            email: email,
+        })
+        await prisma.user.update({
+            where: {
+                id: id
+            },
+            data: {
+                stripeCustomerId: data.id
+            }
+        })
+    }
 }
 
 export default async function DashboardLayout({
