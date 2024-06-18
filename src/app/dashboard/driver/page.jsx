@@ -85,7 +85,7 @@ export default function DriverPage() {
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <form className="space-y-8">
+                            <form className="space-y-2">
                                 <div className="flex items-center space-x-2">
                                     <Navigation />
                                     <GooglePlacesAutocomplete

@@ -31,33 +31,44 @@ export default function DriverPage() {
     // };
 
     const getLatAndLng = (place, type) => {
-        const placeId = place.value.place_id;
-        const service = new google.maps.places.PlacesService(
-            document.createElement('div'),
-        );
-        service.getDetails({ placeId }, (place, status) => {
-            if (
-                status === google.maps.places.PlacesServiceStatus.OK &&
-                place.geometry &&
-                place.geometry.location
-            ) {
-                if ((type === 'source')) {
-                    setSource({
-                        lat: place.geometry.location.lat(),
-                        lng: place.geometry.location.lng(),
-                        name: place.formatted_address,
-                        label: place.name,
-                    });
-                } else {
-                    setDestination({
-                        lat: place.geometry.location.lat(),
-                        lng: place.geometry.location.lng(),
-                        name: place.formatted_address,
-                        label: place.name,
-                    });
-                }
+        if (place == null){
+            console.log("Null")
+            if ((type === 'source')) {
+                setSource([]);
+            } else {
+                setDestination([]);
             }
-        });
+        }
+        else{
+            console.log("Not Null")
+            const placeId = place?.value.place_id;
+            const service = new google.maps.places.PlacesService(
+                document.createElement('div'),
+            );
+            service.getDetails({ placeId }, (place, status) => {
+                if (
+                    status === google.maps.places.PlacesServiceStatus.OK &&
+                    place.geometry &&
+                    place.geometry.location
+                ) {
+                    if ((type === 'source')) {
+                        setSource({
+                            lat: place.geometry.location.lat(),
+                            lng: place.geometry.location.lng(),
+                            name: place.formatted_address,
+                            label: place.name,
+                        });
+                    } else {
+                        setDestination({
+                            lat: place.geometry.location.lat(),
+                            lng: place.geometry.location.lng(),
+                            name: place.formatted_address,
+                            label: place.name,
+                        });
+                    }
+                }
+            });
+        }
     };
     const handlePickUpSelect = (place) => {
         const type = 'source'
@@ -76,16 +87,16 @@ export default function DriverPage() {
             googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY}
             libraries={['places']}
         >
-            <div className="container flex flex-col gap-6 md:gap-12 flex-wrap h-[90vh]">
-                <aside className="flex flex-col md:flex-row gap-6 justify-center bg-white p-4">
-                    <Card className='max-w-[400px]'>
+            <div className="container flex flex-col gap-3 md:gap-12 flex-wrap h-full">
+                <aside className="flex flex-col max-w-[400px] flex-wrap gap-6 justify-center bg-white p-4">
+                    <Card>
                         <CardHeader>
                             <CardTitle>
-                                Publish your Ride
+                                Book your Ride
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <form className="space-y-8">
+                            <form className="space-y-2">
                                 <div className="flex items-center space-x-2">
                                     <Navigation />
                                     <GooglePlacesAutocomplete
@@ -96,7 +107,7 @@ export default function DriverPage() {
                                             value: pickupValue,
                                             onChange: (place) => handlePickUpSelect(place),
                                             placeholder: 'Pickup Location',
-                                            isClearable: false,
+                                            isClearable: true,
                                             className: 'w-full ml-4 text-sm',
                                             components: {
                                                 DropdownIndicator: false
@@ -114,7 +125,7 @@ export default function DriverPage() {
                                             value: dropOffValue,
                                             onChange: (place) => handleDropOffSelect(place),
                                             placeholder: 'DropOff Location',
-                                            isClearable: false,
+                                            isClearable: true,
                                             className: 'w-full ml-4 text-sm',
                                             components: {
                                                 DropdownIndicator: false
@@ -130,8 +141,7 @@ export default function DriverPage() {
                     </Card>
                     <Toaster position="top-center" />
                 </aside>
-                <main className='flex-1 p-4 mt-2'>
-                    <h1>Google Map</h1>
+                <main className='w-full'>
                     <GoogleMapSection />
                 </main>
             </div>

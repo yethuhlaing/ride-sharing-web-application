@@ -79,8 +79,8 @@ export default async function DashboardLayout({
         profileImage: user.picture as string,
     });
     return<>
-        <DashboardNav />
         <LocationContextProvider>
+            <DashboardNav />
             {children}
         </LocationContextProvider>
     </>

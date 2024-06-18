@@ -14,22 +14,15 @@ import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import {
-    CreditCard,
     DoorClosed,
-    Home,
     Moon,
-    Settings,
     SunMoon,
-    UserRound,
 } from 'lucide-react';
 import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components';
 import { useTheme } from 'next-themes';
+import { navItems } from '@/libs/data';
 
-export const navItems = [
-    { name: 'Home', href: '/dashboard', icon: Home },
-    { name: 'Profile', href: '/dashboard/profile', icon: UserRound },
-    { name: 'Billing', href: '/dashboard/billing', icon: CreditCard },
-];
+
 
 export function UserNav({
     name,

@@ -19,7 +19,7 @@ function GoogleMapSection() {
     const [map, setMap] = React.useState(null)
     const [directionRoutePoints, setDirectionRoutePoints] = useState([])
     useEffect(() => {
-        if (source?.length!=[]&&map) {
+        if (source?.length!=[]&& map) {
             map.panTo(
                 {
                     lat: source.lat,
@@ -30,9 +30,13 @@ function GoogleMapSection() {
                 lat:source.lat,
                 lng:source.lng
             })
-            console.log(source)
+            directionRoute()
+        }else{
+            setDirectionRoutePoints(null);
         }
     }, [source]);
+
+    
     useEffect(() => {
         if (destination?.length != [] && map) {
             map.panTo(
@@ -45,6 +49,8 @@ function GoogleMapSection() {
                 lat: destination.lat,
                 lng: destination.lng
             })
+        }else {
+            setDirectionRoutePoints(null);
         }
         if( source?.length !=[] && destination?.length!=[]){
             directionRoute()
@@ -86,7 +92,7 @@ function GoogleMapSection() {
             onLoad={onLoad}
             onUnmount={onUnmount}
         >
-            {source?.length !=[]? 
+            {source?.length !=[] ? 
                 <MarkerF position={{ lat: source?.lat, lng: source?.lng }}>
                     <OverlayViewF position={{ lat: source?.lat, lng: source?.lng }} mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
                         <div className='p-2 inline-block'>
@@ -104,16 +110,18 @@ function GoogleMapSection() {
                     </OverlayViewF>
                 </MarkerF>
                 : null}
-            <DirectionsRenderer 
-                directions={directionRoutePoints}
-                options={{
-                    polylineOptions:{
-                        strokeColor: "text-primary",
-                        strokeWeight: 5
-                    },
-                    suppressMarkers: true
-                }}
-            />
+            {directionRoutePoints && (
+                    <DirectionsRenderer 
+                        directions={directionRoutePoints}
+                        options={{
+                            polylineOptions:{
+                                strokeColor: "text-primary",
+                                strokeWeight: 2
+                            },
+                            suppressMarkers: true
+                        }}
+                    />
+                )}
         </GoogleMap>
     )
 }

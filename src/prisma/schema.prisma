@@ -9,26 +9,26 @@ datasource db {
 }
 
 model User {
-  id             String    @id @unique
-  email          String    @unique
-  fullName       String?
-  phone          String?   @unique
-  userBio        String?
-  profileImage   String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  stripeCustomerId String?       @unique
-  Subscription   Subscription?
-  ridesAsDriver  Ride[]    @relation("DriverRides")
-  ridesAsPassenger Ride[]  @relation("PassengerRides")
-  vehicles       Vehicle[]
-  payments       Payment[]
-  reviewsGiven   Review[]  @relation("ReviewFrom")
-  reviewsReceived Review[] @relation("ReviewTo")
+  id                String          @id @unique
+  email             String          @unique
+  fullName          String?
+  phone             String?         @unique
+  userBio           String?
+  profileImage      String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  stripeCustomerId  String?         @unique
+  Subscription      Subscription?
+  ridesAsDriver     Ride[]          @relation("DriverRides")
+  ridesAsPassenger  Ride[]          @relation("PassengerRides")
+  vehicles          Vehicle[]
+  payments          Payment[]
+  reviewsGiven      Review[]        @relation("ReviewFrom")
+  reviewsReceived   Review[]        @relation("ReviewTo")
 }
 
 model Vehicle {
-  id          Int      @id @default(autoincrement())
+  id          String      @id @default(uuid())
   brand       String
   model       String?
   color       String?
@@ -40,12 +40,12 @@ model Vehicle {
 }
 
 model Ride {
-  id            Int      @id @default(autoincrement())
+  id            String      @id @default(uuid())
   driverId      String
   driver        User     @relation("DriverRides", fields: [driverId], references: [id])
   passengerId   String
   passenger     User     @relation("PassengerRides", fields: [passengerId], references: [id])
-  vehicleId     Int
+  vehicleId     String
   vehicle       Vehicle  @relation(fields: [vehicleId], references: [id])
   startLocationId Int
   startLocation Location @relation("StartLocation", fields: [startLocationId], references: [id])
@@ -74,7 +74,7 @@ model Payment {
   id        Int      @id @default(autoincrement())
   amount    Float
   method    PaymentMethod
-  rideId    Int      @unique
+  rideId    String      @unique
   ride      Ride     @relation(fields: [rideId], references: [id])
   userId    String
   user      User     @relation(fields: [userId], references: [id])
@@ -93,14 +93,14 @@ model Subscription {
   user                 User     @relation(fields: [userId], references: [id])
 }
 model Review {
-  id        Int      @id @default(autoincrement())
+  id        String      @id @default(uuid())
   rating    Int
   comment   String
   fromUserId String
   fromUser  User     @relation("ReviewFrom", fields: [fromUserId], references: [id])
   toUserId  String
   toUser    User     @relation("ReviewTo", fields: [toUserId], references: [id])
-  rideId    Int      @unique
+  rideId    String      @unique
   ride      Ride     @relation(fields: [rideId], references: [id])
   createdAt DateTime @default(now())
 }
