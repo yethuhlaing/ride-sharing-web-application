@@ -18,11 +18,11 @@ import { Textarea } from '@/components/ui/textarea';
 import AddVehicleDialog from '@/components/specific/AddVehicleDialog';
 import Link from 'next/link';
 
-async function getData(userId: string) {
+async function getData(user_id: string) {
     noStore();
     const data = await prisma.user.findUnique({
         where: {
-            id: userId,
+            user_id: user_id,
         },
         select: {
             fullName: true,
@@ -53,7 +53,7 @@ export default async function ProfilePage() {
 
         await prisma.user.update({
             where: {
-                id: user?.id,
+                user_id: user?.id,
             },
             data: {
                 fullName: name ?? undefined,
@@ -65,13 +65,13 @@ export default async function ProfilePage() {
 
         revalidatePath('/', 'layout');
     }
-    async function getVehicles(userId: string){
+    async function getVehicles(user_id: string){
         const vehicles = await prisma.vehicle.findMany({
             where: {
-                userId: userId,
+                user_id: user_id,
             },
             select: {
-                id: true,
+                vehicle_id: true,
                 brand: true,
                 model: true,
                 color: true,
@@ -86,11 +86,11 @@ export default async function ProfilePage() {
     async function deleteVehicle(formData: FormData) {
         "use server";
 
-        const vehicleId = Number(formData.get("vehicleId")) as number;
+        const vehicle_id = formData.get("vehicle_id") as string;
 
         await prisma.vehicle.delete({
             where: {
-                id: vehicleId,
+                vehicle_id: vehicle_id,
             },
         });
 
@@ -188,7 +188,7 @@ export default async function ProfilePage() {
                 <div className="flex flex-col px-6 gap-2 mt-4 sm:mt-auto justify-center items-left">
                     {vehicles?.map((vehicle) => (
                         <Card
-                            key={vehicle.id}
+                            key={vehicle.vehicle_id}
                             className="flex items-center justify-between p-4"
                         >
                             <div>
@@ -204,7 +204,7 @@ export default async function ProfilePage() {
 
                             <div className="flex gap-x-4">
                                 <form action={deleteVehicle}>
-                                    <input type="hidden" name="vehicleId" value={vehicle.id} />
+                                    <input type="hidden" name="vehicle_id" value={vehicle.vehicle_id} />
                                     <TrashDelete />
                                 </form>
                             </div>

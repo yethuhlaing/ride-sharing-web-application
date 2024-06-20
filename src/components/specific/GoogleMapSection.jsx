@@ -3,27 +3,26 @@ import { GoogleMap, MarkerF, OverlayViewF, OverlayView, DirectionsRenderer } fro
 import { LocationContext } from '@/context/LocationContextProvider';
 const containerStyle = {
     width: '100%',
-    height: '50vh'
+    height: '85vh'
 };
 
-function GoogleMapSection() {
+function GoogleMapSection({ source, destination }) {
     // const { isLoaded } = useJsApiLoader({
     //     id: 'google-map-script',
     //     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY
     // })
     const [ center , setCenter ] = useState({
-        lat: -3.745,
-        lng: -38.523
+        lat: 61.05497219999999,
+        lng: 28.1896039,
     })
-    const { source, setSource, destination, setDestination } = useContext(LocationContext)
-    const [map, setMap] = React.useState(null)
+    const [map, setMap] = useState(null)
     const [directionRoutePoints, setDirectionRoutePoints] = useState([])
     useEffect(() => {
         if (source?.length!=[]&& map) {
             map.panTo(
                 {
-                    lat: source.lat,
-                    lng: source.lng
+                    lat: source?.lat,
+                    lng: source?.lng
                 }
             )
             setCenter({
@@ -34,6 +33,7 @@ function GoogleMapSection() {
         }else{
             setDirectionRoutePoints(null);
         }
+        console.log(source)
     }, [source]);
 
     
@@ -41,8 +41,8 @@ function GoogleMapSection() {
         if (destination?.length != [] && map) {
             map.panTo(
                 {
-                    lat: destination.lat,
-                    lng: destination.lng
+                    lat: destination?.lat,
+                    lng: destination?.lng
                 }
             )
             setCenter({

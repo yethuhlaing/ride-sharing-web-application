@@ -9,7 +9,7 @@ datasource db {
 }
 
 model User {
-  id                String          @id @unique
+  user_id           String          @id @default(uuid())
   email             String          @unique
   fullName          String?
   phone             String?         @unique
@@ -19,67 +19,46 @@ model User {
   updatedAt         DateTime        @updatedAt
   stripeCustomerId  String?         @unique
   Subscription      Subscription?
-  ridesAsDriver     Ride[]          @relation("DriverRides")
-  ridesAsPassenger  Ride[]          @relation("PassengerRides")
   vehicles          Vehicle[]
-  payments          Payment[]
-  reviewsGiven      Review[]        @relation("ReviewFrom")
-  reviewsReceived   Review[]        @relation("ReviewTo")
+  bookings          Booking[]
+  rides             Ride[]          @relation("DriverRides")
+  reviews           Review[]
 }
 
 model Vehicle {
-  id          String      @id @default(uuid())
-  brand       String
-  model       String?
-  color       String?
-  year        Int?
-  licensePlate String?
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  rides       Ride[]
+  vehicle_id       String      @id @default(uuid())
+  brand            String
+  model            String?
+  color            String?
+  year             Int?
+  licensePlate     String?
+  user_id          String
+  user             User     @relation(fields: [user_id], references: [user_id])
 }
 
 model Ride {
-  id            String      @id @default(uuid())
-  driverId      String
-  driver        User     @relation("DriverRides", fields: [driverId], references: [id])
-  passengerId   String
-  passenger     User     @relation("PassengerRides", fields: [passengerId], references: [id])
-  vehicleId     String
-  vehicle       Vehicle  @relation(fields: [vehicleId], references: [id])
-  startLocationId Int
-  startLocation Location @relation("StartLocation", fields: [startLocationId], references: [id])
-  endLocationId Int
-  endLocation   Location @relation("EndLocation", fields: [endLocationId], references: [id])
-  startTime     DateTime
-  endTime       DateTime
-  fare          Float
-  status        RideStatus @default(PENDING)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  payment       Payment?
-  reviews       Review[]
+  ride_id         String     @id @default(uuid())
+  driver_id       String
+  origin          String
+  destination     String
+  departure_time  DateTime
+  available_seats Int
+  driver          User       @relation(fields: [driver_id], references: [user_id], name: "DriverRides")
+  bookings        Booking[]
+  reviews         Review[]
 }
 
-model Location {
-  id        Int      @id @default(autoincrement())
-  latitude  Float
-  longitude Float
-  address   String
-  startRides  Ride[] @relation("StartLocation")
-  endRides    Ride[] @relation("EndLocation")
+
+model Booking {
+  booking_id    String      @id @default(uuid())
+  ride_id       String
+  passenger_id  String
+  booking_time  DateTime
+  status        String
+  ride          Ride        @relation(fields: [ride_id], references: [ride_id])
+  passenger     User        @relation(fields: [passenger_id], references: [user_id])
 }
 
-model Payment {
-  id        Int      @id @default(autoincrement())
-  amount    Float
-  method    PaymentMethod
-  rideId    String      @unique
-  ride      Ride     @relation(fields: [rideId], references: [id])
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-}
 model Subscription {
   stripeSubscriptionId String   @id @unique
   interval             String
@@ -89,31 +68,17 @@ model Subscription {
   currentPeriodEnd     Int
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
-  userId               String   @unique
-  user                 User     @relation(fields: [userId], references: [id])
+  user_id              String   @unique
+  user                 User     @relation(fields: [user_id], references: [user_id])
 }
+
 model Review {
-  id        String      @id @default(uuid())
-  rating    Int
-  comment   String
-  fromUserId String
-  fromUser  User     @relation("ReviewFrom", fields: [fromUserId], references: [id])
-  toUserId  String
-  toUser    User     @relation("ReviewTo", fields: [toUserId], references: [id])
-  rideId    String      @unique
-  ride      Ride     @relation(fields: [rideId], references: [id])
-  createdAt DateTime @default(now())
+  review_id     Int      @id @default(autoincrement())
+  ride_id       String
+  passenger_id  String
+  rating        Int
+  comment       String?
+  ride          Ride     @relation(fields: [ride_id], references: [ride_id])
+  passenger     User     @relation(fields: [passenger_id], references: [user_id])
 }
 
-enum RideStatus {
-  PENDING
-  COMPLETED
-  CANCELLED
-}
-
-enum PaymentMethod {
-  CREDIT_CARD
-  DEBIT_CARD
-  PAYPAL
-  CASH
-}

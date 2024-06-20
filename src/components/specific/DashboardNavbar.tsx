@@ -5,7 +5,7 @@ import { LoginLink } from '@kinde-oss/kinde-auth-nextjs/components';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { UserNav } from './UserNav';
 
-export async function DashboardNav() {
+export async function DashboardNavbar() {
     const { getUser } = getKindeServerSession();
     const user = await getUser();
 
@@ -21,12 +21,12 @@ export async function DashboardNav() {
                     <ThemeToggle />
                     <div className="flex items-center gap-x-2">
                         <Button>
-                            <Link href="/dashboard/driver">
+                            <Link href={`/dashboard/driver/${user?.id}`}>
                                 Driver
                             </Link>
                         </Button>
                         <Button>
-                            <Link href="/dashboard/passenger">
+                            <Link href={`/dashboard/passenger/${user?.id}`}>
                                 Passenger
                             </Link>
                         </Button>

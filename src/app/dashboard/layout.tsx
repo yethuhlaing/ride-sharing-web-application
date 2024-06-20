@@ -4,8 +4,8 @@ import { redirect } from 'next/navigation';
 import prisma from '@/libs/db';
 import { stripe } from "@/libs/stripe";
 import { unstable_noStore as noStore } from 'next/cache';
-import { DashboardNav } from '@/components/specific/DashboardNavbar';
 import LocationContextProvider from '@/context/LocationContextProvider';
+import { DashboardNavbar } from '@/components/specific/DashboardNavbar';
 
 interface UserData {
     email: string;
@@ -25,10 +25,10 @@ async function getData({
 
     const user = await prisma.user.findUnique({
         where: {
-            id: id,
+            user_id: id,
         },
         select: {
-            id: true,
+            user_id: true,
             stripeCustomerId: true,
         },
     });
@@ -37,11 +37,11 @@ async function getData({
         await prisma.user.create({
             data: {
                 email: email,
-                id: id,
+                user_id: id,
                 fullName: fullName,
             },
             select: {
-                id: true,
+                user_id: true,
             },
         });
     }
@@ -51,7 +51,7 @@ async function getData({
         })
         await prisma.user.update({
             where: {
-                id: id
+                user_id: id
             },
             data: {
                 stripeCustomerId: data.id
@@ -71,6 +71,7 @@ export default async function DashboardLayout({
     if (!user) {
         return redirect('/');
     }
+    
     await getData({
         email: user.email as string,
         firstName: user.given_name as string,
@@ -80,7 +81,7 @@ export default async function DashboardLayout({
     });
     return<>
         <LocationContextProvider>
-            <DashboardNav />
+            <DashboardNavbar />
             {children}
         </LocationContextProvider>
     </>
