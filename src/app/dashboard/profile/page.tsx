@@ -16,7 +16,10 @@ import { SubmitButton, TrashDelete } from '@/components/specific/SubmitButton';
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 import { Textarea } from '@/components/ui/textarea';
 import AddVehicleDialog from '@/components/specific/AddVehicleDialog';
-import Link from 'next/link';
+import mime from "mime";
+import { join } from "path";
+import { stat, mkdir, writeFile } from "fs/promises";
+import toast from 'react-hot-toast';
 
 async function getData(user_id: string) {
     noStore();
@@ -43,27 +46,79 @@ export default async function ProfilePage() {
     const data = await getData(user?.id as string);
     const vehicles = await getVehicles(user?.id as string);
 
-    async function postData(formData: FormData) {
+    async function postProfileImage(formData: FormData) {
+        'use server';
+
+        const image = formData.get("profileImage") as File || null;
+
+
+        const buffer = Buffer.from(await image.arrayBuffer());
+        const relativeUploadDir = `/uploads/${new Date(Date.now())
+            .toLocaleDateString("id-ID", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+            })
+            .replace(/\//g, "-")}`;
+
+        const uploadDir = join(process.cwd(), "public", relativeUploadDir);
+        
+        try{
+            await stat(uploadDir);
+            const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+            const filename = `${image.name.replace(
+                /\.[^/.]+$/,
+                ""
+            )}-${uniqueSuffix}.${mime.getExtension(image.type)}`;
+            await writeFile(`${uploadDir}/${filename}`, buffer);
+            const fileUrl = `${relativeUploadDir}/${filename}`;
+
+            await prisma.user.update({
+                where: {
+                    user_id: user?.id,
+                },
+                data: {
+                    profileImage: fileUrl ?? undefined,
+                },
+            });
+        }catch( e: any){
+            if (e.code === "ENOENT") {
+                // If the directory doesn't exist (ENOENT : Error No Entry), create one
+                await mkdir(uploadDir, { recursive: true });
+            } else {
+                console.error(
+                    "Error while trying to create directory when uploading a file\n",
+                    e
+                );
+            }
+        }
+
+        revalidatePath('/dashboard', 'layout');
+    }
+
+    async function postProfileData(formData: FormData) {
         'use server';
 
         const name = formData.get('name') as string;
         const phone = formData.get('phone') as string;
-        const userBio = formData.get('useBio') as string;
-        const profileImage = formData.get('profileImage') as string;
+        const userBio = formData.get('userBio') as string;
 
-        await prisma.user.update({
-            where: {
-                user_id: user?.id,
-            },
-            data: {
-                fullName: name ?? undefined,
-                phone: phone ?? undefined,
-                userBio: userBio ?? undefined,
-                profileImage: profileImage ?? undefined,
-            },
-        });
+        try{
+            await prisma.user.update({
+                where: {
+                    user_id: user?.id,
+                },
+                data: {
+                    fullName: name ?? undefined,
+                    phone: phone ?? undefined,
+                    userBio: userBio ?? undefined,
+                },
+            });
+        }catch(error){
+            console.log(error)
+        }
 
-        revalidatePath('/', 'layout');
+        revalidatePath('/dashboard', 'layout');
     }
     async function getVehicles(user_id: string){
         const vehicles = await prisma.vehicle.findMany({
@@ -105,18 +160,19 @@ export default async function ProfilePage() {
                             Please provide general information about yourself.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <form>
+                    <form action={postProfileImage}>
+                        <CardContent>
                             <Label>Edit Profile Picture</Label>
                             <Input
                                 name="profileImage"
-                                className="py-2"
-                                type="file"
+                                className="mt-2 mb-2"
+                                type="file"                                
                             />
-                        </form>
-                    </CardContent>
-                    <CardContent>
-                        <form action={postData}>
+                            <SubmitButton buttonName={"Change Profile"}/>
+                        </CardContent>
+                    </form>
+                    <form action={postProfileData}>
+                        <CardContent>
                             <div className="space-y-2">
                                 <div className="space-y-1">
                                     <Label className="mb-2">Your Name</Label>
@@ -150,7 +206,7 @@ export default async function ProfilePage() {
                                     />
                                 </div>
                                 <div className="space-y-1">
-                                    <Label>Your Bio</Label>
+                                    <Label htmlFor='userBio'>Your Bio</Label>
                                     <Textarea
                                         name="userBio"
                                         id="userBio"
@@ -158,14 +214,10 @@ export default async function ProfilePage() {
                                         defaultValue={data?.userBio as string}
                                     />
                                 </div>
+                                <SubmitButton buttonName="Save Now" />
                             </div>
-                        </form>
-                    </CardContent>
-
-
-                    <CardFooter className='mt-auto'>
-                        <SubmitButton buttonName="Save Button"/>
-                    </CardFooter>
+                        </CardContent>
+                    </form>
             </Card>
             <Card className="max-w-lg">
                 <CardHeader>

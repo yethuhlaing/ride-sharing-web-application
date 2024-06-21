@@ -4,11 +4,21 @@ import { Button } from '../ui/button';
 import { LoginLink } from '@kinde-oss/kinde-auth-nextjs/components';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { UserNav } from './UserNav';
+import prisma from '@/libs/db';
 
 export async function DashboardNavbar() {
     const { getUser } = getKindeServerSession();
     const user = await getUser();
-
+    const userData = await prisma.user.findUnique({
+        where: {
+            user_id: user?.id,
+        },
+        select: {
+            fullName: true,
+            email: true,
+            profileImage: true,
+        },
+    });
     return (
         <nav className="bg-background h-[10vh] flex items-center sticky z-50 top-0 inset-x-0">
             <div className="container flex items-center justify-between gap-x-4">
@@ -31,9 +41,9 @@ export async function DashboardNavbar() {
                             </Link>
                         </Button>
                         <UserNav
-                            email={user?.email as string}
-                            image={user?.picture as string}
-                            name={user?.given_name as string}
+                            email={userData?.email as string}
+                            image={userData?.profileImage as string}
+                            name={userData?.fullName as string}
                         />
                     </div>
                 </div>

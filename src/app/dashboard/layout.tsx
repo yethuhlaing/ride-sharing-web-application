@@ -40,6 +40,7 @@ async function getData({
                 email: email,
                 user_id: id,
                 fullName: fullName,
+                profileImage: profileImage,
             },
             select: {
                 user_id: true,
