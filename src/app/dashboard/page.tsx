@@ -1,18 +1,28 @@
 import { DashboardSidebar } from "@/components/specific/DashboardSidebar";
+import prisma from "@/libs/db";
+import RideCard from "@/components/specific/RideCard"
 
-export default function DashboardPage(){
+async function getRides() {
+    try {
+        const rides = await prisma.ride.findMany({
+            include: {
+                driver: true, 
+            },
+        });
+        console.log(rides)
+        return rides;
+    } catch (error) {
+        console.error('Error fetching rides:', error);
+        throw error;
+    }
+}
+export default async function DashboardPage(){
+    const rides = await getRides()
     return(
-        <div className="flex flex-col space-y-6 mt-10">
-            <div className="container grid flex-1 gap-12 md:grid-cols-[200px_1fr]">
-                <aside className="hidden w-[200px] flex-col md:flex">
-                    <DashboardSidebar />
-                </aside>
-                <main>
-                    <h1 className="text-center my-auto">
-                        Ride Posts will be uplaoded here!
-                    </h1>
-                </main>
-            </div>
+        <div className="p-4 space-y-2">
+            {rides.map((ride, index) => (
+                <RideCard key={index} ride={ride} />
+            ))}
         </div>
     )
 }

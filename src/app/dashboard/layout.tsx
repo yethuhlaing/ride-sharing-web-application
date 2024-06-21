@@ -6,6 +6,7 @@ import { stripe } from "@/libs/stripe";
 import { unstable_noStore as noStore } from 'next/cache';
 import LocationContextProvider from '@/context/LocationContextProvider';
 import { DashboardNavbar } from '@/components/specific/DashboardNavbar';
+import { DashboardSidebar } from '@/components/specific/DashboardSidebar';
 
 interface UserData {
     email: string;
@@ -82,7 +83,16 @@ export default async function DashboardLayout({
     return<>
         <LocationContextProvider>
             <DashboardNavbar />
-            {children}
+            <div className="flex flex-col space-y-6 mt-10">
+                <div className="container grid flex-1 gap-12 md:grid-cols-[200px_1fr]">
+                    <aside className="hidden w-[200px] flex-col md:flex md:sticky top-0">
+                        <DashboardSidebar />
+                    </aside>
+                    <main className="overflow-y-auto no-scrollbar h-[85vh]">
+                        {children}
+                    </main>
+                </div>
+            </div>
         </LocationContextProvider>
     </>
     

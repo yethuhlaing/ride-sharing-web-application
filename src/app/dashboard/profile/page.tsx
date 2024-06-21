@@ -99,7 +99,6 @@ export default async function ProfilePage() {
     return (
         <div className="container flex flex-col md:flex-row gap-5 justify-center">
             <Card className="max-w-lg">
-                <form action={postData}>
                     <CardHeader>
                         <CardTitle>Your Profile</CardTitle>
                         <CardDescription>
@@ -107,73 +106,66 @@ export default async function ProfilePage() {
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <Label>Edit Profile Picture</Label>
-                        <Input
-                            name="profileImage"
-                            className="py-2"
-                            type="file"
-                        />
+                        <form>
+                            <Label>Edit Profile Picture</Label>
+                            <Input
+                                name="profileImage"
+                                className="py-2"
+                                type="file"
+                            />
+                        </form>
                     </CardContent>
                     <CardContent>
-                        <div className="space-y-2">
-                            <div className="space-y-1">
-                                <Label className="mb-2">Your Name</Label>
-                                <Input
-                                    name="name"
-                                    type="text"
-                                    id="name"
-                                    placeholder="Your Name"
-                                    defaultValue={data?.fullName ?? undefined}
-                                />
+                        <form action={postData}>
+                            <div className="space-y-2">
+                                <div className="space-y-1">
+                                    <Label className="mb-2">Your Name</Label>
+                                    <Input
+                                        name="name"
+                                        type="text"
+                                        id="name"
+                                        placeholder="Your Name"
+                                        defaultValue={data?.fullName ?? undefined}
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <Label>Your Email</Label>
+                                    <Input
+                                        name="email"
+                                        type="email"
+                                        id="email"
+                                        placeholder="Your Email"
+                                        disabled
+                                        defaultValue={data?.email as string}
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <Label>Your Phone</Label>
+                                    <Input
+                                        name="phone"
+                                        type="phone"
+                                        id="phone"
+                                        placeholder="Your Phone"
+                                        defaultValue={data?.phone as string}
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <Label>Your Bio</Label>
+                                    <Textarea
+                                        name="userBio"
+                                        id="userBio"
+                                        placeholder="Type your message here."
+                                        defaultValue={data?.userBio as string}
+                                    />
+                                </div>
                             </div>
-                            <div className="space-y-1">
-                                <Label>Your Email</Label>
-                                <Input
-                                    name="email"
-                                    type="email"
-                                    id="email"
-                                    placeholder="Your Email"
-                                    disabled
-                                    defaultValue={data?.email as string}
-                                />
-                            </div>
-                            <div className="space-y-1">
-                                <Label>Your Phone</Label>
-                                <Input
-                                    name="phone"
-                                    type="phone"
-                                    id="phone"
-                                    placeholder="Your Phone"
-                                    defaultValue={data?.phone as string}
-                                />
-                            </div>
-                            <div className="space-y-1">
-                                <Label>Your Bio</Label>
-                                <Textarea
-                                    name="userBio"
-                                    id="userBio"
-                                    placeholder="Type your message here."
-                                    defaultValue={data?.userBio as string}
-                                />
-                            </div>
-                        </div>
+                        </form>
                     </CardContent>
 
-                    {/* {
-                        vehicles?.length == 0  (
-                            {
-                                vehicles.map((vehicle, index) => {
-                                    <div>Helllo</div>
-                                })
-                            }
-                        ):(
-                            <div>Loading</div>
-                        )
-                    } */}
+
                     <CardFooter className='mt-auto'>
                         <SubmitButton buttonName="Save Button"/>
                     </CardFooter>
-                </form>
             </Card>
             <Card className="max-w-lg">
                 <CardHeader>
