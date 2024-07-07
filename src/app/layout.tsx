@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/specific/ThemeProvider';
-import { Navbar } from '../components/specific/Navbar';
 import { Toaster } from 'react-hot-toast';
+import { LocationProvider } from '@/context/LocationContextProvider';
+import { DashboardNavbar } from '@/components/specific/DashboardNavbar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,15 +22,17 @@ export default function RootLayout({
     return (
         <html lang="en" className="!scroll-smooth">
             <body className={inter.className}>
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    <Toaster />
-                    {children}
-                </ThemeProvider>
+                <LocationProvider>
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                        disableTransitionOnChange
+                    >
+                        <Toaster />
+                        {children}
+                    </ThemeProvider>
+                </LocationProvider>
             </body>
         </html>
     );

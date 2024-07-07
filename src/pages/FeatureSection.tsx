@@ -1,5 +1,3 @@
-"use server"
-
 import { Badge } from '@/components/ui/badge';
 import {
     Card,

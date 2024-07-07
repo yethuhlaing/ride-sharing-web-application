@@ -1,4 +1,6 @@
-export default function subscribeEmail(e: any){
+export default async function subscribeEmail(e: any){
+    "use server"
+
     e.preventDefault();
     console.log('Subscribed!');
 }

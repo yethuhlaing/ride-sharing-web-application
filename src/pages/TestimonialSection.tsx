@@ -1,5 +1,3 @@
-'use client';
-
 import { cn } from '@/libs/utils';
 import { AnimatedList } from '@/components/ui/animated-list';
 

@@ -6,6 +6,14 @@ import {
     UserRound,
 } from 'lucide-react';
 
+export const featureItems = [
+    { name: "Lorem Ipsum something" },
+    { name: "Lorem Ipsum something" },
+    { name: "Lorem Ipsum something" },
+    { name: "Lorem Ipsum something" },
+    { name: "Lorem Ipsum something" },
+];
+
 export const teamList: TeamProps[] = [
     {
         imageUrl: 'https://i.pravatar.cc/150?img=35',
@@ -55,8 +63,7 @@ export const teamList: TeamProps[] = [
 ];
 
 export const navItems = [
-    { name: 'Home', href: '/dashboard', icon: Home },
-    { name: 'Profile', href: '/dashboard/profile', icon: UserRound },
-    { name: "Settings", href: "/dashboard/settings", icon: Settings },
-    { name: 'Billing', href: '/dashboard/billing', icon: CreditCard },
+    { name: 'Home', href: '/dashboard/home', icon: Home },
+    { name: 'Profile', href: '/dashboard/home/profile', icon: UserRound },
+    { name: 'Billing', href: '/dashboard/home/billing', icon: CreditCard },
 ];

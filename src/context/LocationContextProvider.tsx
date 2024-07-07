@@ -19,7 +19,7 @@ type LocationContextProviderProps = {
     children: React.ReactNode;
 };
 
-export default function LocationContextProvider({
+export function LocationProvider({
     children,
 }: LocationContextProviderProps) {
     const [destination, setDestination] = useState<string | null> (null);

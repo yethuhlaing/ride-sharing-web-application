@@ -43,9 +43,11 @@ export function UserNav({
                         variant="ghost"
                         className="relative h-10 w-10 rounded-full"
                     >
-                        <Avatar className="h-10 w-10 rounded-full">
-                            <AvatarImage src={image} alt="" />
-                            <AvatarFallback>Jan</AvatarFallback>
+                        <Avatar className="h-12 w-12 rounded-full">
+                            <AvatarImage src={image} alt="Profile Image" />
+                            <AvatarFallback>
+                                <img src="https://avatar.iran.liara.run/public" />
+                            </AvatarFallback>
                         </Avatar>
                     </Button>
                 </DropdownMenuTrigger>

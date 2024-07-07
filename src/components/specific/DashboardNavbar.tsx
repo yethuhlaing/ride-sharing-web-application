@@ -31,12 +31,12 @@ export async function DashboardNavbar() {
                     <ThemeToggle />
                     <div className="flex items-center gap-x-2">
                         <Button>
-                            <Link href={`/driver/${user?.id}`}>
+                            <Link href={`/dashboard/driver/${user?.id}`}>
                                 Driver
                             </Link>
                         </Button>
                         <Button>
-                            <Link href={`/passenger/${user?.id}`}>
+                            <Link href={`/dashboard/passenger/${user?.id}`}>
                                 Passenger
                             </Link>
                         </Button>
