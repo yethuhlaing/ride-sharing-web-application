@@ -6,8 +6,8 @@ import Footer from '../pages/FooterSection';
 import { ScrollToTop } from '../components/specific/ScrollToTop';
 import { AnimatedSection } from '../pages/TestimonialSection';
 import ContactSection from '@/pages/ContactSection';
-import { Navbar } from '@/components/specific/Navbar';
 import ContactForm from '@/components/specific/ContactForm';
+import { Navbar } from '@/components/specific/Navbar';
 
 export default async function Home() {
     return (

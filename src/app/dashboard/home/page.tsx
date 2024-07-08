@@ -18,7 +18,7 @@ async function getRides() {
 export default async function DashboardPage(){
     const rides = await getRides()
     return(
-        <div className="p-4 space-y-2">
+        <div className="space-y-2">
             {rides.map((ride, index) => (
                 <RideCard key={index} ride={ride} />
             ))}

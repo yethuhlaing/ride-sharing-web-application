@@ -67,11 +67,13 @@ export const Features = () => {
                         <CardContent>{description}</CardContent>
 
                         <CardFooter>
-                            <img
-                                src={image.src}
-                                alt="About feature"
-                                className="w-[200px] lg:w-[250px] mx-auto"
-                            />
+                            <div>
+                                <img
+                                    src={image.src}
+                                    alt="About feature"
+                                    className="w-[200px] lg:w-[250px] mx-auto"
+                                />
+                            </div>
                         </CardFooter>
                     </Card>
                 ))}

@@ -7,7 +7,6 @@ import { unstable_noStore as noStore } from 'next/cache';
 import { DashboardNavbar } from '@/components/specific/DashboardNavbar';
 import { DashboardSidebar } from '@/components/specific/DashboardSidebar';
 import Loading from "./loading";
-import { LocationProvider } from "@/context/LocationContextProvider"
 interface UserData {
     email: string;
     id: string;

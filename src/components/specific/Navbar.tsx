@@ -2,12 +2,8 @@ import Link from 'next/link';
 import { ThemeToggle } from '@/components/specific/ThemeToggle';
 import { Button } from '../ui/button';
 import { LoginLink } from '@kinde-oss/kinde-auth-nextjs/components';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { UserNav } from './UserNav';
 
 export async function Navbar() {
-    const { isAuthenticated, getUser } = getKindeServerSession();
-    const user = await getUser();
 
     return (
         <nav className="bg-background h-[10vh] flex items-center sticky z-50 top-0 inset-x-0">
@@ -20,7 +16,7 @@ export async function Navbar() {
                 <div className="flex items-center gap-x-3">
                     <ThemeToggle />
                     <div className="flex items-center gap-x-3">
-                        <LoginLink>
+                        <LoginLink postLoginRedirectURL="/dashboard/home">
                             <Button>Sign in</Button>
                         </LoginLink>
                     </div>
