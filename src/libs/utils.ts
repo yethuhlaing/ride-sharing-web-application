@@ -12,13 +12,13 @@ export const validateString = (
     return true;
 };
 
-export const formatDate = (dateString: string) => {
+export const formatDate = (dateString: string ) => {
     const date = new Date(dateString);
     const options = { year: 'numeric', month: 'long', day: 'numeric' } as const;
     return new Intl.DateTimeFormat('en-US', options).format(date);
 };
 
-export const formatTime = (dateString: string) => {
+export const formatTime = (dateString: string  ) => {
     const date = new Date(dateString);
     const options = { hour: 'numeric', minute: 'numeric', hour12: true } as const;
     return new Intl.DateTimeFormat('en-US', options).format(date);

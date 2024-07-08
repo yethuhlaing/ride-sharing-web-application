@@ -54,7 +54,6 @@ export default function DriverPage() {
                 },
                 body: JSON.stringify(rideData),
             });
-
             const data = await response.json();
             if (response.ok) {
                 toast.success("You have successfully published.")
@@ -63,8 +62,10 @@ export default function DriverPage() {
                 router.push('/dashboard/home');
             } else {
                 console.error('Error publishing ride:', data.error);
+                toast.error("Error publishing ride!")
                 // Handle error (e.g., show error message)
             }
+            
         } catch (error) {
             console.error('Network error:', error);
             // Handle network error
