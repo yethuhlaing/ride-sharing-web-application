@@ -9,12 +9,7 @@ export default async function Dashboardlayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const { getUser, isAuthenticated } = getKindeServerSession();
-    const user = await getUser();
 
-    if (!user && !(await isAuthenticated())) {
-        return redirect('/');
-    }
     return (
         <div>
             <ProtectedRoute>
