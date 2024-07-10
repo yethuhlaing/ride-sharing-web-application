@@ -4,10 +4,22 @@ import { Button } from '@/components/ui/button';
 import { Loader2, Trash } from 'lucide-react';
 import { useFormStatus } from 'react-dom';
 import { Send } from 'lucide-react';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 type Prop = {
     buttonName: string
 }
+
 export function SubmitButton({ buttonName }: Prop) {
     const { pending } = useFormStatus();
     return (
@@ -23,6 +35,45 @@ export function SubmitButton({ buttonName }: Prop) {
                         {buttonName}
                     </Button>
                 </div>
+
+            )}
+        </>
+    );
+}
+
+export function BookRideButton({ buttonName, bookRide }: { buttonName: string, bookRide : ()=> void}) {
+    const { pending } = useFormStatus();
+
+    return (
+        <>
+            {pending ? (
+                <Button disabled className="w-fit">
+                    <Loader2 className="mr-2 w-4 h-4 animate-spin" /> Please
+                    Wait
+                </Button>
+            ) : (
+                <AlertDialog>
+                <AlertDialogTrigger>
+                    <span className='text-xs text-neutral-50 w-auto h-auto bg-primary px-10 py-2 rounded-lg'>{buttonName}</span>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete your account
+                        and remove your data from our servers.
+                    </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction>
+                        <Button className="w-fit" onClick={bookRide}>
+                            {buttonName}
+                        </Button>
+                    </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+                </AlertDialog>
 
             )}
         </>

@@ -36,12 +36,8 @@ async function getData(user_id) {
 
 export default async function BillingPage() {
     noStore()
-    const { getUser, isAuthenticated } = getKindeServerSession();
+    const { getUser } = getKindeServerSession();
     const user = await getUser();
-
-    if (!user && !isAuthenticated) {
-        return redirect('/');
-    }
     const data = await getData(user?.id)
 
     async function createSubscription() {

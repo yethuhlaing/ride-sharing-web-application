@@ -13,15 +13,23 @@ export const validateString = (
 };
 
 export const formatDate = (dateString: string ) => {
-    const date = new Date(dateString);
-    const options = { year: 'numeric', month: 'long', day: 'numeric' } as const;
-    return new Intl.DateTimeFormat('en-US', options).format(date);
+    try {
+        const date = new Date(dateString);
+        const options = { year: 'numeric', month: 'long', day: 'numeric' } as const;
+        return new Intl.DateTimeFormat('en-US', options).format(date); 
+    } catch (error) {
+        console.log(error)
+    }
 };
 
 export const formatTime = (dateString: string  ) => {
-    const date = new Date(dateString);
-    const options = { hour: 'numeric', minute: 'numeric', hour12: true } as const;
-    return new Intl.DateTimeFormat('en-US', options).format(date);
+    try {
+        const date = new Date(dateString);
+        const options = { hour: 'numeric', minute: 'numeric', hour12: true } as const;
+        return new Intl.DateTimeFormat('en-US', options).format(date);    
+    } catch (error) {
+        console.log(error)
+    }
 };
 
 export function cn(...inputs: ClassValue[]) {

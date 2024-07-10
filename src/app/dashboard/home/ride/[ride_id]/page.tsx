@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { BookRideButton, SubmitButton } from '../../../../../components/specific/SubmitButton';
+
 
 
 
@@ -27,6 +29,7 @@ async function getRide(ride_id: string) {
         throw error;
     }
 }
+
 async function getVehicles(user_id: string) {
     const vehicles = await prisma.vehicle.findMany({
         where: {
@@ -50,6 +53,11 @@ export default async function RidePage({ params } : any) {
     console.log(ride_id)
     const ride = await getRide(ride_id)
     const vehicles = await getVehicles(ride?.driver_id as string)
+
+    async function bookRide() {
+        "use server"
+        console.log("Hei")
+    }
     return (
         <Card>
             <CardHeader>
@@ -103,9 +111,7 @@ export default async function RidePage({ params } : any) {
                 </div>
             </CardContent>
             <CardContent>
-                <Button className='btn-primary'>
-                    Book
-                </Button>
+                <BookRideButton buttonName='Book' bookRide={bookRide}/>
             </CardContent>
         </Card>
     )

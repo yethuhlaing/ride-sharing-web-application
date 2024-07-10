@@ -40,12 +40,9 @@ async function getData(user_id: string) {
 
 export default async function ProfilePage() {
     noStore();
-    const { getUser, isAuthenticated } = getKindeServerSession();
+    const { getUser } = getKindeServerSession();
     const user = await getUser();
-
-    if (!user && !isAuthenticated) {
-        return redirect('/');
-    }
+    
     const data = await getData(user?.id as string);
     const vehicles = await getVehicles(user?.id as string);
 

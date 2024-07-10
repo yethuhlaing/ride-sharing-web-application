@@ -68,10 +68,6 @@ export default async function DashboardLayout({
 }) {
     const { getUser, isAuthenticated } = getKindeServerSession();
     const user = await getUser();
-
-    if (!user && !isAuthenticated) {
-        return redirect('/');
-    }
     
     await getData({
         email: user?.email as string,

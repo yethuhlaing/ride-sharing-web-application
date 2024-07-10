@@ -8,7 +8,19 @@ function Loading() {
             <Skeleton className="h-[125px] w-[250px] rounded-xl" />
             <div className="space-y-2">
                 <Skeleton className="h-4 w-[100%]" />
+                <Skeleton className="h-24 w-[100%]" />
+            </div>
+            <div className="space-y-2">
                 <Skeleton className="h-4 w-[100%]" />
+                <Skeleton className="h-20 w-[100%]" />
+            </div>
+            <div className="space-y-2">
+                <Skeleton className="h-4 w-[100%]" />
+                <Skeleton className="h-20 w-[100%]" />
+            </div>
+            <div className="space-y-2">
+                <Skeleton className="h-4 w-[100%]" />
+                <Skeleton className="h-20 w-[100%]" />
             </div>
         </div>
     )

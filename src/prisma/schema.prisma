@@ -53,7 +53,7 @@ model Booking {
   booking_id    String      @id @default(uuid())
   ride_id       String
   passenger_id  String
-  booking_time  DateTime
+  createdAt     DateTime    @default(now())
   status        String
   ride          Ride        @relation(fields: [ride_id], references: [ride_id])
   passenger     User        @relation(fields: [passenger_id], references: [user_id])
