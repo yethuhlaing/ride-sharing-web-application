@@ -14,7 +14,7 @@ model User {
   fullName          String?
   phone             String?         @unique
   userBio           String?
-  profileImage      String?
+  profileImage      String?         @default("https://avatar.iran.liara.run/public/6")
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   stripeCustomerId  String?         @unique

@@ -153,7 +153,7 @@ export default async function ProfilePage() {
             },
         });
 
-        revalidatePath("/dasboard");
+        revalidatePath('/dashboard', 'layout');
     }
     return (
         <div className="container flex flex-col md:flex-row gap-5 justify-center">

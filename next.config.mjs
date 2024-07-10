@@ -6,7 +6,13 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'lh3.googleusercontent.com',
             },
+            {
+                protocol: 'https',
+                hostname: 'avatar.iran.liara.run',
+                pathname: '/public/6',
+            },
         ],
+        domains: ['gravatar.com'], 
     },
 };
 

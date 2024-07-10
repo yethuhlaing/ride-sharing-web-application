@@ -21,6 +21,7 @@ import {
 import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components';
 import { useTheme } from 'next-themes';
 import { navItems } from '@/libs/data';
+import Image from 'next/image';
 
 
 
@@ -46,7 +47,7 @@ export function UserNav({
                         <Avatar className="h-10 w-10 rounded-full">
                             <AvatarImage src={image} alt="Profile Image" />
                             <AvatarFallback>
-                                <span><img src="https://avatar.iran.liara.run/public" /></span>
+                                <span><Image src={image} width={10} height={10} alt="Profile Image"/></span>
                             </AvatarFallback>
                         </Avatar>
                     </Button>

@@ -54,32 +54,29 @@ export default async function RidePage({ params } : any) {
         <Card>
             <CardHeader>
                 <CardTitle className="text-lg font-semibold text-gray-900">Ride Details</CardTitle>
-                <CardDescription>
-                    <div className="flex flex-col justify-between">
-                        <div className="flex items-center space-x-4">
-                            <div>
-                                <Image
-                                    src={ride?.driver.profileImage as string | StaticImport}
-                                    alt="User Profile Image"
-                                    width={70}  // Set the appropriate width
-                                    height={70} // Set the appropriate height
-                                    className="rounded-full aspect-square object-cover"
-                                />
-
-                            </div>
-                            <div className="text-xl">
-                                {ride?.driver.fullName}
-                            </div>
-                        </div>
+                <div className="flex flex-row justify-between py-4">
+                    <div className="flex items-center space-x-4">
                         <div>
-                            <Button className='btn-primary'>
+                            <Image
+                                src={ride?.driver.profileImage as string | StaticImport}
+                                alt="User Profile Image"
+                                width={80}  // Set the appropriate width
+                                height={80} // Set the appropriate height
+                                className="rounded-full aspect-square object-cover"
+                            />
+
+                        </div>
+                        <div className="flex flex-col space-y-2 text-base lg:text-xl font-bold">
+                            {ride?.driver.fullName}
+                            <Button className='btn-primary text-xs w-auto h-auto'>
                                 <Link href={`/dashboard/home/profile/${ride?.driver.user_id}`} replace>
                                     Check Profile
                                 </Link>
                             </Button>
                         </div>
                     </div>
-                </CardDescription>
+
+                </div>
             </CardHeader>
             <CardContent>
                 <div className="mt-2">
@@ -104,6 +101,11 @@ export default async function RidePage({ params } : any) {
                         <span className="ml-2 text-gray-600">{ride?.available_seats}</span>
                     </div>
                 </div>
+            </CardContent>
+            <CardContent>
+                <Button className='btn-primary'>
+                    Book
+                </Button>
             </CardContent>
         </Card>
     )
