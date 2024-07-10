@@ -7,7 +7,7 @@ import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { BookRideButton, SubmitButton } from '../../../../../components/specific/SubmitButton';
-
+import NotFound from './not-found';
 
 
 
@@ -51,6 +51,7 @@ async function getVehicles(user_id: string) {
 export default async function RidePage({ params } : any) {
     const { ride_id } = params;
     console.log(ride_id)
+
     const ride = await getRide(ride_id)
     const vehicles = await getVehicles(ride?.driver_id as string)
 
@@ -58,62 +59,71 @@ export default async function RidePage({ params } : any) {
         "use server"
         console.log("Hei")
     }
+
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle className="text-lg font-semibold text-gray-900">Ride Details</CardTitle>
-                <div className="flex flex-row justify-between py-4">
-                    <div className="flex items-center space-x-4">
-                        <div>
-                            <Image
-                                src={ride?.driver.profileImage as string | StaticImport}
-                                alt="User Profile Image"
-                                width={80}  // Set the appropriate width
-                                height={80} // Set the appropriate height
-                                className="rounded-full aspect-square object-cover"
-                            />
+        <>
+            { ride ? (
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-lg font-semibold text-gray-900">Ride Details</CardTitle>
+                        <div className="flex flex-row justify-between py-4">
+                            <div className="flex items-center space-x-4">
+                                <div>
+                                    <Image
+                                        src={ride?.driver.profileImage as string | StaticImport}
+                                        alt="User Profile Image"
+                                        width={80}  // Set the appropriate width
+                                        height={80} // Set the appropriate height
+                                        className="rounded-full aspect-square object-cover"
+                                    />
+
+                                </div>
+                                <div className="flex flex-col space-y-2 text-base lg:text-xl font-bold">
+                                    {ride?.driver.fullName}
+                                    <Button className='btn-primary text-xs w-auto h-auto'>
+                                        <Link href={`/dashboard/home/profile/${ride?.driver.user_id}`} replace>
+                                            Check Profile
+                                        </Link>
+                                    </Button>
+                                </div>
+                            </div>
 
                         </div>
-                        <div className="flex flex-col space-y-2 text-base lg:text-xl font-bold">
-                            {ride?.driver.fullName}
-                            <Button className='btn-primary text-xs w-auto h-auto'>
-                                <Link href={`/dashboard/home/profile/${ride?.driver.user_id}`} replace>
-                                    Check Profile
-                                </Link>
-                            </Button>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="mt-2">
+                            <div className="flex items-center">
+                                <span className="font-semibold text-gray-700">Origin: </span>
+                                <span className="ml-2 text-gray-600">{ride?.origin}</span>
+                            </div>
+                            <div className="flex items-center mt-2">
+                                <span className="font-semibold text-gray-700">Destination: </span>
+                                <span className="ml-2 text-gray-600">{ride?.destination}</span>
+                            </div>
+                            <div className="flex items-center mt-2">
+                                <span className="font-semibold text-gray-700">Departure Date: </span>
+                                <span className="ml-2 text-gray-600">{formatDate(ride?.departure_time.toLocaleString() as string)}</span>
+                            </div>
+                            <div className="flex items-center mt-2">
+                                <span className="font-semibold text-gray-700">Departure Time: </span>
+                                <span className="ml-2 text-gray-600">{formatTime(ride?.departure_time.toLocaleString() as string)}</span>
+                            </div>
+                            <div className="flex items-center mt-2">
+                                <span className="font-semibold text-gray-700">Available Seats: </span>
+                                <span className="ml-2 text-gray-600">{ride?.available_seats}</span>
+                            </div>
                         </div>
-                    </div>
-
-                </div>
-            </CardHeader>
-            <CardContent>
-                <div className="mt-2">
-                    <div className="flex items-center">
-                        <span className="font-semibold text-gray-700">Origin: </span>
-                        <span className="ml-2 text-gray-600">{ride?.origin}</span>
-                    </div>
-                    <div className="flex items-center mt-2">
-                        <span className="font-semibold text-gray-700">Destination: </span>
-                        <span className="ml-2 text-gray-600">{ride?.destination}</span>
-                    </div>
-                    <div className="flex items-center mt-2">
-                        <span className="font-semibold text-gray-700">Departure Date: </span>
-                        <span className="ml-2 text-gray-600">{formatDate(ride?.departure_time.toLocaleString() as string)}</span>
-                    </div>
-                    <div className="flex items-center mt-2">
-                        <span className="font-semibold text-gray-700">Departure Time: </span>
-                        <span className="ml-2 text-gray-600">{formatTime(ride?.departure_time.toLocaleString() as string)}</span>
-                    </div>
-                    <div className="flex items-center mt-2">
-                        <span className="font-semibold text-gray-700">Available Seats: </span>
-                        <span className="ml-2 text-gray-600">{ride?.available_seats}</span>
-                    </div>
-                </div>
-            </CardContent>
-            <CardContent>
-                <BookRideButton buttonName='Book' bookRide={bookRide}/>
-            </CardContent>
-        </Card>
+                    </CardContent>
+                    <CardContent>
+                        <BookRideButton buttonName='Book' bookRide={bookRide} />
+                    </CardContent>
+                </Card >
+                ): 
+                (
+                    <NotFound />
+                )
+            }
+        </>
     )
 }
 
