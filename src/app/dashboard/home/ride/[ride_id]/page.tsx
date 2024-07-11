@@ -6,60 +6,64 @@ import Image from 'next/image';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { BookRideButton, SubmitButton } from '../../../../../components/specific/SubmitButton';
-import NotFound from './not-found';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { createBooking, deleteBooking, getRideData, updateBooking } from '@/actions/action';
+import { revalidatePath, unstable_cache } from 'next/cache';
+import { CancelButton, SubmitButton } from '@/components/specific/SubmitButton';
+import NotFound from '../../NotFound';
 
 
-
-async function getRide(ride_id: string) {
-
-    try {
-        const ride = await prisma.ride.findUnique({
-            where: {
-                ride_id: ride_id
-            },
-            include: {
-                driver: true,
-            },
-        });
-        console.log(ride)
-        return ride;
-    } catch (error) {
-        console.error('Error fetching rides:', error);
-        throw error;
-    }
-}
-
-async function getVehicles(user_id: string) {
-    const vehicles = await prisma.vehicle.findMany({
-        where: {
-            user_id: user_id,
-        },
-        select: {
-            vehicle_id: true,
-            brand: true,
-            model: true,
-            color: true,
-            year: true,
-            licensePlate: true,
-        },
-    });
-    console.log(vehicles)
-    return vehicles;
-}
 
 export default async function RidePage({ params } : any) {
+
     const { ride_id } = params;
-    console.log(ride_id)
 
-    const ride = await getRide(ride_id)
-    const vehicles = await getVehicles(ride?.driver_id as string)
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
+    const passenger_id = user?.id as string
 
-    async function bookRide() {
+    const ride = await getRideData(ride_id)
+    const pendingBookings = ride?.bookings.filter(booking => booking.status === "Pending") || [];
+
+
+    async function handleSubmit() {
         "use server"
-        console.log("Hei")
-    }
+        
+        try {
+            await createBooking(ride_id, passenger_id);
+            revalidatePath(`/dashboard/home/`, "layout")
 
+        } catch (error: any) {
+            if (error.stack?.includes("Unique constraint failed on the fields")) {
+                console.error('Error: Passenger already booked this ride');
+                
+            } else {
+                console.error('Error creating booking:', error);
+
+            }
+
+        }
+    }
+    async function handleAccept(booking_id: string) {
+        "use server"
+
+        try {
+            await updateBooking(booking_id, "Confirmed")
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+    async function handleDelete() {
+        "use server"
+
+        try {
+            await deleteBooking(ride?.bookings[0]?.booking_id as string)
+            revalidatePath(`/dashboard/home/ride/${ride_id}`, "page")
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <>
             { ride ? (
@@ -80,8 +84,8 @@ export default async function RidePage({ params } : any) {
                                 </div>
                                 <div className="flex flex-col space-y-2 text-base lg:text-xl font-bold">
                                     {ride?.driver.fullName}
-                                    <Button className='btn-primary text-xs w-auto h-auto'>
-                                        <Link href={`/dashboard/home/profile/${ride?.driver.user_id}`} replace>
+                                    <Button className='btn-primary text-xs mr-2 mt-2 w-fit h-fit' >
+                                        <Link href={`/dashboard/home/profile/${ride?.driver.user_id}`}>
                                             Check Profile
                                         </Link>
                                     </Button>
@@ -115,7 +119,66 @@ export default async function RidePage({ params } : any) {
                         </div>
                     </CardContent>
                     <CardContent>
-                        <BookRideButton buttonName='Book' bookRide={bookRide} />
+                        {
+                            ride.driver_id !== user?.id ? (
+                                <>
+                                    {ride.bookings.length == 0 && (
+                                        <form action={handleSubmit}>
+                                            <SubmitButton buttonName='Request Ride' />
+                                        </form>
+                                    )}
+                                    {ride.bookings[0]?.status === "Pending" && (
+                                        <form action={handleDelete}>
+                                            <CancelButton buttonName='Cancel Request' />
+                                        </form>
+                                    )}
+                                    {ride.bookings[0]?.status === "Confirmed" && (
+                                        <div>YOu can start chatting</div>
+                                    )}
+                                </>
+                            ) : (
+                                <div className='flex flex-wrap flex-row space-x-4'>
+                                    {
+                                        pendingBookings.length > 0 ? (
+                                            pendingBookings?.map(booking => (
+                                                <Card key={booking.booking_id}>
+                                                    <CardHeader>
+                                                        <form action={handleAccept.bind(null, booking.booking_id)}>
+                                                            <SubmitButton buttonName='Accept Ride' />
+                                                        </form>
+                                                        <div className="flex flex-row justify-between py-4">
+                                                            <div className="flex items-center space-x-4">
+                                                                <div>
+                                                                    <Image
+                                                                        src={booking.passenger.profileImage as string | StaticImport}
+                                                                        alt="User Profile Image"
+                                                                        width={80}  // Set the appropriate width
+                                                                        height={80} // Set the appropriate height
+                                                                        className="rounded-full aspect-square object-cover"
+                                                                    />
+
+                                                                </div>
+                                                                <div className="flex flex-col space-y-2 text-base lg:text-xl font-bold">
+                                                                    <span className='font-normal'>{booking.passenger.fullName}</span>
+                                                                    <Button className='btn-primary text-xs mr-2 mt-2 w-fit h-fit' >
+                                                                        <Link href={`/dashboard/home/profile/${booking.passenger_id}`}>
+                                                                            Check Profile
+                                                                        </Link>
+                                                                    </Button>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </CardHeader>
+                                                </Card>
+                                            ))
+                                        ) : (
+                                            <p>No pending bookings</p>
+                                        )
+                                    }
+                                </div>
+                            )
+                        }
                     </CardContent>
                 </Card >
                 ): 

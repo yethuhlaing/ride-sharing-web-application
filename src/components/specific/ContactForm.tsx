@@ -4,8 +4,11 @@ import toast from "react-hot-toast";
 import { SubmitButton } from "@/components/specific/SubmitButton";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast"
 
 function ContactForm() {
+    const { toast } = useToast()
+
     return(
         <form
             className="mt-10 flex flex-col dark:text-black"
@@ -16,11 +19,12 @@ function ContactForm() {
                 const { data, error } = await sendEmail(formData);
 
                 if (error) {
-                    toast.error(error);
+                toast({
+                    description: error,
+                })
                     return;
                 }
 
-                toast.success("Email sent successfully!");
             }}
         >
             <Input

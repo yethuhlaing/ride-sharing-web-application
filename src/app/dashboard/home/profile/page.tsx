@@ -18,32 +18,15 @@ import AddVehicleDialog from '@/components/specific/AddVehicleDialog';
 import mime from "mime";
 import { join } from "path";
 import { stat, mkdir, writeFile } from "fs/promises";
-import { redirect } from 'next/navigation';
+import { getUserData } from '@/actions/action';
 
-async function getData(user_id: string) {
-    noStore();
-    const data = await prisma.user.findUnique({
-        where: {
-            user_id: user_id,
-        },
-        select: {
-            fullName: true,
-            email: true,
-            phone: true,
-            userBio: true,
-            profileImage: true,
-        },
-    });
-
-    return data;
-}
 
 export default async function ProfilePage() {
     noStore();
     const { getUser } = getKindeServerSession();
     const user = await getUser();
     
-    const data = await getData(user?.id as string);
+    const data = await getUserData(user?.id as string);
     const vehicles = await getVehicles(user?.id as string);
 
     

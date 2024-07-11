@@ -1,31 +1,11 @@
 import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import prisma from '@/libs/db';
-import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
+import { getUserData } from '@/actions/action';
 
-
-async function getData(user_id: string) {
-    noStore();
-    const data = await prisma.user.findUnique({
-        where: {
-            user_id: user_id,
-        },
-        select: {
-            fullName: true,
-            email: true,
-            phone: true,
-            userBio: true,
-            profileImage: true,
-        },
-    });
-
-    return data;
-}
 
 async function ProfilePage({params} : any) {
     const { id } = params
-    console.log(id)
-    const useData = await getData(id as string);
+    const useData = await getUserData(id as string);
 
     return (
         <Card>

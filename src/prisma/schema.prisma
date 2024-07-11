@@ -50,13 +50,15 @@ model Ride {
 
 
 model Booking {
-  booking_id    String      @id @default(uuid())
+  booking_id    String   @id @default(uuid())
   ride_id       String
   passenger_id  String
-  createdAt     DateTime    @default(now())
+  createdAt     DateTime @default(now())
   status        String
-  ride          Ride        @relation(fields: [ride_id], references: [ride_id])
-  passenger     User        @relation(fields: [passenger_id], references: [user_id])
+  ride          Ride     @relation(fields: [ride_id], references: [ride_id])
+  passenger     User     @relation(fields: [passenger_id], references: [user_id])
+
+  @@unique([ride_id, passenger_id]) // Unique constraint for ride_id and passenger_id combination
 }
 
 model Subscription {

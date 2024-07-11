@@ -12,7 +12,7 @@ import {
 import { MapPin } from 'lucide-react';
 import { LocationContext } from '@/context/LocationContextProvider';
 import GoogleMapSection from "@/components/specific/GoogleMapSection"
-import { PublishRideButton } from '@/components/specific/SubmitButton';
+import { SubmitButton } from '@/components/specific/SubmitButton';
 import GoogleMapInput from "@/components/specific/GoogleMapInput"
 import { Input } from '@/components/ui/input';
 import { DatePickerWithPresets } from '@/components/specific/DatePicker';
@@ -33,6 +33,7 @@ export default function DriverPage() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
+        const { toast } = useToast()
 
         const combinedDateTime = new Date(date);
         const [hours, minutes] = time?.split(':');
@@ -56,7 +57,9 @@ export default function DriverPage() {
             });
             const data = await response.json();
             if (response.ok) {
-                toast.success("You have successfully published.")
+                toast({
+                    description: "You have successfully published.",
+                })
                 resetFormData()
                 const router = useRouter();
                 router.push('/dashboard/home');
@@ -168,7 +171,7 @@ export default function DriverPage() {
                                     <CalendarIcon size={20} />
                                     <Input type='time' required value={time} onChange={ (e) => setTime(e.target.value)} className='w-full text-sm ml-4' />
                                 </div>
-                                <PublishRideButton />
+                                <SubmitButton buttonName="Publish" />
                             </form>
                         </CardContent>
                     </Card>

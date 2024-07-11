@@ -36,7 +36,7 @@ export default async function AddVehicleDialog() {
                 throw new Error(`User with ID ${user_id} not found`);
             }
 
-            const newVehicle = await prisma.vehicle.create({
+            await prisma.vehicle.create({
                 data: {
                     brand: brand ?? undefined,
                     model: model ?? undefined,
@@ -46,7 +46,7 @@ export default async function AddVehicleDialog() {
                     user_id: user_id,
                 },
             });
-            toast.success('New Vehicle Created!');
+            
         } catch (error) {
             console.error('Error creating vehicle:', error);
             throw error;

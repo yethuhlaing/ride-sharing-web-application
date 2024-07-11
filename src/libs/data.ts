@@ -2,8 +2,9 @@ import { TeamProps } from "./type";
 import {
     CreditCard,
     Home,
-    Settings,
     UserRound,
+    BookMarked,
+    MessageCircleMore,
 } from 'lucide-react';
 
 export const featureItems = [
@@ -66,4 +67,6 @@ export const navItems = [
     { name: 'Home', href: '/dashboard/home', icon: Home },
     { name: 'Profile', href: '/dashboard/home/profile', icon: UserRound },
     { name: 'Billing', href: '/dashboard/home/billing', icon: CreditCard },
+    { name: 'History', href: '/dashboard/home/history', icon: BookMarked },
+    { name: 'Chat', href: '/dashboard/home/chat', icon: MessageCircleMore },
 ];

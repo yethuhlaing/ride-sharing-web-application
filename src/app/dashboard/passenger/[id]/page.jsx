@@ -12,44 +12,87 @@ import {
 import { MapPin } from 'lucide-react';
 import { LocationContext } from '@/context/LocationContextProvider';
 import GoogleMapSection from "@/components/specific/GoogleMapSection"
-import { PublishRideButton } from '@/components/specific/SubmitButton';
+import { SubmitButton } from '@/components/specific/SubmitButton';
 import GoogleMapInput from "@/components/specific/GoogleMapInput"
-import DatePicker from "@/components/specific/DatePicker"
 import { Input } from '@/components/ui/input';
-export default function PassengerPage() {
+import { DatePickerWithPresets } from '@/components/specific/DatePicker';
+import toast from 'react-hot-toast';
+import { redirect, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
-    const { sourcePs, setSourcePs, destinationPs, setDestinationPs } = useContext(LocationContext)
+export default function DriverPage() {
+
+    const { id } = useParams()
+    const { source, setSource, destination, setDestination } = useContext(LocationContext)
 
     const [pickupValue, setPickupValue] = useState(null)
     const [dropOffValue, setDropOffValue] = useState(null)
     const [date, setDate] = useState()
+    const [time, setTime] = useState("")
     const passengersRef = useRef(null);
 
-    // const onSubmit = () => {
-    //     e.preventDefault();
-    //     console.log(pickUpValue)
-    //     console.log(dropOffValue)
-    // };
+    const onSubmit = async (e) => {
+        e.preventDefault();
+        const { toast } = useToast()
+        const combinedDateTime = new Date(date);
+        const [hours, minutes] = time?.split(':');
+        combinedDateTime.setHours(parseInt(hours, 10));
+        combinedDateTime.setMinutes(parseInt(minutes, 10));
+
+        const rideData = {
+            driver_id: id,
+            origin: pickupValue?.label,
+            destination: dropOffValue?.label,
+            departure_time: combinedDateTime.toISOString(),
+            available_seats: passengersRef.current.value,
+        };
+        try {
+            const response = await fetch('/api/publish-ride', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(rideData),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                toast({
+                    description: "You have successfully published.",
+                })               
+                resetFormData()
+                const router = useRouter();
+                router.push('/dashboard/home');
+            } else {
+                console.error('Error publishing ride:', data.error);
+                toast.error("Error publishing ride!")
+                // Handle error (e.g., show error message)
+            }
+
+        } catch (error) {
+            console.error('Network error:', error);
+            // Handle network error
+        }
+    };
     const resetFormData = () => {
-        setSourcePs([]);
-        destinationPs([]);
+        setSource([]);
+        destination([]);
         setPickupValue(null);
         setDropOffValue(null);
         setDate(null);
+        setTime("")
         passengersRef.current.value = '';
     }
 
     const getLatAndLng = (place, type) => {
-        if (place == null){
+        if (place == null) {
             console.log("Null")
             if ((type === 'sourcePs')) {
-                setSourcePs([]);
+                setSource([]);
             } else {
-                setDestinationPs([]);
+                setDestination([]);
             }
         }
-        else{
-            console.log("Not Null")
+        else {
             const placeId = place?.value.place_id;
             const service = new google.maps.places.PlacesService(
                 document.createElement('div'),
@@ -60,15 +103,15 @@ export default function PassengerPage() {
                     place.geometry &&
                     place.geometry.location
                 ) {
-                    if ((type === 'sourcePs')) {
-                        setSourcePs({
+                    if ((type === 'source')) {
+                        setSource({
                             lat: place.geometry.location.lat(),
                             lng: place.geometry.location.lng(),
                             name: place.formatted_address,
                             label: place.name,
                         });
                     } else {
-                        setDestinationPs({
+                        setDestination({
                             lat: place.geometry.location.lat(),
                             lng: place.geometry.location.lng(),
                             name: place.formatted_address,
@@ -80,12 +123,12 @@ export default function PassengerPage() {
         }
     };
     const handlePickUpSelect = (place) => {
-        const type = 'sourcePs'
+        const type = 'source'
         getLatAndLng(place, type);
         setPickupValue(place)
     };
     const handleDropOffSelect = (place) => {
-        const type = 'destinationPs'
+        const type = 'destination'
         getLatAndLng(place, type);
         setDropOffValue(place)
 
@@ -105,11 +148,11 @@ export default function PassengerPage() {
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <form className="space-y-2">
+                            <form className="space-y-2" onSubmit={onSubmit}>
                                 <div className="flex items-center">
                                     <Navigation size={20} />
                                     <GoogleMapInput value={pickupValue} handleSelect={handlePickUpSelect} placeholderName={"Pickup Location"} />
-                                
+
                                 </div>
                                 <div className="flex items-center">
                                     <MapPin size={20} />
@@ -121,15 +164,19 @@ export default function PassengerPage() {
                                 </div>
                                 <div className='flex items-center'>
                                     <CalendarIcon size={20} />
-                                    <DatePicker date={date} setDate={setDate} placeholderName={"Departure Time"} />
+                                    <DatePickerWithPresets required date={date} setDate={setDate} placeholderName={"Departure Time"} />
                                 </div>
-                                <PublishRideButton />
+                                <div className='flex items-center'>
+                                    <CalendarIcon size={20} />
+                                    <Input type='time' required value={time} onChange={(e) => setTime(e.target.value)} className='w-full text-sm ml-4' />
+                                </div>
+                                <SubmitButton buttonName="Publish" />
                             </form>
                         </CardContent>
                     </Card>
                 </aside>
                 <main className='w-full shadow-lg'>
-                    <GoogleMapSection source={sourcePs} destination={destinationPs} />
+                    <GoogleMapSection source={source} destination={destination} />
                 </main>
             </div>
         </LoadScript>
