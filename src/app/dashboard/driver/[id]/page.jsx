@@ -16,9 +16,9 @@ import { SubmitButton } from '@/components/specific/SubmitButton';
 import GoogleMapInput from "@/components/specific/GoogleMapInput"
 import { Input } from '@/components/ui/input';
 import { DatePickerWithPresets } from '@/components/specific/DatePicker';
-import toast from 'react-hot-toast';
 import { redirect, useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
 
 export default function DriverPage() {
 
@@ -30,10 +30,12 @@ export default function DriverPage() {
     const [date, setDate] = useState()
     const [time, setTime] = useState("")
     const passengersRef = useRef(null);
+    const { toast } = useToast()
+    const router = useRouter();
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        const { toast } = useToast()
+        
 
         const combinedDateTime = new Date(date);
         const [hours, minutes] = time?.split(':');
@@ -58,15 +60,18 @@ export default function DriverPage() {
             const data = await response.json();
             if (response.ok) {
                 toast({
+                    title: "Publish Booking",
                     description: "You have successfully published.",
                 })
                 resetFormData()
-                const router = useRouter();
                 router.push('/dashboard/home');
             } else {
                 console.error('Error publishing ride:', data.error);
-                toast.error("Error publishing ride!")
-                // Handle error (e.g., show error message)
+                toast({
+                    variant: "destructive",
+                    title: "Publish Booking",
+                    description: "Error publishing ride!",
+                })
             }
             
         } catch (error) {

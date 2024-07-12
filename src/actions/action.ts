@@ -1,6 +1,7 @@
 "use server"
 
 import prisma from "@/libs/db";
+import { BookingType } from "@/libs/type";
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 
 export async function createBooking(ride_id: any, passenger_id: any) {
@@ -21,7 +22,7 @@ export async function createBooking(ride_id: any, passenger_id: any) {
         } else {
             console.error('Error creating booking:', error);
         }
-        throw error; // Optionally rethrow error for further handling
+        return error; // Optionally rethrow error for further handling
     }
 }
 
@@ -44,10 +45,11 @@ export async function updateBooking(booking_id: string, status: string) {
             },
             data: { status: status },
         });
+        
         revalidatePath('/dashboard/home/', 'layout')
     } catch (error) {
         console.error('Error cancelling booking:', error);
-        throw error;
+        return error;
     }
 }
 
@@ -70,7 +72,8 @@ export async function getUserData(user_id: string) {
     return data;
 }
 
-export async function getRideData(ride_id: string) {
+
+export async function getRidewithRideId(ride_id: string) {
     noStore();
     try {
         const ride = await prisma.ride.findUnique({
@@ -80,21 +83,94 @@ export async function getRideData(ride_id: string) {
             include: {
                 driver: true,
                 bookings: {
-                    select: {
-                        booking_id: true,
-                        passenger_id: true,
-                        status: true,
-                        passenger: {
-                            select: {
-                                fullName: true,
-                                profileImage: true
-                            }
-                        }
-                    },
+                    include: {
+                        passenger: true
+                    }
                 }
             },
         });
-        revalidatePath('/dashboard/home/', 'layout')
+        if (!ride) {
+            return null;
+        }
+        console.log(ride)
+        return ride;
+    } catch (error) {
+        console.error('Error fetching rides:', error);
+        return error;
+    }
+}
+
+export async function getBookingwithUserId(user_id: string) {
+    try {
+        const bookings = await prisma.booking.findMany({
+            where: {
+                passenger_id: user_id
+            },
+            include: {
+                ride: {
+                    include: {
+                        driver: true
+                    }
+                },
+                passenger: true
+            },
+        });     
+        if (!bookings) {
+            return null;
+        }   
+        return bookings;
+    } catch (error) {
+        console.error('Error fetching bookings:', error);
+        return error;
+    }
+}
+
+export async function getBookingwithRideId(ride_id: string) {
+    try {
+        const bookings = await prisma.booking.findMany({
+            where: {
+                ride_id: ride_id
+            },
+            include: {
+                ride: true,
+                passenger: true
+            },
+        });
+        if (!bookings) {
+            return null;
+        }
+        console.log(bookings)
+        return bookings;
+    } catch (error) {
+        console.error('Error fetching bookings:', error);
+        return error;
+    }
+}
+
+export async function getRides() {
+    try {
+        const rides = await prisma.ride.findMany({
+            include: {
+                driver: true,
+            },
+        });
+        console.log(rides)
+        return rides;
+    } catch (error) {
+        console.error('Error fetching rides:', error);
+        throw error;
+    }
+}
+
+export async function getRidewithDriverId(driver_id: string) {
+    noStore();
+    try {
+        const ride = await prisma.ride.findMany({
+            where: {
+                driver_id: driver_id
+            },
+
+        });
         console.log(ride)
         return ride;
     } catch (error) {

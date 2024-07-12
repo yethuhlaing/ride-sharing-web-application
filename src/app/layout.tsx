@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/specific/ThemeProvider';
-import { Toaster } from "@/components/ui/toaster"
 import { LocationProvider } from '@/context/LocationContextProvider';
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,6 +22,7 @@ export default async function RootLayout({
     return (
         <html lang="en" className="!scroll-smooth">
             <body className={inter.className}>
+                <Toaster />
                 <LocationProvider>
                     <ThemeProvider
                         attribute="class"
@@ -29,7 +30,6 @@ export default async function RootLayout({
                         enableSystem
                         disableTransitionOnChange
                     >
-                        <Toaster />
                         {children}
                     </ThemeProvider>
                 </LocationProvider>

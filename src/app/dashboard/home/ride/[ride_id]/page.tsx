@@ -7,10 +7,11 @@ import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { createBooking, deleteBooking, getRideData, updateBooking } from '@/actions/action';
+import { createBooking, deleteBooking, getBookingwithRideId, getRidewithRideId, updateBooking } from '@/actions/action';
 import { revalidatePath, unstable_cache } from 'next/cache';
 import { CancelButton, SubmitButton } from '@/components/specific/SubmitButton';
 import NotFound from '../../NotFound';
+import { BookingType, RideDataType } from '@/libs/type';
 
 
 
@@ -22,10 +23,8 @@ export default async function RidePage({ params } : any) {
     const user = await getUser();
     const passenger_id = user?.id as string
 
-    const ride = await getRideData(ride_id)
-    const pendingBookings = ride?.bookings.filter(booking => booking.status === "Pending") || [];
-
-
+    const ride = await getRidewithRideId(ride_id) as RideDataType
+    const bookings = await getBookingwithRideId(ride_id) as BookingType[]
     async function handleSubmit() {
         "use server"
         
@@ -49,6 +48,18 @@ export default async function RidePage({ params } : any) {
 
         try {
             await updateBooking(booking_id, "Confirmed")
+            revalidatePath(`/dashboard/home/ride/${ride_id}`, "page")
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+    async function handleDecline(booking_id: string) {
+        "use server"
+
+        try {
+            await updateBooking(booking_id, "Declined")
+            revalidatePath(`/dashboard/home/ride/${ride_id}`, "page")
         } catch (error) {
             console.log(error)
         }
@@ -64,6 +75,7 @@ export default async function RidePage({ params } : any) {
             console.log(error)
         }
     }
+    
     return (
         <>
             { ride ? (
@@ -120,7 +132,7 @@ export default async function RidePage({ params } : any) {
                     </CardContent>
                     <CardContent>
                         {
-                            ride.driver_id !== user?.id ? (
+                            ride?.driver.user_id !== user?.id ? (
                                 <>
                                     {ride.bookings.length == 0 && (
                                         <form action={handleSubmit}>
@@ -139,13 +151,22 @@ export default async function RidePage({ params } : any) {
                             ) : (
                                 <div className='flex flex-wrap flex-row space-x-4'>
                                     {
-                                        pendingBookings.length > 0 ? (
-                                            pendingBookings?.map(booking => (
+                                        bookings.length > 0 ? (
+                                                bookings?.filter((booking: BookingType) => booking.status !== 'Declined').map((booking: BookingType) => (
                                                 <Card key={booking.booking_id}>
                                                     <CardHeader>
-                                                        <form action={handleAccept.bind(null, booking.booking_id)}>
-                                                            <SubmitButton buttonName='Accept Ride' />
-                                                        </form>
+                                                        {
+                                                            booking.status === "Pending" && (
+                                                                <div className='flex flex-row space-x-2'>
+                                                                    <form action={handleAccept.bind(null, booking.booking_id)}>
+                                                                        <SubmitButton buttonName='Accept Ride' />
+                                                                    </form>
+                                                                    <form action={handleDecline.bind(null, booking.booking_id)}>
+                                                                        <CancelButton buttonName='Decline Ride' />
+                                                                    </form>
+                                                                </div> 
+                                                            )
+                                                        }
                                                         <div className="flex flex-row justify-between py-4">
                                                             <div className="flex items-center space-x-4">
                                                                 <div>

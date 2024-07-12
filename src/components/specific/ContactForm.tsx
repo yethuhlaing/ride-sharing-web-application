@@ -1,10 +1,9 @@
 import React from 'react'
 import { sendEmail } from "@/actions/sendEmail";
-import toast from "react-hot-toast";
 import { SubmitButton } from "@/components/specific/SubmitButton";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from '@/components/ui/use-toast';
 
 function ContactForm() {
     const { toast } = useToast()
@@ -19,9 +18,10 @@ function ContactForm() {
                 const { data, error } = await sendEmail(formData);
 
                 if (error) {
-                toast({
-                    description: error,
-                })
+                    toast({
+                        title: "Error",
+                        description: "Error in sending Email",
+                    })
                     return;
                 }
 

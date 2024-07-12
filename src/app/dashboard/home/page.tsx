@@ -6,21 +6,9 @@ import { formatDate, formatTime } from '@/libs/utils';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import { getRides } from "@/actions/action";
 
-async function getRides() {
-    try {
-        const rides = await prisma.ride.findMany({
-            include: {
-                driver: true, 
-            },
-        });
-        console.log(rides)
-        return rides;
-    } catch (error) {
-        console.error('Error fetching rides:', error);
-        throw error;
-    }
-}
+
 export default async function DashboardPage(){
     const rides = await getRides()
     return(
