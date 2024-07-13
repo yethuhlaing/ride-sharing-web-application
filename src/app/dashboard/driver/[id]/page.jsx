@@ -63,6 +63,7 @@ export default function DriverPage() {
                     title: "Publish Booking",
                     description: "You have successfully published.",
                 })
+                console.log("OK")
                 resetFormData()
                 router.push('/dashboard/home');
             } else {

@@ -54,6 +54,16 @@ export default async function RidePage({ params } : any) {
         }
 
     }
+    async function handleRequestAgain(booking_id: string) {
+        "use server"
+
+        try {
+            await updateBooking(booking_id, "Pending")
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
     async function handleDecline(booking_id: string) {
         "use server"
 
@@ -63,7 +73,6 @@ export default async function RidePage({ params } : any) {
         } catch (error) {
             console.log(error)
         }
-
     }
     async function handleDelete() {
         "use server"
@@ -144,8 +153,17 @@ export default async function RidePage({ params } : any) {
                                             <CancelButton buttonName='Cancel Request' />
                                         </form>
                                     )}
+                                    {ride.bookings[0]?.status === "Declined" && (
+                                        <form action={handleRequestAgain.bind('null', ride.bookings[0].booking_id)}>
+                                            <SubmitButton buttonName='Request Again' />
+                                        </form>
+                                    )}
                                     {ride.bookings[0]?.status === "Confirmed" && (
-                                        <div>YOu can start chatting</div>
+                                        <Button className='bg-green-400 hover:bg-green-500 text-xs mr-2 mt-2 w-full md:w-20 h-fit'>
+                                            <Link href={'/dashboard/home/chat'}>
+                                                Chat
+                                            </Link>
+                                        </Button>
                                     )}
                                 </>
                             ) : (
@@ -180,12 +198,21 @@ export default async function RidePage({ params } : any) {
 
                                                                 </div>
                                                                 <div className="flex flex-col space-y-2 text-base lg:text-xl font-bold">
-                                                                    <span className='font-normal'>{booking.passenger.fullName}</span>
-                                                                    <Button className='btn-primary text-xs mr-2 mt-2 w-fit h-fit' >
+                                                                    <span className='font-normal text-sm'>{booking.passenger.fullName}</span>
+                                                                    <Button className='btn-primary text-xs mr-2 mt-2 w-full h-fit' >
                                                                         <Link href={`/dashboard/home/profile/${booking.passenger_id}`}>
                                                                             Check Profile
                                                                         </Link>
-                                                                    </Button>
+                                                                    </Button>                                                            
+                                                                    {
+                                                                        booking.status === "Confirmed" && (
+                                                                            <Button className='bg-green-400 hover:bg-green-500 text-xs mr-2 mt-2 w-full h-fit'>
+                                                                                <Link href={'/dashboard/home/chat'}>
+                                                                                    Chat
+                                                                                </Link>
+                                                                            </Button>
+                                                                        )
+                                                                    }                                                                    
                                                                 </div>
                                                             </div>
 
