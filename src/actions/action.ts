@@ -14,7 +14,7 @@ export async function createBooking(ride_id: any, passenger_id: any) {
                 status: "Pending",
             },
         });
-
+        revalidatePath('/dashboard/home/', 'layout')
         console.log(newBooking);
     } catch (error: any) {
         if (error.code === 'P2002' && error.meta?.target?.includes('Booking.ride_id_passenger_id_unique')) {
@@ -32,6 +32,8 @@ export async function deleteBooking(booking_id: string) {
         await prisma.booking.delete({
             where: { booking_id: booking_id },
         });
+        revalidatePath('/dashboard/home/', 'layout')
+
     } catch (error: any) {
         console.error('Error creating booking:', error);
     }

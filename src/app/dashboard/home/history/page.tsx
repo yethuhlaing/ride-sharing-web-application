@@ -110,24 +110,27 @@ export default  async function History() {
 
 export async function PassengerProfile({ ride_id } : { ride_id : string}) {
     let rides = await getRidewithRideId(ride_id) as RideType
+    let ConfirmedRides = rides.bookings?.filter((booking: BookingType) => booking.status == 'Confirmed')
 
     return (
-        <div className='flex flex-row space-x-2 flex-wrap'>
-            {
-                rides.bookings.map( (booking : BookingType) => (
-                    <img
-                        key={booking.booking_id}
-                        src={booking.passenger.profileImage as string}
-                        alt="User Profile Image"
-                        width={30}  // Set the appropriate width
-                        height={30} // Set the appropriate height
-                        className="rounded-full aspect-square object-cover"
-                    /> 
-                ))
-            }
-        
-        </div>
-        
-
-    )
+        <>
+            <div className="flex flex-row space-x-2 flex-wrap">
+                {ConfirmedRides && ConfirmedRides.length > 0 ? (
+                    ConfirmedRides.map((booking: BookingType) => (
+                        <img
+                            key={booking.booking_id}
+                            src={booking.passenger.profileImage as string}
+                            alt="User Profile Image"
+                            width={30} // Set the appropriate width
+                            height={30} // Set the appropriate height
+                            className="rounded-full aspect-square object-cover"
+                        />
+                    ))
+                ) : (
+                    <div>There is no confirmed passenger yet.</div>
+                )}
+            </div>
+        </>
+    );
+    
 }
