@@ -6,7 +6,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/components/ui/use-toast';
 
 function ContactForm() {
-    const { toast } = useToast()
 
     return(
         <form
@@ -18,10 +17,7 @@ function ContactForm() {
                 const { data, error } = await sendEmail(formData);
 
                 if (error) {
-                    toast({
-                        title: "Error",
-                        description: "Error in sending Email",
-                    })
+                    console.log(error)
                     return;
                 }
 
