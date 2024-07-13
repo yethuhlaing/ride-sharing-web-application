@@ -65,16 +65,6 @@ export default async function RidePage({ params } : any) {
         }
 
     }
-    async function handleRequestAgain(booking_id: string) {
-        "use server"
-
-        try {
-            await updateBooking(booking_id, "Pending")
-        } catch (error) {
-            console.log(error)
-        }
-
-    }
     async function handleDelete() {
         "use server"
 
@@ -155,16 +145,7 @@ export default async function RidePage({ params } : any) {
                                         </form>
                                     )}
                                     {ride.bookings[0]?.status === "Confirmed" && (
-                                        <Button className='btn-primary text-xs mr-2 mt-2 w-fit h-fit' >
-                                            <Link href={`/dashboard/home/chat`}>
-                                                Start Chat
-                                            </Link>
-                                        </Button>
-                                    )}
-                                    {ride.bookings[0]?.status === "Declined" && (
-                                        <form action={handleRequestAgain.bind(null, ride.bookings[0].booking_id)}>
-                                            <SubmitButton buttonName='Request Again' />
-                                        </form>                                    
+                                        <div>YOu can start chatting</div>
                                     )}
                                 </>
                             ) : (
@@ -188,7 +169,6 @@ export default async function RidePage({ params } : any) {
                                                         }
                                                         <div className="flex flex-row justify-between py-4">
                                                             <div className="flex items-center space-x-4">
-                                                                
                                                                 <div>
                                                                     <Image
                                                                         src={booking.passenger.profileImage as string | StaticImport}
@@ -197,24 +177,15 @@ export default async function RidePage({ params } : any) {
                                                                         height={80} // Set the appropriate height
                                                                         className="rounded-full aspect-square object-cover"
                                                                     />
+
                                                                 </div>
                                                                 <div className="flex flex-col space-y-2 text-base lg:text-xl font-bold">
-                                                                    
                                                                     <span className='font-normal'>{booking.passenger.fullName}</span>
                                                                     <Button className='btn-primary text-xs mr-2 mt-2 w-fit h-fit' >
                                                                         <Link href={`/dashboard/home/profile/${booking.passenger_id}`}>
                                                                             Check Profile
                                                                         </Link>
                                                                     </Button>
-                                                                    {
-                                                                        booking.status === "Confirmed" && (
-                                                                            <Button className='bg-green-500 text-xs mr-2 mt-2 w-fit h-fit' variant={"ghost"} >
-                                                                                <Link href={`/dashboard/home/chat`}>
-                                                                                    Start Chat
-                                                                                </Link>
-                                                                            </Button>
-                                                                        )
-                                                                    }
                                                                 </div>
                                                             </div>
 
