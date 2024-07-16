@@ -1,13 +1,13 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import prisma from '@/libs/db';
-import { formatDate, formatTime } from '@/libs/utils';
+import { formatDate, formatTime, getChatRoomName } from '@/libs/utils';
 import Image from 'next/image';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { createBooking, deleteBooking, getBookingwithRideId, getRidewithRideId, updateBooking } from '@/actions/action';
+import { createBooking, deleteBooking, getBookingwithRideId, getRidewithRideId, getUserData, updateBooking } from '@/actions/action';
 import { revalidatePath, unstable_cache } from 'next/cache';
 import { CancelButton, SubmitButton } from '@/components/specific/SubmitButton';
 import NotFound from '../../NotFound';
@@ -43,11 +43,22 @@ export default async function RidePage({ params } : any) {
 
         }
     }
-    async function handleAccept(booking_id: string) {
+
+    async function handleAccept(booking_id: string, passenger_id: string, driver_id: string, destination: string) {
         "use server"
 
         try {
             await updateBooking(booking_id, "Confirmed")
+            const driver = await getUserData(driver_id)
+            const passenger = await getUserData(passenger_id)
+
+            await prisma.chatRoom.create({
+                data: {
+                    passenger_avatar: passenger?.profileImage as string,
+                    driver_avatar: driver?.profileImage as string,
+                    name: getChatRoomName(destination)
+                }
+            });
             revalidatePath(`/dashboard/home/ride/${ride_id}`, "page")
         } catch (error) {
             console.log(error)
@@ -176,7 +187,7 @@ export default async function RidePage({ params } : any) {
                                                         {
                                                             booking.status === "Pending" && (
                                                                 <div className='flex flex-row space-x-2'>
-                                                                    <form action={handleAccept.bind(null, booking.booking_id)}>
+                                                                    <form action={handleAccept.bind(null, booking.booking_id, booking.passenger_id, booking.ride.driver_id, booking.ride.destination)}>
                                                                         <SubmitButton buttonName='Accept Ride' />
                                                                     </form>
                                                                     <form action={handleDecline.bind(null, booking.booking_id)}>

@@ -50,7 +50,7 @@ function ChatInput() {
         <Card className='w-full p-2 rounded-lg relative'>
             <div className='flex gap-2 items-end w-full'>
             <Form { ...form}>
-                <form onSubmit={form.handleSubmit(handleSubmit)} className='flex gap-2 items-end w-full'>
+                <form onSubmit={form.handleSubmit(handleSubmit)} className='flex gap-2 items-center w-full'>
                     <FormField control={form.control} name='content' render={({field})=> {                        
                         return (
                             <FormItem className="w-full h-full">
@@ -61,8 +61,8 @@ function ChatInput() {
                             </FormItem>
                         ) 
                     }} />
-                    <Button disabled={isPending} size="icon">
-                        <SendHorizonal />
+                    <Button disabled={isPending} size={"sm"} >
+                        <SendHorizonal size={14} />
                     </Button>
                 </form>
             </Form>

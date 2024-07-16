@@ -11,8 +11,11 @@ const nextConfig = {
                 hostname: 'avatar.iran.liara.run',
                 pathname: '/public/6',
             },
+            {
+                protocol: 'https',
+                hostname: 'gravatar.com',
+            },
         ],
-        domains: ['gravatar.com'], 
     },
 };
 

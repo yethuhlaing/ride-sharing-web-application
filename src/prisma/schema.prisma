@@ -23,6 +23,7 @@ model User {
   bookings          Booking[]
   rides             Ride[]          @relation("DriverRides")
   reviews           Review[]
+  messages          Message[]       @relation("UserMessages")
 }
 
 model Vehicle {
@@ -84,3 +85,26 @@ model Review {
   passenger     User     @relation(fields: [passenger_id], references: [user_id])
 }
 
+
+
+model ChatRoom {
+  chat_room_id      String    @id @default(uuid())
+  name              String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  messages          Message[] @relation("ChatRoomMessages")
+  passenger_avatar  String
+  driver_avatar     String
+}
+
+model Message {
+  message_id    String   @id @default(uuid())
+  content       String
+  is_edit       Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
+  sender_id     String
+  chat_room_id  String
+  user          User     @relation("UserMessages", fields: [sender_id], references: [user_id])
+  chatRoom      ChatRoom @relation("ChatRoomMessages", fields: [chat_room_id], references: [chat_room_id])
+}
