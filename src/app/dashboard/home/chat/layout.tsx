@@ -3,17 +3,25 @@ import React from 'react'
 import prisma from '@/libs/db';
 import ChatRoom from './ChatRooms';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { ChatRoomType } from '@/libs/type';
 
 
 export default async function ChatLayout({ children }: React.PropsWithChildren) {
+
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
     const chatRooms = await prisma.chatRoom.findMany({
         include: {
             passenger: true,
             driver: true
+        },
+        where: {
+            OR: [
+                { driver_id: user?.id },
+                { passenger_id: user?.id }
+            ]
         }
     });
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
 
     return (
         <div className='w-full h-full p-2 md:flex md:flex-row gap-2'>
@@ -22,7 +30,7 @@ export default async function ChatLayout({ children }: React.PropsWithChildren) 
                     <CardTitle>Conversation</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <ChatRoom initialChatRooms={chatRooms} user_id={user?.id as string} />
+                    <ChatRoom ChatRooms={chatRooms} />
                 </CardContent>
             </Card>
             {children}

@@ -21,7 +21,13 @@ export const formatDate = (dateString: string ) => {
         console.log(error)
     }
 };
-
+export function getRandomAvatarUrl() {
+    const numbers = [3, 7, 43, 8, 49, 18, 22, 59, 85, 92, 71, 63, 59, 93, 94, 79, 67];
+    const randomIndex = Math.floor(Math.random() * numbers.length);
+    const randomNumber = numbers[randomIndex];
+    const url = `https://avatar.iran.liara.run/public/${randomNumber}`;
+    return url;
+}
 export const formatTime = (dateString: string  ) => {
     try {
         const date = new Date(dateString);

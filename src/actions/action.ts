@@ -1,10 +1,10 @@
 "use server"
 
 import prisma from "@/libs/db";
-import { BookingType } from "@/libs/type";
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 
 export async function createBooking(ride_id: any, passenger_id: any) {
+    "use server"
 
     try {
         const newBooking = await prisma.booking.create({
@@ -14,15 +14,14 @@ export async function createBooking(ride_id: any, passenger_id: any) {
                 status: "Pending",
             },
         });
-        revalidatePath('/dashboard/home/', 'layout')
         console.log(newBooking);
+        revalidatePath('/dashboard/home/', 'layout')
     } catch (error: any) {
         if (error.code === 'P2002' && error.meta?.target?.includes('Booking.ride_id_passenger_id_unique')) {
             console.log("Duplicate booking error");
         } else {
-            console.error('Error creating booking:', error);
+            console.log('Error creating booking:', error);
         }
-        return error; // Optionally rethrow error for further handling
     }
 }
 
@@ -70,7 +69,7 @@ export async function getUserData(user_id: string) {
             profileImage: true,
         },
     });
-    console.log(data)
+
     return data;
 }
 
@@ -127,6 +126,30 @@ export async function getBookingwithUserId(user_id: string) {
     }
 }
 
+export async function getBookingwithRideIdAndPassengerId(ride_id: string, passenger_id: string) {
+    try {
+        const bookings = await prisma.booking.findMany({
+            include: {
+                ride: true,
+                passenger: true
+            },
+            where: {
+                ride_id: ride_id,
+                passenger_id: passenger_id
+            },
+
+        });
+        if (!bookings) {
+            return null;
+        }
+        console.log(bookings)
+        return bookings;
+    } catch (error) {
+        console.error('Error fetching bookings:', error);
+        return error;
+    }
+}
+
 export async function getBookingwithRideId(ride_id: string) {
     try {
         const bookings = await prisma.booking.findMany({
@@ -141,7 +164,6 @@ export async function getBookingwithRideId(ride_id: string) {
         if (!bookings) {
             return null;
         }
-        console.log(bookings)
         return bookings;
     } catch (error) {
         console.error('Error fetching bookings:', error);

@@ -14,13 +14,13 @@ export function SubmitButton({ buttonName }: Prop) {
     return (
         <>
             {pending ? (
-                <Button disabled className="w-fit">
+                <Button disabled className="btn-primary text-xs mr-2 mt-2 w-full h-fit">
                     <Loader2 className="mr-2 w-4 h-4 animate-spin" /> Please
                     Wait
                 </Button>
             ) : (
                 <div>
-                    <Button className="w-fit" type="submit">
+                        <Button className="btn-primary text-xs mr-2 mt-2 w-full h-fit" type="submit">
                         {buttonName}
                     </Button>
                 </div>
@@ -35,13 +35,13 @@ export function CancelButton({ buttonName }: Prop) {
     return (
         <>
             {pending ? (
-                <Button disabled className="w-fit" variant="destructive">
+                <Button disabled className="btn-primary text-xs mr-2 mt-2 w-full h-fit" variant="destructive">
                     <Loader2 className="mr-2 w-4 h-4 animate-spin" /> Please
                     Wait
                 </Button>
             ) : (
                 <div>
-                    <Button className="w-fit" type="submit" variant="destructive">
+                    <Button className="btn-primary text-xs mr-2 mt-2 w-full h-fit" type="submit" variant="destructive">
                         {buttonName}
                     </Button>
                 </div>

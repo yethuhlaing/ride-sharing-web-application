@@ -7,6 +7,7 @@ import { unstable_noStore as noStore } from 'next/cache';
 import { DashboardNavbar } from '@/components/specific/DashboardNavbar';
 import { DashboardSidebar } from '@/components/specific/DashboardSidebar';
 import Loading from "./loading";
+import { getRandomAvatarUrl } from '@/libs/utils';
 interface UserData {
     email: string;
     id: string;
@@ -22,7 +23,6 @@ async function getData({
     profileImage,
 }: UserData) {
     noStore();
-
     const user = await prisma.user.findUnique({
         where: {
             user_id: id,
@@ -34,12 +34,13 @@ async function getData({
     });
     if (!user) {
         const fullName = `${firstName ?? ''} ${lastName ?? ''}`;
+        const avatarUrl = getRandomAvatarUrl();
         await prisma.user.create({
             data: {
                 email: email,
                 user_id: id,
                 fullName: fullName,
-                profileImage: profileImage,
+                profileImage: avatarUrl,
             },
             select: {
                 user_id: true,

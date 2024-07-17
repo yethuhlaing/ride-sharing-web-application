@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { getRides } from "@/actions/action";
+import { RideType } from "@/libs/type";
 
 
 export default async function DashboardPage(){
@@ -15,7 +16,6 @@ export default async function DashboardPage(){
         <div className="space-y-2">
             {rides.map((ride, index) => (
                 <Card key={index} className="min-w-sm mx-auto p-4 shadow-sm border border-gray-200 flex items-center justify-between">
-
                         {/* <CardHeader>
                             <CardTitle className="text-lg font-semibold text-gray-900">Ride Details</CardTitle>
                             <CardDescription className="text-sm text-gray-600">
@@ -51,6 +51,7 @@ export default async function DashboardPage(){
                             width={70}  // Set the appropriate width
                             height={70} // Set the appropriate height
                             className="rounded-full aspect-square object-cover"
+                            priority={true}
                         />
                         <Button className="btn btn-primary text-xs w-auto h-auto">
                             <Link href={`/dashboard/home/ride/${ride.ride_id}`}>

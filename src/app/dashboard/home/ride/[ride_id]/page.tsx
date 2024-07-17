@@ -7,7 +7,7 @@ import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { createBooking, deleteBooking, getBookingwithRideId, getRidewithRideId, getUserData, updateBooking } from '@/actions/action';
+import { createBooking, deleteBooking, getBookingwithRideId, getBookingwithRideIdAndPassengerId, getRidewithRideId, getUserData, updateBooking } from '@/actions/action';
 import { revalidatePath, unstable_cache } from 'next/cache';
 import { CancelButton, SubmitButton } from '@/components/specific/SubmitButton';
 import NotFound from '../../NotFound';
@@ -18,27 +18,26 @@ import { BookingType, RideDataType } from '@/libs/type';
 export default async function RidePage({ params } : any) {
 
     const { ride_id } = params;
-
     const { getUser } = getKindeServerSession();
     const user = await getUser();
     const passenger_id = user?.id as string
 
     const ride = await getRidewithRideId(ride_id) as RideDataType
     const bookings = await getBookingwithRideId(ride_id) as BookingType[]
+    const bookingsWithPassengerId = await getBookingwithRideIdAndPassengerId(ride_id, passenger_id ) as BookingType[]
+    
     async function handleSubmit() {
         "use server"
-        
+
         try {
             await createBooking(ride_id, passenger_id);
             revalidatePath(`/dashboard/home/`, "layout")
 
         } catch (error: any) {
             if (error.stack?.includes("Unique constraint failed on the fields")) {
-                console.error('Error: Passenger already booked this ride');
-                
+                console.log('Error: Passenger already booked this ride');
             } else {
-                console.error('Error creating booking:', error);
-
+                console.log('Error creating booking:', error);
             }
 
         }
@@ -153,50 +152,44 @@ export default async function RidePage({ params } : any) {
                     </CardContent>
                     <CardContent>
                         {
-                            ride?.driver.user_id !== user?.id ? (
+                            ride?.driver.user_id !== user?.id ? (                                                                
                                 <>
-                                    {ride.bookings.length == 0 && ride.bookings[0].passenger_id == user?.id && (
+                                    {bookingsWithPassengerId.length === 0 ? (
                                         <form action={handleSubmit}>
                                             <SubmitButton buttonName='Request Ride' />
                                         </form>
+                                    ) : (
+                                        <>
+                                            {bookingsWithPassengerId[0]?.status === "Pending" && (
+                                                <form action={handleDelete}>
+                                                    <CancelButton buttonName='Cancel Request' />
+                                                </form>
+                                            )}
+                                            {bookingsWithPassengerId[0]?.status === "Declined" && (
+                                                <form action={handleRequestAgain.bind(null, ride.bookings[0].booking_id)}>
+                                                    <SubmitButton buttonName='Request Again' />
+                                                </form>
+                                            )}
+                                            {bookingsWithPassengerId[0]?.status === "Confirmed" && (
+                                                <Button className='bg-green-400 hover:bg-green-500 text-xs mr-2 mt-2 w-full md:w-20 h-fit'>
+                                                    <Link href='/dashboard/home/chat'>
+                                                        Chat
+                                                    </Link>
+                                                </Button>
+                                            )}
+                                        </>
                                     )}
-                                    {ride.bookings[0]?.status === "Pending" && ride.bookings[0].passenger_id == user?.id && (
-                                        <form action={handleDelete}>
-                                            <CancelButton buttonName='Cancel Request' />
-                                        </form>
-                                    )}
-                                    {ride.bookings[0]?.status === "Declined" && ride.bookings[0].passenger_id == user?.id && (
-                                        <form action={handleRequestAgain.bind('null', ride.bookings[0].booking_id)}>
-                                            <SubmitButton buttonName='Request Again' />
-                                        </form>
-                                    )}
-                                    {ride.bookings[0]?.status === "Confirmed" && ride.bookings[0].passenger_id == user?.id && (
-                                        <Button className='bg-green-400 hover:bg-green-500 text-xs mr-2 mt-2 w-full md:w-20 h-fit'>
-                                            <Link href={'/dashboard/home/chat'}>
-                                                Chat
-                                            </Link>
-                                        </Button>
-                                    )}
+                                    
                                 </>
+                                    
+                                
                             ) : (
-                                <div className='flex flex-wrap flex-row space-x-4'>
+                                <div className='flex flex-wrap flex-row space-x-0 space-y-2 lg:space-x-4 lg:space-y-0'>
                                     {
                                         bookings.length > 0 ? (
                                                 bookings?.filter((booking: BookingType) => booking.status !== 'Declined').map((booking: BookingType) => (
                                                 <Card key={booking.booking_id}>
                                                     <CardHeader>
-                                                        {
-                                                            booking.status === "Pending" && (
-                                                                <div className='flex flex-row space-x-2'>
-                                                                    <form action={handleAccept.bind(null, booking.booking_id, booking.passenger_id, booking.ride.driver_id)}>
-                                                                        <SubmitButton buttonName='Accept Ride' />
-                                                                    </form>
-                                                                    <form action={handleDecline.bind(null, booking.booking_id)}>
-                                                                        <CancelButton buttonName='Decline Ride' />
-                                                                    </form>
-                                                                </div> 
-                                                            )
-                                                        }
                                                         <div className="flex flex-row justify-between py-4">
                                                             <div className="flex items-center space-x-4">
                                                                 <div>
@@ -229,6 +222,18 @@ export default async function RidePage({ params } : any) {
                                                             </div>
 
                                                         </div>
+                                                        {
+                                                            booking.status === "Pending" && (
+                                                                <div className='flex flex-row space-x-2'>
+                                                                    <form action={handleAccept.bind(null, booking.booking_id, booking.passenger_id, booking.ride.driver_id)}>
+                                                                        <SubmitButton buttonName='Accept Ride' />
+                                                                    </form>
+                                                                    <form action={handleDecline.bind(null, booking.booking_id)}>
+                                                                        <CancelButton buttonName='Decline Ride' />
+                                                                    </form>
+                                                                </div>
+                                                            )
+                                                        }
                                                     </CardHeader>
                                                 </Card>
                                             ))
