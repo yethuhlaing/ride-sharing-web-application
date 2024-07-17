@@ -24,6 +24,8 @@ model User {
   rides             Ride[]          @relation("DriverRides")
   reviews           Review[]
   messages          Message[]       @relation("UserMessages")
+  driverChatRooms   ChatRoom[]      @relation("DriverChatRooms")
+  passengerChatRooms ChatRoom[]     @relation("PassengerChatRooms")
 }
 
 model Vehicle {
@@ -93,8 +95,10 @@ model ChatRoom {
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   messages          Message[] @relation("ChatRoomMessages")
-  passenger_avatar  String
-  driver_avatar     String
+  driver_id         String
+  passenger_id      String
+  driver            User      @relation("DriverChatRooms", fields: [driver_id], references: [user_id])
+  passenger         User      @relation("PassengerChatRooms", fields: [passenger_id], references: [user_id])
 }
 
 model Message {

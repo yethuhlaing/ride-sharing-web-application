@@ -31,8 +31,8 @@ export const formatTime = (dateString: string  ) => {
         console.log(error)
     }
 };
-export const getChatRoomName = (str: string) => {
-    return str.split(',')[0];
+export const getFirstName = (str: string) => {
+    return str.split(' ')[0];
 };
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));

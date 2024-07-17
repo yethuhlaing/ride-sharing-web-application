@@ -16,13 +16,13 @@ export interface SociaNetworkslProps {
 export type UserType = {
     user_id: string;
     email: string;
-    fullName?: string;
-    phone?: string;
-    userBio?: string;
-    profileImage?: string;
+    fullName?: string | null;
+    phone?: string | null;
+    userBio?: string | null;
+    profileImage?: string | null;
     createdAt: Date;
     updatedAt: Date;
-    stripeCustomerId?: string;
+    stripeCustomerId?: string | null;
 }
 export type BookingType = {
     booking_id: string;
@@ -100,3 +100,27 @@ export type RideDataType = {
         }
     }[];
 } & RideType
+
+
+export interface ChatRoomType {
+    chat_room_id: string;
+    name: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+    driver_id: string;
+    passenger_id: string;
+    driver: UserType;
+    passenger: UserType
+}
+
+
+export interface MessageType {
+    message_id: string;
+    content: string;
+    createdAt: Date;
+    updatedAt: Date;
+    user_id: string;
+    chat_room_id: string;
+    user: UserType;
+    chatRoom: ChatRoomType;
+}

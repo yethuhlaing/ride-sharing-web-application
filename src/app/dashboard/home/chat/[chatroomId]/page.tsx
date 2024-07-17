@@ -18,7 +18,7 @@ export default async function ChatPage({ params } : any) {
     console.log(chatroom)
     return (
         <Card className='hidden lg:flex lg:flex-col h-full w-full p-2 items-center justify-between bg-secondary text-secondary-foreground '>
-            <ChatHeader user={chatroom.}/>
+            {/* <ChatHeader user={chatroom.}/> */}
             <div>ChatBody</div>
             <ChatInput />
         </Card>

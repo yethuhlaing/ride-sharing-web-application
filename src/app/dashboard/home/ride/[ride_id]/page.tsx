@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import prisma from '@/libs/db';
-import { formatDate, formatTime, getChatRoomName } from '@/libs/utils';
+import { formatDate, formatTime, getFirstName } from '@/libs/utils';
 import Image from 'next/image';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Link from 'next/link';
@@ -44,20 +44,21 @@ export default async function RidePage({ params } : any) {
         }
     }
 
-    async function handleAccept(booking_id: string, passenger_id: string, driver_id: string, destination: string) {
+    async function handleAccept(booking_id: string, passenger_id: string, driver_id: string) {
         "use server"
 
         try {
             await updateBooking(booking_id, "Confirmed")
             const driver = await getUserData(driver_id)
             const passenger = await getUserData(passenger_id)
-
+            const chatRoomname = `${getFirstName(driver?.fullName as string)} • ${getFirstName(passenger?.fullName as string) }`
             await prisma.chatRoom.create({
                 data: {
-                    passenger_avatar: passenger?.profileImage as string,
-                    driver_avatar: driver?.profileImage as string,
-                    name: getChatRoomName(destination)
-                }
+                    name: chatRoomname,
+                    driver_id: driver_id,
+                    passenger_id: passenger_id,
+                },
+
             });
             revalidatePath(`/dashboard/home/ride/${ride_id}`, "page")
         } catch (error) {
@@ -154,22 +155,22 @@ export default async function RidePage({ params } : any) {
                         {
                             ride?.driver.user_id !== user?.id ? (
                                 <>
-                                    {ride.bookings.length == 0 && (
+                                    {ride.bookings.length == 0 && ride.bookings[0].passenger_id == user?.id && (
                                         <form action={handleSubmit}>
                                             <SubmitButton buttonName='Request Ride' />
                                         </form>
                                     )}
-                                    {ride.bookings[0]?.status === "Pending" && (
+                                    {ride.bookings[0]?.status === "Pending" && ride.bookings[0].passenger_id == user?.id && (
                                         <form action={handleDelete}>
                                             <CancelButton buttonName='Cancel Request' />
                                         </form>
                                     )}
-                                    {ride.bookings[0]?.status === "Declined" && (
+                                    {ride.bookings[0]?.status === "Declined" && ride.bookings[0].passenger_id == user?.id && (
                                         <form action={handleRequestAgain.bind('null', ride.bookings[0].booking_id)}>
                                             <SubmitButton buttonName='Request Again' />
                                         </form>
                                     )}
-                                    {ride.bookings[0]?.status === "Confirmed" && (
+                                    {ride.bookings[0]?.status === "Confirmed" && ride.bookings[0].passenger_id == user?.id && (
                                         <Button className='bg-green-400 hover:bg-green-500 text-xs mr-2 mt-2 w-full md:w-20 h-fit'>
                                             <Link href={'/dashboard/home/chat'}>
                                                 Chat
@@ -187,7 +188,7 @@ export default async function RidePage({ params } : any) {
                                                         {
                                                             booking.status === "Pending" && (
                                                                 <div className='flex flex-row space-x-2'>
-                                                                    <form action={handleAccept.bind(null, booking.booking_id, booking.passenger_id, booking.ride.driver_id, booking.ride.destination)}>
+                                                                    <form action={handleAccept.bind(null, booking.booking_id, booking.passenger_id, booking.ride.driver_id)}>
                                                                         <SubmitButton buttonName='Accept Ride' />
                                                                     </form>
                                                                     <form action={handleDecline.bind(null, booking.booking_id)}>
