@@ -149,6 +149,33 @@ export async function getBookingwithRideIdAndPassengerId(ride_id: string, passen
         return error;
     }
 }
+export async function getChatRoomWithUserId(user_id: string) {
+    const chatRooms = await prisma.chatRoom.findMany({
+        include: {
+            passenger: true,
+            driver: true
+        },
+        where: {
+            OR: [
+                { driver_id: user_id },
+                { passenger_id: user_id }
+            ]
+        }
+    });
+    return chatRooms
+}
+export async function getChatRoomWithId(chatRoom_Id: string) {
+    const chatRooms = await prisma.chatRoom.findUnique({
+        where: {
+            chat_room_id: chatRoom_Id
+        },
+        include: {
+            passenger: true,
+            driver: true
+        },
+    })
+    return chatRooms
+}
 
 export async function getBookingwithRideId(ride_id: string) {
     try {
@@ -171,6 +198,22 @@ export async function getBookingwithRideId(ride_id: string) {
     }
 }
 
+export async function createMessage(content: string, senderId: string, chatRoomId: string ) {
+    try {
+        const newMessage = await prisma.message.create({
+            data: {
+                content,
+                sender_id: senderId,
+                chat_room_id: chatRoomId,
+            },
+        });
+        console.log('Message created:', newMessage);
+        return newMessage;
+    } catch (error) {
+        console.error('Error creating message:', error);
+        throw error;
+    }
+}
 export async function getRides() {
     try {
         const rides = await prisma.ride.findMany({
@@ -202,3 +245,4 @@ export async function getRidewithDriverId(driver_id: string) {
         throw error;
     }
 }
+

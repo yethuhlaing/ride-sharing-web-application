@@ -10,11 +10,12 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { Button } from '@/components/ui/button'
 import { SendHorizonal } from 'lucide-react'
 import { SubmitButton } from '@/components/specific/SubmitButton'
+import { createMessage } from '@/actions/action';
 
 const chatMessageSchema = z.object({
     content: z.string().min(1, { message: "This field can't be empty" })
 })
-function ChatInput() {
+function ChatInput({ senderId, chatRoomId } : any) {
     const form = useForm<z.infer<typeof chatMessageSchema>>({
         resolver: zodResolver(chatMessageSchema),
         defaultValues: {
@@ -32,8 +33,7 @@ function ChatInput() {
 
     const handleSubmit = async (values: z.infer<typeof chatMessageSchema>) => {
         try {
-            console.log(values.content);
-            
+            await createMessage(values.content, senderId, chatRoomId);
      
         } finally {
             form.reset()
