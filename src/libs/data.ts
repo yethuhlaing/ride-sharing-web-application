@@ -15,6 +15,8 @@ export const featureItems = [
     { name: "Lorem Ipsum something" },
 ];
 
+export const LIMIT_MESSAGE = 20;
+
 export const teamList: TeamProps[] = [
     {
         imageUrl: 'https://i.pravatar.cc/150?img=35',

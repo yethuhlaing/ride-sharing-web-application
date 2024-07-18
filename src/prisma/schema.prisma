@@ -109,6 +109,6 @@ model Message {
   updatedAt     DateTime @default(now())
   sender_id     String
   chat_room_id  String
-  user          User     @relation("UserMessages", fields: [sender_id], references: [user_id])
+  sender        User     @relation("UserMessages", fields: [sender_id], references: [user_id])
   chatRoom      ChatRoom @relation("ChatRoomMessages", fields: [chat_room_id], references: [chat_room_id])
 }

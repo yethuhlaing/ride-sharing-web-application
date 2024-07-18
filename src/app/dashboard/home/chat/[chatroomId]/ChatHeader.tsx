@@ -2,13 +2,13 @@
 
 import ChatRoomAvatar from "@/components/specific/ChatRoomAvatar";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/libs/supabase";
 import { ChatRoomType, UserType } from "@/libs/type";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
- 
+import defaultImage from "@@/public/assets/avatar.png"
+import { supabase } from "@/libs/supabase"
 
 
 export default function ChatHeader({chatRoom} : { chatRoom: ChatRoomType}) {
@@ -18,7 +18,6 @@ export default function ChatHeader({chatRoom} : { chatRoom: ChatRoomType}) {
 
     useEffect(() => {
         if (!user) return;
-
         const channelName = `room-${chatRoom.passenger_id}-${chatRoom.driver_id}`;
         const channel = supabase.channel(channelName);
 
@@ -34,7 +33,7 @@ export default function ChatHeader({chatRoom} : { chatRoom: ChatRoomType}) {
 
         channel
             .on('presence', { event: 'sync' }, handleSync)
-            .subscribe(async (status) => {
+            .subscribe(async (status: any) => {
                 if (status === 'SUBSCRIBED') {
                     await channel.track({
                         online_at: new Date().toISOString(),
@@ -59,7 +58,7 @@ export default function ChatHeader({chatRoom} : { chatRoom: ChatRoomType}) {
                     <ArrowLeft />
                 </Link>
             </div>
-            <ChatRoomAvatar passengerProfileImage={chatRoom.passenger.profileImage} driverProfileImage={chatRoom.driver.profileImage} />
+            <ChatRoomAvatar passengerProfileImage={chatRoom.passenger?.profileImage ?? defaultImage} driverProfileImage={chatRoom.driver?.profileImage ?? defaultImage} />
             <div className="flex flex-col px-14 items-start py-2">
                 <h1 className="text-sm font-bold">{chatRoom.name}</h1>
                 <div className="flex items-center gap-1">

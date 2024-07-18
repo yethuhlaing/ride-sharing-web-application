@@ -30,6 +30,7 @@
     "@radix-ui/react-toggle": "^1.0.3",
     "@react-email/components": "^0.0.19",
     "@react-google-maps/api": "^2.19.3",
+    "@supabase/ssr": "^0.4.0",
     "@supabase/supabase-js": "^2.44.4",
     "@tabler/icons-react": "^3.5.0",
     "class-variance-authority": "^0.7.0",
@@ -54,7 +55,8 @@
     "stripe": "^15.11.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zustand": "^4.5.4"
   },
   "devDependencies": {
     "@types/node": "^20",

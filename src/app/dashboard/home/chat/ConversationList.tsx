@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ChatRoomType } from '@/libs/type';
 import Link from 'next/link';
 import { cn } from '@/libs/utils';
-import { useConversation } from '@@/hooks/useConversation';
+import { useConversation } from '@/hooks/useConversation';
 import ChatRoomAvatar from '@/components/specific/ChatRoomAvatar';
 
 export default async function ConversationList({ chatRooms }: {chatRooms: ChatRoomType[]}) {

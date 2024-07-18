@@ -10,12 +10,19 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { Button } from '@/components/ui/button'
 import { SendHorizonal } from 'lucide-react'
 import { SubmitButton } from '@/components/specific/SubmitButton'
-import { createMessage } from '@/actions/action';
+import { createMessages } from '@/actions/action';
+import { MessageState, MessageType } from '@/libs/type';
+import toast from 'react-hot-toast';
+import { useMessage } from '@/store/message';
 
 const chatMessageSchema = z.object({
     content: z.string().min(1, { message: "This field can't be empty" })
 })
 function ChatInput({ senderId, chatRoomId } : any) {
+
+    const addMessage = useMessage((state: MessageState) => state.addMessage);
+    const setOptimisticIds = useMessage((state: MessageState) => state.setOptimisticIds);
+
     const form = useForm<z.infer<typeof chatMessageSchema>>({
         resolver: zodResolver(chatMessageSchema),
         defaultValues: {
@@ -33,9 +40,14 @@ function ChatInput({ senderId, chatRoomId } : any) {
 
     const handleSubmit = async (values: z.infer<typeof chatMessageSchema>) => {
         try {
-            await createMessage(values.content, senderId, chatRoomId);
-     
-        } finally {
+            const newMessage = await createMessages(values.content, senderId, chatRoomId)
+            addMessage(newMessage as MessageType)
+            setOptimisticIds(newMessage.message_id)
+    
+        } catch(error: any){
+            toast.error(error?.message);
+        }
+        finally {
             form.reset()
             setIsPending(false);
         }    

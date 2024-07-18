@@ -64,8 +64,8 @@ export type RideType = {
     departure_time: Date;
     available_seats: number;
     driver: UserType;
-    bookings: BookingType[];
-    reviews: Review
+    bookings?: BookingType[];
+    reviews?: Review
 };
 
 export type ReviewType = {
@@ -109,18 +109,33 @@ export interface ChatRoomType {
     updatedAt: Date;
     driver_id: string;
     passenger_id: string;
-    driver: UserType;
-    passenger: UserType
+    driver?: UserType;
+    passenger?: UserType;
 }
 
 
-export interface MessageType {
+export type MessageType = {
     message_id: string;
     content: string;
     createdAt: Date;
     updatedAt: Date;
-    user_id: string;
+    sender_id: string;
+    is_edit: boolean;
     chat_room_id: string;
-    user: UserType;
-    chatRoom: ChatRoomType;
+    sender?: UserType;
+    chatRoom?: ChatRoomType;
+}
+
+export type MessageState = {
+    hasMore: boolean;
+    page: number;
+    messages: MessageType[];
+    actionMessage: MessageType | undefined;
+    optimisticIds: string[];
+    addMessage: (message: MessageType) => void;
+    setActionMessage: (message: MessageType | undefined) => void;
+    optimisticDeleteMessage: (messageId: string) => void;
+    optimisticUpdateMessage: (message: MessageType) => void;
+    setOptimisticIds: (id: string) => void;
+    setMesssages: (messages: MessageType[]) => void;
 }
