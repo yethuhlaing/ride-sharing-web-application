@@ -116,7 +116,7 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType ) {
     return (
         <>
             <div
-                className="flex-1 flex flex-col p-5 h-full overflow-y-auto"
+                className="flex-1 flex flex-col p-5 h-full  no-scrollbar overflow-y-auto"
                 ref={scrollRef}
                 onScroll={handleOnScroll}
             >
