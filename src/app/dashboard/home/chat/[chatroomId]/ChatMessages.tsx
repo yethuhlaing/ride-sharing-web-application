@@ -24,22 +24,38 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType ) {
         optimisticDeleteMessage,
         optimisticUpdateMessage,
     } = useMessage((state) => state);
+    const fetchSenderData = async (sender_id: string) => {
+        const { data, error } = await supabase
+            .from('User')
+            .select('*')
+            .eq('user_id', sender_id)
+            .single();
 
+        if (error) {
+            console.error('Error fetching sender data:', error);
+            return null;
+        }
+        return data;
+    };
     useEffect(() => {
         const channelName = `room-${chatRoom.chat_room_id}`;
         const channel = supabase.channel(channelName);
 
         channel.on("postgres_changes",
             { event: "INSERT", schema: "public", table: "Message" },
-            (payload: any) => {
+            async (payload: any) => {
                 console.log(payload)
-
-                if (!optimisticIds.includes(payload.new.id)) {
+                const senderData = await fetchSenderData(payload.new.sender_id);
+                console.log(payload)
+                if (senderData) {
                     const newMessage = {
                         ...payload.new,
-                    } as MessageType;
-                    addMessage(newMessage as MessageType);
+                        sender: senderData,
+                    };
+                    addMessage(newMessage);
                 }
+            
+
                 
                 const scrollContainer = scrollRef.current;
                 if (

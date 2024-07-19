@@ -206,9 +206,6 @@ export async function createMessages(content: string, senderId: string, chatRoom
                 sender_id: senderId,
                 chat_room_id: chatRoomId,                
             },
-            include: {
-                sender: true,  
-            },
         });
         return newMessage;
     } catch (error) {

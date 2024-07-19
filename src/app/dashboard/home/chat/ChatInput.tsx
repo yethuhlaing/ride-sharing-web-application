@@ -43,8 +43,8 @@ function ChatInput({ senderId, chatRoomId } : any) {
             const newMessage = await createMessages(values.content, senderId, chatRoomId)
             addMessage(newMessage as MessageType)
             setOptimisticIds(newMessage.message_id)
-    
-        } catch(error: any){
+
+        } catch (error: any) {
             toast.error(error?.message);
         }
         finally {
