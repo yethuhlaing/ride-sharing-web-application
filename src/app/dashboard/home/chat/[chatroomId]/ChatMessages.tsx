@@ -9,6 +9,7 @@ import { ChatRoomType, MessageType } from "@/libs/type";
 import toast from "react-hot-toast";
 import { useMessage } from "@/store/message";
 import { supabase } from "@/libs/supabase"
+import { getUserData } from "@/actions/action";
 type ChatMessagesType = { 
     chatRoom: ChatRoomType,
 }
@@ -24,19 +25,7 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType ) {
         optimisticDeleteMessage,
         optimisticUpdateMessage,
     } = useMessage((state) => state);
-    const fetchSenderData = async (sender_id: string) => {
-        const { data, error } = await supabase
-            .from('User')
-            .select('*')
-            .eq('user_id', sender_id)
-            .single();
-
-        if (error) {
-            console.error('Error fetching sender data:', error);
-            return null;
-        }
-        return data;
-    };
+    
     useEffect(() => {
         const channelName = `room-${chatRoom.chat_room_id}`;
         const channel = supabase.channel(channelName);
@@ -45,8 +34,7 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType ) {
             { event: "INSERT", schema: "public", table: "Message" },
             async (payload: any) => {
                 console.log(payload)
-                const senderData = await fetchSenderData(payload.new.sender_id);
-                console.log(payload)
+                const senderData = await getUserData(payload.new.sender_id);
                 if (senderData) {
                     const newMessage = {
                         ...payload.new,
@@ -55,7 +43,6 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType ) {
                     addMessage(newMessage);
                 }
             
-
                 
                 const scrollContainer = scrollRef.current;
                 if (
@@ -92,8 +79,8 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType ) {
 
         return () => {
             // console.log("REmove the Channel")
-            // supabase.removeChannel(channel) 
-            channel.unsubscribe();
+            channel.unsubscribe()
+            supabase.removeChannel(channel) 
         };
     }, [messages]);
 
@@ -136,7 +123,7 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType ) {
                 <div className="flex-1 pb-5 ">
                     <LoadMoreMessages />
                 </div>
-                <div className=" space-y-7">
+                <div className=" space-y-6">
                     {messages.map((message: MessageType, index: any) => {
                         return <Message key={index} message={message} />;
                     })}

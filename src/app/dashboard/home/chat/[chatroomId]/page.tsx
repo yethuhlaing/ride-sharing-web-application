@@ -26,10 +26,8 @@ export default async function ChatPage({ params } : any) {
     return (
         <Card className={cn('flex flex-col h-full w-full p-2 justify-between bg-secondary text-secondary-foreground' )}>
             <ChatHeader chatRoom={chatRoom} />
-            <Suspense fallback={"loading.."}>
-                <ChatMessages chatRoom={chatRoom} />
-                <InitMessages messages={messages?.reverse() || []} />
-            </Suspense>
+            <ChatMessages chatRoom={chatRoom} />
+            <InitMessages messages={messages?.reverse() || []} />
             <ChatInput senderId={user?.id} chatRoomId={chatRoomId} />
         </Card>
     )
