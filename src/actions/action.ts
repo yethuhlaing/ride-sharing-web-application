@@ -1,6 +1,8 @@
 "use server"
 
+import { LIMIT_MESSAGE } from "@/libs/data";
 import prisma from "@/libs/db";
+import { getFromAndTo } from "@/libs/utils";
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 
 export async function createBooking(ride_id: any, passenger_id: any) {
@@ -272,7 +274,24 @@ export async function getMessagesWithChatRoomId(limit: number, chatRoomId: strin
         throw error
     }
 }
-
+export async function getMessageWithPage(page: number ){
+    try {
+        const { from, to } = getFromAndTo(page, LIMIT_MESSAGE);
+        const messages = await prisma.message.findMany({
+            skip: from,
+            take: to - from + 1,
+            orderBy: {
+                createdAt: 'desc',
+            },
+            include: {
+                sender: true,
+            },
+        });
+        return messages
+    } catch (error) {
+        throw error
+    }
+}
 export async function getRides() {
     try {
         const rides = await prisma.ride.findMany({

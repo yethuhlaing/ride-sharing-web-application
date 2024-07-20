@@ -8,7 +8,6 @@ import { AnimatedSection } from '../pages/TestimonialSection';
 import ContactSection from '@/pages/ContactSection';
 import ContactForm from '@/components/specific/ContactForm';
 import { Navbar } from '@/components/specific/Navbar';
-import { Toaster } from "@/components/ui/toaster"
 
 export default async function Home() {
     return (

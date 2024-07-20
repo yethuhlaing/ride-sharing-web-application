@@ -6,6 +6,7 @@ import { getFromAndTo } from "@/libs/utils";
 import { LIMIT_MESSAGE } from "@/libs/data";
 import { supabase } from "@/libs/supabase";
 import { Button } from "@/components/ui/button";
+import { getMessageWithPage } from "@/actions/action";
 
 export default function LoadMoreMessages() {
     const page = useMessage((state: MessageState) => state.page);
@@ -13,17 +14,13 @@ export default function LoadMoreMessages() {
     const hasMore = useMessage((state: MessageState) => state.hasMore);
 
     const fetchMore = async () => {
-        const { from, to } = getFromAndTo(page, LIMIT_MESSAGE);
-        const { data, error } = await supabase
-            .from("Message")
-            .select("*,Sender(*)")
-            .range(from, to)
-            .order("created_at", { ascending: false });
-
-        if (error) {
-            toast.error(error.message);
-        } else {
-            setMesssages(data.reverse());
+        try {
+            const messages = await getMessageWithPage(page)
+            // Reverse the messages to maintain the original order
+            setMesssages(messages.reverse());
+        } catch (error) {
+            console.error('Error fetching messages:', error);
+            toast.error("Failed Loading messages");
         }
     };
 

@@ -140,7 +140,7 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType) {
                 <div className=" absolute bottom-20 w-full">
                     {notification ? (
                         <div
-                            className="w-36 mx-auto bg-indigo-500 p-1 rounded-md cursor-pointer"
+                            className="w-36 mx-auto bg-primary p-1 rounded-md cursor-pointer"
                             onClick={scrollDown}
                         >
                             <h1>New {notification} messages</h1>
