@@ -12,7 +12,6 @@ import toast from 'react-hot-toast';
 import { useMessage } from '@/store/message';
 import { Input } from '@/components/ui/input';
 import { v4 as uuidv4 } from 'uuid';
-import { supabaseServer } from '@/supabase/server';
 import { supabasebrowser } from '@/supabase/browser';
 
 const supabase = supabasebrowser()
@@ -24,9 +23,8 @@ function ChatInput({ senderId, chatRoomId }: any) {
     const [message, setMessage] = useState('');
     const handleSendMessage = async (content: string) => {
         if (content.trim()) {
-            const senderData = await getUserData(senderId);
             const message_id = uuidv4();
-
+            // const senderData = await getUserData(senderId);
             // const newMessage = {
             //     message_id,
             //     content,
@@ -86,16 +84,16 @@ function ChatInput({ senderId, chatRoomId }: any) {
                 }}
                 className="flex-1 px-4 py-2 rounded-lg outline-none focus:ring-0 focus:border-transparent text-xs placeholder:text-xs"
             />
-            <button
-                type="button"
+            <Button
+                
                 onClick={() => {
                     handleSendMessage(message);
                     setMessage('');
                 }}
-                className="bg-primary-foreground flex justify-center items-center"
+                className='bg-primary-foreground w-fit h-fit flex justify-center items-center'
             >
-                <SendHorizonal size={10} />
-            </button>
+                <SendHorizonal size={16} />
+            </Button>
         </div>
 
     )

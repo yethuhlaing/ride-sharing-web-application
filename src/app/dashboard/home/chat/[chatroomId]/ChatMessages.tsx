@@ -142,17 +142,17 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType) {
                 <EditAlert />
             </div>
             {userScrolled && (
-                <div className=" absolute bottom-20 w-full">
+                <div className="absolute left-35 bottom-20 w-full">
                     {notification ? (
                         <div
-                            className="w-36 mx-auto bg-primary p-1 rounded-md cursor-pointer"
+                            className="w-36 mx-auto bg-primary px-2 py-1 rounded-lg cursor-pointer"
                             onClick={scrollDown}
                         >
-                            <h1>New {notification} messages</h1>
+                            <h1 className="text-secondary-foreground text-xs lg:text-sm text-center">New {notification} messages</h1>
                         </div>
                     ) : (
                         <div
-                            className="w-10 h-10 bg-blue-500 rounded-full justify-center items-center flex mx-auto border cursor-pointer hover:scale-110 transition-all"
+                            className="w-10 h-10 bg-primary rounded-full justify-center items-center flex mx-auto border cursor-pointer hover:scale-110 transition-all"
                             onClick={scrollDown}
                         >
                             <ArrowDown />

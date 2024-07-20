@@ -23,7 +23,7 @@ export default async function ChatPage({ params } : any) {
     console.log(messages)
 
     return (
-        <Card className={cn('flex flex-col h-full w-full p-2 justify-between bg-secondary text-secondary-foreground' )}>
+        <Card className='flex flex-col h-full w-full p-2 justify-between bg-secondary text-secondary-foreground'>
             <ChatHeader chatRoom={chatRoom} />
             <Suspense fallback={<LoadingComponent />}>
                 <ChatMessages chatRoom={chatRoom} />
