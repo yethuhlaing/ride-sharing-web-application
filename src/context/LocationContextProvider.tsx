@@ -9,10 +9,6 @@ type LocationContextType = {
     setSource: React.Dispatch<React.SetStateAction<string | null>>;
     destination: string | null;
     setDestination: React.Dispatch<React.SetStateAction<string | null>>;
-    sourcePs: string | null;
-    setSourcePs: React.Dispatch<React.SetStateAction<string | null>>;
-    destinationPs: string | null;
-    setDestinationPs: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 type LocationContextProviderProps = {
@@ -24,8 +20,6 @@ export function LocationProvider({
 }: LocationContextProviderProps) {
     const [destination, setDestination] = useState<string | null> (null);
     const [source, setSource] = useState< string | null>(null);
-    const [destinationPs, setDestinationPs] = useState<string | null>(null);
-    const [sourcePs, setSourcePs] = useState<string | null>(null);
     return (
         <LocationContext.Provider
             value={{
@@ -33,10 +27,6 @@ export function LocationProvider({
                 setSource,
                 destination,
                 setDestination,
-                sourcePs,
-                setSourcePs,
-                destinationPs,
-                setDestinationPs,
             }}
         >
             {children}

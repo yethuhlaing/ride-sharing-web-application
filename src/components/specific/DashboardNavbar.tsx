@@ -3,7 +3,6 @@ import { ThemeToggle } from '@/components/specific/ThemeToggle';
 import { Button } from '../ui/button';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { UserNav } from './UserNav';
-import prisma from '@/libs/db';
 import { getUserData } from '@/actions/action';
 
 export async function DashboardNavbar() {
@@ -24,13 +23,8 @@ export async function DashboardNavbar() {
                     </div>
                     <div className="flex items-center gap-x-1 md:gap-x-2">
                         <Button className='text-xs md:text-sm w-auto h-auto'>
-                            <Link href={`/dashboard/driver/${user?.id}`}>
-                                Driver
-                            </Link>
-                        </Button>
-                        <Button className='text-xs  md:text-sm w-auto h-auto'>
-                            <Link href={`/dashboard/passenger/${user?.id}`}>
-                                Passenger
+                            <Link href={`/dashboard/publish`}>
+                                Publish
                             </Link>
                         </Button>
                         <UserNav
