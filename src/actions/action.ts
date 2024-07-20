@@ -2,6 +2,7 @@
 
 import { LIMIT_MESSAGE } from "@/libs/data";
 import prisma from "@/libs/db";
+import { RideType } from "@/libs/type";
 import { getFromAndTo } from "@/libs/utils";
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 
@@ -75,6 +76,29 @@ export async function getUserData(user_id: string) {
     return data;
 }
 
+
+export async function createRide({ driver_id,
+    origin,
+    destination,
+    departure_time,
+    available_seats } : RideType) {
+    try {
+        const newRide = await prisma.ride.create({
+            data: {
+                driver_id,
+                origin,
+                destination,
+                departure_time,
+                available_seats
+            },
+        });
+        console.log('Ride created:', newRide);
+        return newRide;
+    } catch (error) {
+        console.error('Error creating ride:', error);
+        throw error;
+    }
+}
 export async function getRides() {
     try {
         const rides = await prisma.ride.findMany({
