@@ -75,6 +75,37 @@ export async function getUserData(user_id: string) {
     return data;
 }
 
+export async function getRides() {
+    try {
+        const rides = await prisma.ride.findMany({
+            include: {
+                driver: true,
+            },
+        });
+        console.log(rides)
+        return rides;
+    } catch (error) {
+        console.error('Error fetching rides:', error);
+        throw error;
+    }
+}
+
+export async function getRidewithDriverId(driver_id: string) {
+    noStore();
+    try {
+        const ride = await prisma.ride.findMany({
+            where: {
+                driver_id: driver_id
+            },
+
+        });
+        console.log(ride)
+        return ride;
+    } catch (error) {
+        console.error('Error fetching rides:', error);
+        throw error;
+    }
+}
 
 export async function getRidewithRideId(ride_id: string) {
     noStore();
@@ -178,7 +209,21 @@ export async function getChatRoomWithId(chatRoom_Id: string) {
     })
     return chatRooms
 }
+export async function deleteChatRoomWithId(chatRoomId: string) {
+    try {
+        const deletedChatRoom = await prisma.chatRoom.delete({
+            where: {
+                chat_room_id: chatRoomId,
+            },
+        });
 
+        console.log('ChatRoom deleted:', deletedChatRoom);
+        revalidatePath('/chat', 'page')
+    } catch (error) {
+        console.error('Error deleting ChatRoom:', error);
+        throw error;
+    }
+}
 export async function getBookingwithRideId(ride_id: string) {
     try {
         const bookings = await prisma.booking.findMany({
@@ -226,7 +271,8 @@ export async function deleteMessageWithId(message_id: string){
                 message_id: message_id,
             },
         });
-        return deletedMessage
+        console.log(deletedMessage)
+        revalidatePath('/chat', 'page')
 
     } catch (error: any) {
         console.error('Error deleting message:', error);
@@ -290,37 +336,6 @@ export async function getMessageWithPage(page: number ){
         return messages
     } catch (error) {
         throw error
-    }
-}
-export async function getRides() {
-    try {
-        const rides = await prisma.ride.findMany({
-            include: {
-                driver: true,
-            },
-        });
-        console.log(rides)
-        return rides;
-    } catch (error) {
-        console.error('Error fetching rides:', error);
-        throw error;
-    }
-}
-
-export async function getRidewithDriverId(driver_id: string) {
-    noStore();
-    try {
-        const ride = await prisma.ride.findMany({
-            where: {
-                driver_id: driver_id
-            },
-
-        });
-        console.log(ride)
-        return ride;
-    } catch (error) {
-        console.error('Error fetching rides:', error);
-        throw error;
     }
 }
 

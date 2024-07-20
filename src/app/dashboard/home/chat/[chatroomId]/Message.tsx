@@ -18,7 +18,7 @@ export default function Message({ message }: { message: MessageType }) {
     const { getUser } = useKindeBrowserClient();
     const user = getUser()
     return (
-        <div className="flex gap-2 justify-center items-center p-2">
+        <div className="flex gap-2 justify-center items-center">
             <div>
                 <img
                     src={message.sender?.profileImage! ?? defaultImage}
@@ -26,15 +26,13 @@ export default function Message({ message }: { message: MessageType }) {
                     className="lg:w-10 lg:h-10 w-7 h-7 rounded-full"
                 />
             </div>
-            <div className="flex-1">
+            <div className="flex-1 space-y-1">
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center space-x-1">
                         <h1 className="font-bold text-xs lg:text-sm">
                             {message.sender?.fullName!}
                         </h1>
-                        <h1 className="text-xs lg:text-sm text-gray-400">
-                            {new Date(message.createdAt).toDateString()}
-                        </h1>
+
                         {message.is_edit && (
                             <h1 className="text-xs lg:text-sm text-gray-400">edited</h1>
                         )}
@@ -55,9 +53,15 @@ const MessageMenu = ({ message }: { message: MessageType }) => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger>
-                <MoreHorizontal />
+                <MoreHorizontal size={18}/>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
+                <DropdownMenuLabel>
+                    <h1 className="text-xs lg:text-sm text-gray-400">
+                        {new Date(message.createdAt).toDateString()}
+                    </h1>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem
                     onClick={() => {
                         document.getElementById("trigger-edit")?.click();

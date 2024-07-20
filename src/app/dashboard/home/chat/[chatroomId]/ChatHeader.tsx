@@ -8,7 +8,8 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import defaultImage from "@@/public/assets/avatar.png"
-import { supabase } from "@/libs/supabase"
+import { DeleteChatRoom } from "./MessageAction";
+import { supabasebrowser } from "@/supabase/browser";
 
 
 export default function ChatHeader({chatRoom} : { chatRoom: ChatRoomType}) {
@@ -19,6 +20,7 @@ export default function ChatHeader({chatRoom} : { chatRoom: ChatRoomType}) {
     useEffect(() => {
         if (!user) return;
         const channelName = `room-${chatRoom.passenger_id}-${chatRoom.driver_id}`;
+        const supabase = supabasebrowser()
         const channel = supabase.channel(channelName);
 
         const handleSync = () => {
@@ -52,7 +54,7 @@ export default function ChatHeader({chatRoom} : { chatRoom: ChatRoomType}) {
     }
 
     return (                
-        <div className="flex flex-row justify-start items-center min-h-14 border px-4 hover:bg-slate-300 rounded-lg">
+        <div className="relative flex flex-row justify-start items-center min-h-14 border px-4 rounded-lg">
             <div className="lg:hidden pr-4">
                 <Link href={'/dashboard/home/chat'}>
                     <ArrowLeft />
@@ -66,6 +68,7 @@ export default function ChatHeader({chatRoom} : { chatRoom: ChatRoomType}) {
                     <h1 className="text-xs text-gray-400">{onlineUsers} onlines</h1>
                 </div>
             </div>
+            <DeleteChatRoom style={"absolute right-2"} chat_room_id={chatRoom.chat_room_id} />
         </div>
     );
 }

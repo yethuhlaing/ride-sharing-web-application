@@ -24,10 +24,52 @@ import { Input } from "@/components/ui/input";
 import { useRef } from "react";
 import toast from "react-hot-toast";
 import { MessageState, MessageType } from "@/libs/type";
-import { supabase } from "@/libs/supabase";
 import { useMessage } from "@/store/message";
-import { deleteMessageWithId, updateMessageWithId } from "@/actions/action";
+import { deleteChatRoomWithId, deleteMessageWithId, updateMessageWithId } from "@/actions/action";
+import { CopyX } from 'lucide-react';
+import { revalidatePath } from "next/cache";
 
+
+export async function DeleteChatRoom({ style, chat_room_id } : any){
+    const handleDeleteChatRoom = async () => {
+        try {
+            await deleteChatRoomWithId(chat_room_id as string)
+            revalidatePath('/chat','page')
+            toast.success("Successfully delete the conversation");
+        } catch (error) {
+            console.log(error)
+            toast.error("Failed to Delete conversation");
+        }
+    };
+    return (
+        <div className={style}>
+            <AlertDialog>
+                <AlertDialogTrigger asChild>
+                    <Button className="" variant={"destructive"}>
+                        <CopyX size={14} />
+                    </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>
+                            Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently
+                            delete the conversation.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDeleteChatRoom}>
+                            Continue
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </div>
+    );
+}
 export async function DeleteAlert() {
     const actionMessage = useMessage((state: MessageState) => state.actionMessage);
     const optimisticDeleteMessage = useMessage(
@@ -43,6 +85,7 @@ export async function DeleteAlert() {
             console.log(error)
             toast.error("Failed to Delete message");
         }
+        
     };
 
     return (

@@ -1,86 +1,103 @@
 "use client"
 
 import React, { useRef, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Card } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import TextareaAutosize from 'react-textarea-autosize';
 import { Button } from '@/components/ui/button'
 import { SendHorizonal } from 'lucide-react'
 import { SubmitButton } from '@/components/specific/SubmitButton'
-import { createMessages } from '@/actions/action';
+import { createMessages, getUserData } from '@/actions/action';
 import { MessageState, MessageType } from '@/libs/type';
 import toast from 'react-hot-toast';
 import { useMessage } from '@/store/message';
+import { Input } from '@/components/ui/input';
+import { v4 as uuidv4 } from 'uuid';
+import { supabaseServer } from '@/supabase/server';
+import { supabasebrowser } from '@/supabase/browser';
 
-const chatMessageSchema = z.object({
-    content: z.string().min(1, { message: "This field can't be empty" })
-})
-function ChatInput({ senderId, chatRoomId } : any) {
+const supabase = supabasebrowser()
 
-    const addMessage = useMessage((state: MessageState) => state.addMessage);
-    const setOptimisticIds = useMessage((state: MessageState) => state.setOptimisticIds);
+function ChatInput({ senderId, chatRoomId }: any) {
 
-    const form = useForm<z.infer<typeof chatMessageSchema>>({
-        resolver: zodResolver(chatMessageSchema),
-        defaultValues: {
-            content: "",
-        }
-    })
-    const handleInputChange = (event: any) => {
-        const { value , selectionStart} = event.target;
-        if( selectionStart !== null) {
-            form.setValue("content", value)
+    const addMessage = useMessage((state) => state.addMessage);
+    const setOptimisticIds = useMessage((state) => state.setOptimisticIds);
+    const [message, setMessage] = useState('');
+    const handleSendMessage = async (content: string) => {
+        if (content.trim()) {
+            const senderData = await getUserData(senderId);
+            const message_id = uuidv4();
+
+            // const newMessage = {
+            //     message_id,
+            //     content,
+            //     createdAt: new Date(),
+            //     is_edit: false,
+            //     sender_id: senderId,
+            //     chat_room_id: chatRoomId,
+            //     sender: senderData
+            // } as MessageType;
+            // addMessage(newMessage as MessageType);
+            // setOptimisticIds(newMessage.message_id);
+
+            const { error } = await supabase
+                .from("Message")
+                .insert({ content, message_id, chat_room_id: chatRoomId, sender_id: senderId });
+            setMessage('');
+            if (error) {
+                console.log(error)
+                toast.error(error.message);
+            }
+        } else {
+            toast.error("Message can not be empty!!");
         }
     }
-    const textaraRef = useRef<HTMLTextAreaElement | null>(null)
-    const [isPending, setIsPending] = useState(false);
 
-    const handleSubmit = async (values: z.infer<typeof chatMessageSchema>) => {
-        try {
-            const newMessage = await createMessages(values.content, senderId, chatRoomId)
-            addMessage(newMessage as MessageType)
-            setOptimisticIds(newMessage.message_id)
-
-        } catch (error: any) {
-            toast.error(error?.message);
-        }
-        finally {
-            form.reset()
-            setIsPending(false);
-        }    
-    }
-    const handleKeyDown = async ( e: any) => {    
-        if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            await form.handleSubmit(handleSubmit)()
-        }   
-    }
     return (
-        <Card className='w-full rounded-lg relative'>
-            <div className='flex gap-2 p-1 items-end w-full'>
-                <Form { ...form}>
-                    <form onSubmit={form.handleSubmit(handleSubmit)} className='flex gap-2 items-center justify-center w-full'>
-                        <FormField control={form.control} name='content' render={({field})=> {                        
-                            return (
-                                <FormItem className="w-full h-full">
-                                    <FormControl>
-                                        <TextareaAutosize rows={1} maxRows={3} {...field} onChange={handleInputChange} onClick={handleInputChange} onKeyDown={handleKeyDown} placeholder="Type a message..." className="min-h-full w-full resize-none border-0 outline-0 bg-card text-card-foreground text-xs placeholder:text-xs placeholder:text-muted-foreground p-1.5 " />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            ) 
-                        }} />
-                        <Button disabled={isPending} className='text-xs mr-2 w-fit h-fit' >
-                            <SendHorizonal size={14} />
-                        </Button>
-                    </form>
-                </Form>
-            
-            </div>
-        </Card>
+        // <div className='space-x-2 flex justify-center'>
+        //     <input
+        //         className='flex-1 px-4 py-2 rounded-lg outline-none focus:ring-0 focus:border-transparent text-xs placeholder:text-xs'
+        //         placeholder="send message"
+        //         value={message}
+        //         onChange={(e) => setMessage(e.target.value)}
+        //         onKeyDown={(e: any) => {
+        //             if (e.key === "Enter") {
+        //                 handleSendMessage();
+        //             }
+        //         }}
+        //     />
+        //     <Button type="submit" className='bg-primary-foreground flex justify-center items-center' onClick={handleSendMessage}>
+        //         <SendHorizonal size={10} />
+        //     </Button>
+        // </div>
+        <div
+            className="space-x-2 flex justify-center"
+        >
+            <input
+                type="text"
+                placeholder="Send message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleSendMessage(e.currentTarget.value);
+                        e.currentTarget.value = "";
+                    }
+                }}
+                className="flex-1 px-4 py-2 rounded-lg outline-none focus:ring-0 focus:border-transparent text-xs placeholder:text-xs"
+            />
+            <button
+                type="button"
+                onClick={() => {
+                    handleSendMessage(message);
+                    setMessage('');
+                }}
+                className="bg-primary-foreground flex justify-center items-center"
+            >
+                <SendHorizonal size={10} />
+            </button>
+        </div>
+
     )
 }
 

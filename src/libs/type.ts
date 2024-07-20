@@ -118,7 +118,6 @@ export type MessageType = {
     message_id: string;
     content: string;
     createdAt: Date;
-    updatedAt: Date;
     sender_id: string;
     is_edit: boolean;
     chat_room_id: string;

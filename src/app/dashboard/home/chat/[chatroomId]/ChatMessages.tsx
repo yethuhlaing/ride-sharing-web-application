@@ -6,10 +6,12 @@ import LoadMoreMessages from "./LoadMoreMessages";
 import Message from "./Message";
 import { ChatRoomType, MessageType } from "@/libs/type";
 import { useMessage } from "@/store/message";
-import { supabase } from "@/libs/supabase"
 import { getUserData } from "@/actions/action";
 import { DeleteAlert, EditAlert } from "./MessageAction";
 import { ScrollToTop } from "@/components/specific/ScrollToTop";
+import { supabasebrowser } from '@/supabase/browser';
+import toast from "react-hot-toast";
+
 type ChatMessagesType = {
     chatRoom: ChatRoomType,
 }
@@ -28,24 +30,27 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType) {
 
     useEffect(() => {
         const channelName = `room-${chatRoom.chat_room_id}`;
+        const supabase = supabasebrowser()
         const channel = supabase.channel(channelName);
 
         channel.on("postgres_changes",
             { event: "INSERT", schema: "public", table: "Message" },
             async (payload: any) => {
-                console.log(payload)
-                const senderData = await getUserData(payload.new.sender_id);
-                console.log(payload)
-                console.log(senderData)
-                if (senderData) {
-                    const newMessage = {
-                        ...payload.new,
-                        sender: senderData,
-                    };
-                    console.log(newMessage)
-                    addMessage(newMessage);
+                if (!optimisticIds.includes(payload.new.id)) {
+                    try {
+                        const senderData = await getUserData(payload.new.sender_id);
+                        if (senderData) {
+                            const newMessage = {
+                                ...payload.new,
+                                sender: senderData,
+                            };
+                            addMessage(newMessage);
+                        }
+                    } catch (error: any) {
+                        console.log(error)
+                        toast.error(error)
+                    }
                 }
-
 
                 const scrollContainer = scrollRef.current;
                 if (
@@ -62,7 +67,7 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType) {
             .on(
                 "postgres_changes",
                 { event: "DELETE", schema: "public", table: "Message" },
-                (payload) => {
+                (payload: any) => {
                     console.log(payload)
                     optimisticDeleteMessage(payload.old.id);
                 }
@@ -70,7 +75,7 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType) {
             .on(
                 "postgres_changes",
                 { event: "UPDATE", schema: "public", table: "Message" },
-                (payload) => {
+                (payload: any) => {
                     console.log(payload)
                     optimisticUpdateMessage(payload.new as MessageType);
                 }
@@ -127,7 +132,7 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType) {
                 <div className="flex-1 pb-5 ">
                     <LoadMoreMessages />
                 </div>
-                <div>
+                <div className="space-y-3 lg:space-y-4 px-2">
                     {messages.map((message: MessageType, index: any) => {
                         return <Message key={index} message={message} />;
                     })}

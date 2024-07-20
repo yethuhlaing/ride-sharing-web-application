@@ -4,7 +4,6 @@ import { MessageState } from "@/libs/type";
 import { useMessage } from "@/store/message";
 import { getFromAndTo } from "@/libs/utils";
 import { LIMIT_MESSAGE } from "@/libs/data";
-import { supabase } from "@/libs/supabase";
 import { Button } from "@/components/ui/button";
 import { getMessageWithPage } from "@/actions/action";
 
