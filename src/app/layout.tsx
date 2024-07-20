@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/specific/ThemeProvider';
 import { LocationProvider } from '@/context/LocationContextProvider';
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,7 +22,10 @@ export default async function RootLayout({
     return (
         <html lang="en" className="!scroll-smooth">
             <body className={inter.className}>
-                <Toaster />
+                <Toaster
+                    position="top-center"
+                    reverseOrder={false}
+                />
                 <LocationProvider>
                     <ThemeProvider
                         attribute="class"

@@ -1,20 +1,20 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-// import { DeleteAlert, EditAlert } from "./MessasgeActions";
 import { ArrowDown } from "lucide-react";
 import LoadMoreMessages from "./LoadMoreMessages";
 import Message from "./Message";
 import { ChatRoomType, MessageType } from "@/libs/type";
-import toast from "react-hot-toast";
 import { useMessage } from "@/store/message";
 import { supabase } from "@/libs/supabase"
 import { getUserData } from "@/actions/action";
-type ChatMessagesType = { 
+import { DeleteAlert, EditAlert } from "./MessageAction";
+import { ScrollToTop } from "@/components/specific/ScrollToTop";
+type ChatMessagesType = {
     chatRoom: ChatRoomType,
 }
-export default function ChatMessages({ chatRoom }: ChatMessagesType ) {
-    const scrollRef = useRef() as React.MutableRefObject<HTMLDivElement>;
+export default function ChatMessages({ chatRoom }: ChatMessagesType) {
+    const scrollRef = useRef() as React.MutableRefObject<HTMLDivElement>;    
     const [userScrolled, setUserScrolled] = useState(false);
     const [notification, setNotification] = useState(0);
 
@@ -25,7 +25,7 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType ) {
         optimisticDeleteMessage,
         optimisticUpdateMessage,
     } = useMessage((state) => state);
-    
+
     useEffect(() => {
         const channelName = `room-${chatRoom.chat_room_id}`;
         const channel = supabase.channel(channelName);
@@ -35,17 +35,21 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType ) {
             async (payload: any) => {
                 console.log(payload)
                 const senderData = await getUserData(payload.new.sender_id);
+                console.log(payload)
+                console.log(senderData)
                 if (senderData) {
                     const newMessage = {
                         ...payload.new,
                         sender: senderData,
                     };
+                    console.log(newMessage)
                     addMessage(newMessage);
                 }
-            
-                
+
+
                 const scrollContainer = scrollRef.current;
                 if (
+                    scrollContainer &&
                     scrollContainer.scrollTop <
                     scrollContainer.scrollHeight -
                     scrollContainer.clientHeight -
@@ -55,20 +59,22 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType ) {
                 }
             }
         )
-        // .on(
-        //     "postgres_changes",
-        //     { event: "DELETE", schema: "public", table: "messages" },
-        //     (payload) => {
-        //         optimisticDeleteMessage(payload.old.id);
-        //     }
-        // )
-        // .on(
-        //     "postgres_changes",
-        //     { event: "UPDATE", schema: "public", table: "messages" },
-        //     (payload) => {
-        //         optimisticUpdateMessage(payload.new as MessageType);
-        //     }
-        // )
+            .on(
+                "postgres_changes",
+                { event: "DELETE", schema: "public", table: "Message" },
+                (payload) => {
+                    console.log(payload)
+                    optimisticDeleteMessage(payload.old.id);
+                }
+            )
+            .on(
+                "postgres_changes",
+                { event: "UPDATE", schema: "public", table: "Message" },
+                (payload) => {
+                    console.log(payload)
+                    optimisticUpdateMessage(payload.new as MessageType);
+                }
+            )
         channel.subscribe((status: any) => {
             if (status === 'SUBSCRIBED') {
                 console.log(`Successfully subscribed to ${channelName}`);
@@ -78,9 +84,7 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType ) {
         });
 
         return () => {
-            // console.log("REmove the Channel")
             channel.unsubscribe()
-            supabase.removeChannel(channel) 
         };
     }, [messages]);
 
@@ -116,21 +120,21 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType ) {
     return (
         <>
             <div
-                className="flex-1 flex flex-col p-5 h-full  no-scrollbar overflow-y-auto"
+                className="flex flex-col h-full py-4 no-scrollbar overflow-y-auto"
                 ref={scrollRef}
                 onScroll={handleOnScroll}
             >
                 <div className="flex-1 pb-5 ">
                     <LoadMoreMessages />
                 </div>
-                <div className=" space-y-6">
+                <div>
                     {messages.map((message: MessageType, index: any) => {
                         return <Message key={index} message={message} />;
                     })}
                 </div>
 
-                {/* <DeleteAlert />
-                <EditAlert /> */}
+                <DeleteAlert />
+                <EditAlert />
             </div>
             {userScrolled && (
                 <div className=" absolute bottom-20 w-full">

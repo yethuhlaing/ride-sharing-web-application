@@ -217,21 +217,60 @@ export async function createMessages(content: string, senderId: string, chatRoom
     }
 }
 
+export async function deleteMessageWithId(message_id: string){
+    try {
+        const deletedMessage = await prisma.message.delete({
+            where: {
+                message_id: message_id,
+            },
+        });
+        return deletedMessage
+
+    } catch (error: any) {
+        console.error('Error deleting message:', error);
+        throw error
+
+    } 
+
+}
+
+export async function updateMessageWithId(message_id: string, content: string) {
+    try {
+        const updatedMessage = await prisma.message.update({
+            where: {
+                message_id: message_id,
+            },
+            data: {
+                content: content,
+                is_edit: true,
+            },
+        });
+        console.log('Message updated:', updatedMessage);
+    } catch (error) {
+        console.error('Error updating message:', error);
+        throw error
+    } 
+}
+
 export async function getMessagesWithChatRoomId(limit: number, chatRoomId: string) {
-    const messages = await prisma.message.findMany({
-        include: {
-            sender: true, 
-            chatRoom: true
-        },
-        where: {
-            chat_room_id: chatRoomId
-        },
-        orderBy: {
-            createdAt: 'desc',  // Assuming `createdAt` field exists in your model
-        },
-        take: limit,
-    });
-    return messages;
+    try {
+        const messages = await prisma.message.findMany({
+            include: {
+                sender: true,
+                chatRoom: true
+            },
+            where: {
+                chat_room_id: chatRoomId
+            },
+            orderBy: {
+                createdAt: 'desc',  // Assuming `createdAt` field exists in your model
+            },
+            take: limit,
+        });
+        return messages;
+    } catch (error) {
+        throw error
+    }
 }
 
 export async function getRides() {

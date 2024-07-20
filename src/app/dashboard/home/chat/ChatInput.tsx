@@ -59,25 +59,25 @@ function ChatInput({ senderId, chatRoomId } : any) {
         }   
     }
     return (
-        <Card className='w-full p-2 rounded-lg relative'>
-            <div className='flex gap-2 items-end w-full'>
-            <Form { ...form}>
-                <form onSubmit={form.handleSubmit(handleSubmit)} className='flex gap-2 items-center w-full'>
-                    <FormField control={form.control} name='content' render={({field})=> {                        
-                        return (
-                            <FormItem className="w-full h-full">
-                                <FormControl>
-                                    <TextareaAutosize rows={1} maxRows={3} {...field} onChange={handleInputChange} onClick={handleInputChange} onKeyDown={handleKeyDown} placeholder="Type a message..." className="min-h-full w-full resize-none border-0 outline-0 bg-card text-card-foreground placeholder:text-muted-foreground p-1.5 " />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        ) 
-                    }} />
-                    <Button disabled={isPending} size={"sm"} >
-                        <SendHorizonal size={14} />
-                    </Button>
-                </form>
-            </Form>
+        <Card className='w-full rounded-lg relative'>
+            <div className='flex gap-2 p-1 items-end w-full'>
+                <Form { ...form}>
+                    <form onSubmit={form.handleSubmit(handleSubmit)} className='flex gap-2 items-center justify-center w-full'>
+                        <FormField control={form.control} name='content' render={({field})=> {                        
+                            return (
+                                <FormItem className="w-full h-full">
+                                    <FormControl>
+                                        <TextareaAutosize rows={1} maxRows={3} {...field} onChange={handleInputChange} onClick={handleInputChange} onKeyDown={handleKeyDown} placeholder="Type a message..." className="min-h-full w-full resize-none border-0 outline-0 bg-card text-card-foreground text-xs placeholder:text-xs placeholder:text-muted-foreground p-1.5 " />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            ) 
+                        }} />
+                        <Button disabled={isPending} className='text-xs mr-2 w-fit h-fit' >
+                            <SendHorizonal size={14} />
+                        </Button>
+                    </form>
+                </Form>
             
             </div>
         </Card>

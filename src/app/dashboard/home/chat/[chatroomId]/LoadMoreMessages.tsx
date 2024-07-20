@@ -15,8 +15,8 @@ export default function LoadMoreMessages() {
     const fetchMore = async () => {
         const { from, to } = getFromAndTo(page, LIMIT_MESSAGE);
         const { data, error } = await supabase
-            .from("messages")
-            .select("*,senders(*)")
+            .from("Message")
+            .select("*,Sender(*)")
             .range(from, to)
             .order("created_at", { ascending: false });
 

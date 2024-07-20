@@ -1,6 +1,4 @@
 import React from "react";
-import Image from "next/image";
-
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -20,34 +18,32 @@ export default function Message({ message }: { message: MessageType }) {
     const { getUser } = useKindeBrowserClient();
     const user = getUser()
     return (
-        <div className="flex gap-2">
+        <div className="flex gap-2 justify-center items-center p-2">
             <div>
-                <Image
+                <img
                     src={message.sender?.profileImage! ?? defaultImage}
                     alt={message.sender?.fullName!}
-                    width={40}
-                    height={40}
-                    className=" rounded-full ring-2"
+                    className="lg:w-10 lg:h-10 w-7 h-7 rounded-full"
                 />
             </div>
             <div className="flex-1">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1">
-                        <h1 className="font-bold">
+                        <h1 className="font-bold text-xs lg:text-sm">
                             {message.sender?.fullName!}
                         </h1>
-                        <h1 className="text-sm text-gray-400">
+                        <h1 className="text-xs lg:text-sm text-gray-400">
                             {new Date(message.createdAt).toDateString()}
                         </h1>
                         {message.is_edit && (
-                            <h1 className="text-sm text-gray-400">edited</h1>
+                            <h1 className="text-xs lg:text-sm text-gray-400">edited</h1>
                         )}
                     </div>
                     {message.sender_id === user?.id && (
                         <MessageMenu message={message} />
                     )}
                 </div>
-                <p className="text-gray-300">{message.content}</p>
+                <p className="text-xs lg:text-sm text-gray-800">{message.content}</p>
             </div>
         </div>
     );
@@ -62,8 +58,6 @@ const MessageMenu = ({ message }: { message: MessageType }) => {
                 <MoreHorizontal />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                <DropdownMenuLabel>Action</DropdownMenuLabel>
-                <DropdownMenuSeparator />
                 <DropdownMenuItem
                     onClick={() => {
                         document.getElementById("trigger-edit")?.click();

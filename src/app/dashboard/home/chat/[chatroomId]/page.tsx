@@ -1,11 +1,9 @@
 import { Card } from '@/components/ui/card'
 import ChatInput from '../ChatInput'
-import prisma from '@/libs/db'
 import { redirect } from 'next/navigation'
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import ChatHeader from './ChatHeader'
 import { getChatRoomWithId, getMessagesWithChatRoomId } from '@/actions/action';
-import { useConversation } from '@/hooks/useConversation';
 import { cn } from '@/libs/utils';
 import { LIMIT_MESSAGE } from "@/libs/data";
 import { Suspense } from 'react';
