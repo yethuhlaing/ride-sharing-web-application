@@ -2,8 +2,9 @@
 
 import { LIMIT_MESSAGE } from "@/libs/data";
 import prisma from "@/libs/db";
-import { RideDataType, RideType } from "@/libs/type";
-import { getFromAndTo } from "@/libs/utils";
+import { stripe } from "@/libs/stripe";
+import { RideDataType, RideType, UserData, UserType } from "@/libs/type";
+import { getFromAndTo, getRandomAvatarUrl } from "@/libs/utils";
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 
 export async function createBooking(ride_id: any, passenger_id: any) {
@@ -141,7 +142,52 @@ export async function getRides() {
         throw error;
     }
 }
-
+export async function getDataDashboard({
+    email,
+    id,
+    firstName,
+    lastName,
+    profileImage,
+}: UserData) {
+    noStore();
+    const user = await prisma.user.findUnique({
+        where: {
+            user_id: id,
+        },
+        select: {
+            user_id: true,
+            stripeCustomerId: true,
+        },
+    });
+    if (!user) {
+        const fullName = `${firstName ?? ''} ${lastName ?? ''}`;
+        const avatarUrl = getRandomAvatarUrl();
+        await prisma.user.create({
+            data: {
+                email: email,
+                user_id: id,
+                fullName: fullName,
+                profileImage: avatarUrl,
+            },
+            select: {
+                user_id: true,
+            },
+        });
+    }
+    if (!user?.stripeCustomerId) {
+        const data = await stripe.customers.create({
+            email: email,
+        })
+        await prisma.user.update({
+            where: {
+                user_id: id
+            },
+            data: {
+                stripeCustomerId: data.id
+            }
+        })
+    }
+}
 export async function getRidewithDriverId(driver_id: string) {
     noStore();
     try {

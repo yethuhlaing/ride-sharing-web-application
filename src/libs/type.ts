@@ -24,6 +24,15 @@ export type UserType = {
     updatedAt: Date;
     stripeCustomerId?: string | null;
 }
+
+export interface UserData {
+    email: string;
+    id: string;
+    firstName: string;
+    lastName: string;
+    profileImage: string;
+}
+
 export type BookingType = {
     booking_id: string;
     ride_id: string;

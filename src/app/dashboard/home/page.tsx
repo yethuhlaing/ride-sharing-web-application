@@ -51,7 +51,7 @@ export default function DashboardPage(){
     
     return(
         <div className='relative flex flex-col h-full w-full'>
-            <div className="bg-neutral-50 py-4 sticky top-0 flex flex-wrap lg:space-x-2 space-x-0 lg:space-y-0 space-y-2 lg:justify-between justify-center">
+            <div className="bg-[#ffffff] py-4 sticky top-0 flex flex-wrap lg:space-x-2 space-x-0 lg:space-y-0 space-y-2 lg:justify-between justify-center">
                 <div className="flex items-center space-x-1">
                     <Navigation size={20} />
                     <GoogleMapInput value={pickupValue} handleSelect={handlePickUpSelect} placeholderName={"Pickup Location"} />
