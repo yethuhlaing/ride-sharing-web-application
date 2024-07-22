@@ -81,7 +81,7 @@ export async function createRide({ driver_id,
     origin,
     destination,
     departure_time,
-    available_seats } : RideType) {
+    available_seats } : any) {
     try {
         const newRide = await prisma.ride.create({
             data: {
