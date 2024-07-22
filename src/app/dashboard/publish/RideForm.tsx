@@ -9,13 +9,15 @@ import { useRouter } from 'next/navigation';
 import { createRide } from '@/actions/action';
 import toast from 'react-hot-toast';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
-import { MapPin } from 'lucide-react';
+import { Clock, MapPin } from 'lucide-react';
 import { CalendarIcon, Navigation, UserRound } from 'lucide-react';
 import { useLocation } from '@/context/LocationContextProvider';
+import { Location } from '@/libs/type';
+import { getLatAndLng } from '@/libs/utils';
 
 function RideForm() {
 
-    const { source, destination, setSource, setDestination } = useLocation()
+    const { setSource, setDestination } = useLocation()
 
     const { getUser } = useKindeBrowserClient()
     const user_id = getUser()
@@ -65,63 +67,33 @@ function RideForm() {
         }
     }
 
-    const getLatAndLng = (place: any, type: any) => {
-        if (place == null) {
-            console.log("Null")
-            if ((type === 'source')) {
-                setSource(null);
-            } else {
-                setDestination(null);
-            }
-        }
-        else {
-            const placeId = place?.value.place_id;
-            const service = new google.maps.places.PlacesService(
-                document.createElement('div'),
-            );
-            service.getDetails({ placeId }, (place, status) => {
-                if (
-                    status === google.maps.places.PlacesServiceStatus.OK &&
-                    place?.geometry &&
-                    place?.geometry.location
-                ) {
-                    if ((type === 'source')) {
-                        setSource({
-                            lat: place.geometry.location.lat(),
-                            lng: place.geometry.location.lng(),
-                            name: place.formatted_address,
-                            label: place.name,
-                        });
-                    } else {
-                        setDestination({
-                            lat: place.geometry.location.lat(),
-                            lng: place.geometry.location.lng(),
-                            name: place.formatted_address,
-                            label: place.name,
-                        });
-                    }
-                }
-            });
-        }
-    };
     const handlePickUpSelect = (place: any) => {
-        const type = 'source'
-        getLatAndLng(place, type);
         setPickupValue(place)
+        const result = getLatAndLng(place);
+        if (result && result !== null) {
+            setSource(result)
+        } else{
+            setSource(null);
+        }
+
     };
     const handleDropOffSelect = (place: any) => {
-        const type = 'destination'
-        getLatAndLng(place, type);
         setDropOffValue(place)
+        const result = getLatAndLng(place);
+        if (result && result !== null) {
+            setDestination(result)
+        } else {
+            setDestination(null);
+        }
 
     };
     return (
         <form className="space-y-2" action={handleSubmit}>
-            <div className="flex items-center">
+            <div className="flex items-center space-x-3">
                 <Navigation size={20} />
                 <GoogleMapInput value={pickupValue} handleSelect={handlePickUpSelect} placeholderName={"Pickup Location"} />
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center space-x-3">
                 <MapPin size={20} />
                 <GoogleMapInput value={dropOffValue} handleSelect={handleDropOffSelect} placeholderName={"DropOff Location"} />
             </div>
@@ -131,10 +103,10 @@ function RideForm() {
             </div>
             <div className='flex items-center'>
                 <CalendarIcon size={20} />
-                <DatePickerWithPresets date={date} setDate={setDate} placeholderName={"Departure Time"} />
+                <DatePickerWithPresets date={date} setDate={setDate} placeholderName={"Departure Date"} />
             </div>
             <div className='flex items-center'>
-                <CalendarIcon size={20} />
+                <Clock size={20} />
                 <Input type='time' required value={time} onChange={(e) => setTime(e.target.value)} className='w-full text-sm ml-4' />
             </div>
             <SubmitButton buttonName="Publish" />

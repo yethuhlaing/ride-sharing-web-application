@@ -10,17 +10,29 @@ export default function GoogleMapInput( {value, handleSelect, placeholderName}) 
                 placeholder: placeholderName,
                 isClearable: true,
                 required: true,
-                className: 'w-full ml-4 text-sm rounded-lg',
                 styles: {
                     input: (provided) => ({
                         ...provided,
-                        minWidth: "210px"
-                    })
+                    }),
+                    control: (provided) => ({
+                        ...provided,
+                        width: "300px",
+                        '@media (min-width: 768px)': {
+                            width: '500px', 
+                        },
+                        '@media (min-width: 1024px)': {
+                            width: '250px',// lg:
+                        },
+                        borderRadius: '10px', 
+                        paddingleft: "0.5rem",
+                        paddingRight: "0.5rem",
+                    }),
                 },
                 components: {
                     DropdownIndicator: false
                 }
             }}
+            apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY}
         />
     )
 }

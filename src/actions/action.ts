@@ -2,7 +2,7 @@
 
 import { LIMIT_MESSAGE } from "@/libs/data";
 import prisma from "@/libs/db";
-import { RideType } from "@/libs/type";
+import { RideDataType, RideType } from "@/libs/type";
 import { getFromAndTo } from "@/libs/utils";
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 
@@ -96,6 +96,34 @@ export async function createRide({ driver_id,
         return newRide;
     } catch (error) {
         console.error('Error creating ride:', error);
+        throw error;
+    }
+}
+export async function findRides(origin: string, destination: string, departureTime: Date) {
+    try {
+        // Create a range for the entire day
+        const startOfDay = new Date(departureTime);
+        startOfDay.setHours(0, 0, 0, 0);
+
+        const rides = await prisma.ride.findMany({
+            where: {
+                origin: origin,
+                destination: destination,
+                departure_time: {
+                    gte: startOfDay, 
+                },
+            },
+            orderBy: {
+                departure_time: 'asc',
+            },
+            include: {
+                driver: true
+            }
+        });
+        console.log(rides)
+        return rides;
+    } catch (error) {
+        console.error('Error fetching rides:', error);
         throw error;
     }
 }

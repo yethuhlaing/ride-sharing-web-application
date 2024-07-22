@@ -1,5 +1,6 @@
 import { ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { Location } from "./type";
 
 export const validateString = (
     value: unknown,
@@ -37,13 +38,37 @@ export const formatTime = (dateString: string  ) => {
         console.log(error)
     }
 };
+
 export const getFirstName = (str: string) => {
     return str.split(' ')[0];
 };
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
-
+export function getLatAndLng(place: any): Location | null {
+    if (!place) {
+        const placeId = place?.value.place_id;
+        const service = new google.maps.places.PlacesService(
+            document.createElement('div'),
+        );
+        service.getDetails({ placeId }, (place, status) => {
+            if (
+                status === google.maps.places.PlacesServiceStatus.OK &&
+                place?.geometry &&
+                place?.geometry.location
+            ) {
+                console.log("OK")
+                return {
+                    lat: place.geometry.location.lat(),
+                    lng: place.geometry.location.lng(),
+                    name: place.formatted_address,
+                    label: place.name,
+                }
+            }
+        });
+    }
+    return null
+};
 export function getFromAndTo(page: number, itemPerPage: number) {
     let from = page * itemPerPage;
     let to = from + itemPerPage;

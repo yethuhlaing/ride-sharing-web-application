@@ -55,7 +55,12 @@ export type SubscriptionType = {
     updatedAt: Date;
     user_id: string;
 };
-
+export type Location = {
+    lat: number;
+    lng: number;
+    name: string | undefined;
+    label: string | undefined;
+}
 export type RideType = {
     ride_id: string;
     driver_id: string;
@@ -63,7 +68,7 @@ export type RideType = {
     destination: string;
     departure_time: Date;
     available_seats: number;
-    driver: UserType;
+    driver?: UserType;
     bookings?: BookingType[];
     reviews?: Review
 };

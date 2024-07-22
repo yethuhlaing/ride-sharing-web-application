@@ -1,5 +1,6 @@
 "use client";
 
+import { Location } from "@/libs/type";
 import React, { useState, createContext, useContext } from "react";
 
 export const LocationContext = createContext<LocationContextType | null>(null);
@@ -14,12 +15,7 @@ type LocationContextType = {
 type LocationContextProviderProps = {
     children: React.ReactNode;
 };
-interface Location {
-    lat: number;
-    lng: number;
-    name: string | undefined;
-    label: string | undefined;
-}
+
 export function LocationProvider({
     children,
 }: LocationContextProviderProps) {

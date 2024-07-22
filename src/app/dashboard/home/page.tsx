@@ -1,67 +1,85 @@
-import prisma from "@/libs/db";
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import Image from 'next/image';
-import { formatDate, formatTime } from '@/libs/utils';
-import Link from 'next/link';
-import { Button } from "@/components/ui/button";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
-import { getRides } from "@/actions/action";
-import { RideType } from "@/libs/type";
+"use client"
+
+import React, { Suspense, useEffect, useState } from 'react';
+import GoogleMapInput from "@/components/specific/GoogleMapInput"
+import { MapPin, Navigation, CalendarIcon } from "lucide-react";
+import { DatePickerWithPresets } from '@/components/specific/DatePicker';
+import RideList from './RideList';
+import { SubmitButton } from '@/components/specific/SubmitButton';
+import { findRides } from '@/actions/action';
+import toast from 'react-hot-toast';
+import { RideDataType, RideType } from '@/libs/type';
+import LoadingComponent from '@/components/loading/LoadingComponent';
+import { Card } from '@/components/ui/card';
 
 
-export default async function DashboardPage(){
-    const rides = await getRides()
+export default function DashboardPage(){
+    const [pickupValue, setPickupValue] = useState<any>(null)
+    const [dropOffValue, setDropOffValue] = useState<any>(null)
+    const [date, setDate] = useState<Date | null>(null)
+    const [ rides, setRides ] = useState<RideType[]>([])
+    const handlePickUpSelect = (place: any) => {
+        console.log(place)
+        if (place) {
+            setPickupValue(place)
+        }else{
+            setPickupValue(null)
+        }
+
+
+    };
+    const handleDropOffSelect = (place: any) => {
+        if (place) {
+            setDropOffValue(place)
+        } else {
+            setDropOffValue(null)
+        }
+    };
+    const SearchRide = async () => {
+        try {
+            const rides = await findRides(
+                pickupValue?.label,
+                dropOffValue?.label,
+                date as Date
+            )
+            setRides(rides)
+        } catch (error: any) {
+            toast.error(error)
+        }
+    }
+
+    
     return(
-        <div className="space-y-2">
-            {rides.map((ride, index) => (
-                <Card key={index} className="min-w-sm mx-auto p-4 shadow-sm border border-gray-200 flex items-center justify-between">
-                        {/* <CardHeader>
-                            <CardTitle className="text-lg font-semibold text-gray-900">Ride Details</CardTitle>
-                            <CardDescription className="text-sm text-gray-600">
-                                Driver Name: {ride.driver.fullName}
-                            </CardDescription>
-                        </CardHeader> */}
-                    <div className='flex-row items-center justify-center space-y-1'>
-                        <div className="flex items-center text-xs lg:text-base">
-                            <span className="font-semibold text-gray-700">Origin: </span>
-                            <span className="ml-2 text-gray-600">{ride.origin}</span>
-                        </div>
-                        <div className="flex items-center text-xs lg:text-base">
-                            <span className="font-semibold text-gray-700">Destination: </span>
-                            <span className="ml-2 text-gray-600">{ride.destination}</span>
-                        </div>
-                        <div className="flex items-center text-xs lg:text-base">
-                            <span className="font-semibold text-gray-700">Departure Date: </span>
-                            <span className="ml-2 text-gray-600">{formatDate(ride.departure_time.toLocaleString())}</span>
-                        </div>
-                        <div className="flex items-center text-xs lg:text-base">
-                            <span className="font-semibold text-gray-700">Departure Time: </span>
-                            <span className="ml-2 text-gray-600">{formatTime(ride.departure_time.toLocaleString())}</span>
-                        </div>
-                        <div className="flex items-center text-xs lg:text-base">
-                            <span className="font-semibold text-gray-700">Available Seats: </span>
-                            <span className="ml-2 text-gray-600">{ride.available_seats}</span>
-                        </div>
+        <div className='relative flex flex-col h-full w-full'>
+            <div className="bg-neutral-50 py-4 sticky top-0 flex flex-wrap lg:space-x-2 space-x-0 lg:space-y-0 space-y-2 lg:justify-between justify-center">
+                <div className="flex items-center space-x-1">
+                    <Navigation size={20} />
+                    <GoogleMapInput value={pickupValue} handleSelect={handlePickUpSelect} placeholderName={"Pickup Location"} />
+                </div>
+                <div className="flex items-center space-x-1">
+                    <MapPin size={20} />
+                    <GoogleMapInput value={dropOffValue} handleSelect={handleDropOffSelect} placeholderName={"DropOff Location"} />
+                </div>
+                <div className='flex items-center space-x-2 w-[320px] md:w-[500px] lg:w-[250px] '>
+                    <CalendarIcon size={20} />
+                    <DatePickerWithPresets date={date} setDate={setDate} placeholderName={"Departure Date"} />
+                </div>
+                <form action={SearchRide} className='w-[320px] md:w-[550px] lg:flex-1'>
+                    <SubmitButton buttonName='Search'/>
+                </form>
+            </div>
+            {
+                rides && rides.length > 0 ? (
+                    <Suspense fallback={<LoadingComponent />}>
+                        <RideList rides={rides} />
+                    </Suspense>
+                ) : (
+                    <div className='flex flex-col h-full w-full p-2 items-center justify-between bg-secondary rounded-md text-secondary-foreground '>
+                        <div className='m-auto text-sm px-6 py-1 bg-primary rounded-3xl text-neutral-50'>Find your Journey</div>
                     </div>
-                    <div className='flex flex-col items-center justify-between space-y-4'>
-                        <Image
-                            src={ride.driver.profileImage as string | StaticImport}
-                            alt="User Profile Image"
-                            width={70}  // Set the appropriate width
-                            height={70} // Set the appropriate height
-                            className="rounded-full aspect-square object-cover"
-                            priority={true}
-                        />
-                        <Button className="btn btn-primary text-xs w-auto h-auto">
-                            <Link href={`/dashboard/home/ride/${ride.ride_id}`}>
-                                See more...                    
-                            </Link>
-                        </Button>
-                    </div>
-                </Card>
-
-            ))}
+                )
+            }
         </div>
+
     )
 }
