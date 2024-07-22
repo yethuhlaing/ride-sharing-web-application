@@ -11,14 +11,17 @@ import toast from 'react-hot-toast';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { MapPin } from 'lucide-react';
 import { CalendarIcon, Navigation, UserRound } from 'lucide-react';
-import { LoadScript } from '@react-google-maps/api';
+import { useLocation } from '@/context/LocationContextProvider';
 
-function RideForm({ source, setSource, destination, setDestination }: any) {
+function RideForm() {
+
+    const { source, destination, setSource, setDestination } = useLocation()
+
     const { getUser } = useKindeBrowserClient()
     const user_id = getUser()
 
-    const [pickupValue, setPickupValue] = useState(null)
-    const [dropOffValue, setDropOffValue] = useState(null)
+    const [pickupValue, setPickupValue] = useState<any>(null)
+    const [dropOffValue, setDropOffValue] = useState<any>(null)
     const [date, setDate] = useState<Date | null>(null)
     const [time, setTime] = useState("")
     const passengersRef = useRef<HTMLInputElement | null>(null)
@@ -32,8 +35,8 @@ function RideForm({ source, setSource, destination, setDestination }: any) {
 
         const rideData = {
             driver_id: user_id?.id,
-            origin: pickupValue,
-            destination: dropOffValue,
+            origin: pickupValue?.label,
+            destination: dropOffValue?.label,
             departure_time: combinedDateTime,
             available_seats: Number(passengersRef.current?.value),
         };
@@ -51,8 +54,8 @@ function RideForm({ source, setSource, destination, setDestination }: any) {
         }
     };
     const resetFormData = () => {
-        setSource([]);
-        destination([]);
+        setSource(null);
+        setDestination(null);
         setPickupValue(null);
         setDropOffValue(null);
         setDate(null);
@@ -66,9 +69,9 @@ function RideForm({ source, setSource, destination, setDestination }: any) {
         if (place == null) {
             console.log("Null")
             if ((type === 'source')) {
-                setSource([]);
+                setSource(null);
             } else {
-                setDestination([]);
+                setDestination(null);
             }
         }
         else {

@@ -5,36 +5,36 @@ import React, { useState, createContext, useContext } from "react";
 export const LocationContext = createContext<LocationContextType | null>(null);
 
 type LocationContextType = {
-    source: string | null;
-    setSource: React.Dispatch<React.SetStateAction<string | null>>;
-    destination: string | null;
-    setDestination: React.Dispatch<React.SetStateAction<string | null>>;
+    source: Location | null;
+    setSource: React.Dispatch<React.SetStateAction<Location | null>>;
+    destination: Location | null;
+    setDestination: React.Dispatch<React.SetStateAction<Location | null>>;
 };
 
 type LocationContextProviderProps = {
     children: React.ReactNode;
 };
-
+interface Location {
+    lat: number;
+    lng: number;
+    name: string | undefined;
+    label: string | undefined;
+}
 export function LocationProvider({
     children,
 }: LocationContextProviderProps) {
-    const [destination, setDestination] = useState<string | null> (null);
-    const [source, setSource] = useState< string | null>(null);
+    const [destination, setDestination] = useState<Location | null>(null);
+    const [source, setSource] = useState<Location | null>(null);
+
     return (
         <LocationContext.Provider
-            value={{
-                source,
-                setSource,
-                destination,
-                setDestination,
-            }}
+            value={{ source, destination, setSource, setDestination }}
         >
             {children}
         </LocationContext.Provider>
     );
 }
-
-export function useActiveSectionContext() {
+export const useLocation = () => {
     const context = useContext(LocationContext);
 
     if (context === null) {
@@ -44,5 +44,6 @@ export function useActiveSectionContext() {
     }
 
     return context;
-}
+};
+
 

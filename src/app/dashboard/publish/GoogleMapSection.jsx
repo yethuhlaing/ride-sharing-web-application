@@ -1,16 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { GoogleMap, MarkerF, OverlayViewF, OverlayView, DirectionsRenderer } from '@react-google-maps/api';
-import { LocationContext } from '@/context/LocationContextProvider';
+import { useLocation } from '@/context/LocationContextProvider';
 const containerStyle = {
     width: '100%',
     height: '85vh'
 };
 
-function GoogleMapSection({ source, destination }) {
+function GoogleMapSection() {
     // const { isLoaded } = useJsApiLoader({
     //     id: 'google-map-script',
     //     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY
     // })
+    const { source, destination, } = useLocation()
+    console.log(source)
     const [ center , setCenter ] = useState({
         lat: 61.05497219999999,
         lng: 28.1896039,
@@ -18,7 +20,8 @@ function GoogleMapSection({ source, destination }) {
     const [map, setMap] = useState(null)
     const [directionRoutePoints, setDirectionRoutePoints] = useState([])
     useEffect(() => {
-        if (source?.length!=[]&& map) {
+        if (source!=null&& map) {
+            console.log(typeof (source?.lat))
             map.panTo(
                 {
                     lat: source?.lat,
@@ -38,7 +41,7 @@ function GoogleMapSection({ source, destination }) {
 
     
     useEffect(() => {
-        if (destination?.length != [] && map) {
+        if (destination != null && map) {
             map.panTo(
                 {
                     lat: destination?.lat,

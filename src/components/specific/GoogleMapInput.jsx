@@ -10,7 +10,7 @@ export default function GoogleMapInput( {value, handleSelect, placeholderName}) 
                 placeholder: placeholderName,
                 isClearable: true,
                 required: true,
-                className: 'w-full ml-4 text-sm',
+                className: 'w-full ml-4 text-sm rounded-lg',
                 styles: {
                     input: (provided) => ({
                         ...provided,
