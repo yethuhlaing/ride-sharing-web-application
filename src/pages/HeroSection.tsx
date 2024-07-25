@@ -4,8 +4,8 @@ import { RegisterLink } from '@kinde-oss/kinde-auth-nextjs/components';
 
 export default function HeroSection() {
     return (
-        <section className="relative flex items-center justify-center bg-background h-[80vh]">
-            <div className="flex items-center w-full px-5 py-12 mx-auto lg:px-16 max-w-7xl md:px-12">
+        <section className="relative flex items-center justify-center bg-background h-[90vh]">
+            <div className="z-40 flex items-center w-full px-5 py-10 mx-auto lg:px-16 max-w-7xl md:px-12">
                 <div className="max-w-3xl mx-auto text-center">
                     <div>
                         <span className="w-auto px-6 py-3 rounded-full bg-secondary">
@@ -17,7 +17,7 @@ export default function HeroSection() {
                             Get a Ride,
                             <span className="text-primary">Save More!</span>
                         </h1>
-                        <p className="max-w-xl mx-auto mt-8 text-base lg:text-base text-secondary-foreground">
+                        <p className="max-w-xl mx-auto mt-8 text-base lg:text-base text-neutral-700">
                             As a student-led startup, we are dedicated to
                             providing an exceptional transportation solution
                             that makes your daily commute and travels between
@@ -33,7 +33,7 @@ export default function HeroSection() {
 
                         <Button
                             size="lg"
-                            className="ml-4 md:ml-6 text-secondary-foreground bg-secondary"
+                            className="ml-4 md:ml-6 bg-secondary-foreground text-primary hover:bg-[#cfd3ab]"
                         >
                             Download App
                         </Button>

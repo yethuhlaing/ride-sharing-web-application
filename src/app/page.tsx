@@ -1,13 +1,14 @@
 import HeroSection from '../pages/HeroSection';
-import { Features } from '../pages/FeatureSection';
 import { FAQ } from '../pages/FAQSection';
 import { Team } from '../pages/TeamSection';
 import Footer from '../pages/FooterSection';
 import { ScrollToTop } from '../components/specific/ScrollToTop';
-import { AnimatedSection } from '../pages/TestimonialSection';
 import ContactSection from '@/pages/ContactSection';
 import ContactForm from '@/components/specific/ContactForm';
 import { Navbar } from '@/components/specific/Navbar';
+import Features from '@/pages/FeatureSection';
+import Pricing from '@/pages/Pricing';
+import HowItWorkSection from '@/pages/HowItWorkSection';
 
 export default async function Home() {
     return (
@@ -16,8 +17,9 @@ export default async function Home() {
             <ScrollToTop />
             <HeroSection />
             <Features />
-            <AnimatedSection />
-            <Team />
+            <HowItWorkSection />
+            <Pricing />
+            {/* <Team /> */}
             <FAQ />
             <ContactSection>
                 <ContactForm />

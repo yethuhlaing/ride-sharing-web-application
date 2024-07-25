@@ -3,6 +3,7 @@
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect } from 'react';
+import LoadingComponent from "../loading/LoadingComponent";
 
 export default function ProtectedRoute({ children }){
     
@@ -16,7 +17,7 @@ export default function ProtectedRoute({ children }){
     }, [isLoading, isAuthenticated, router]);
 
     if (isLoading || !isAuthenticated) {
-        return <p>Loading...</p>;
+        return <LoadingComponent />;
     }
 
     return children;

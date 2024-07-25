@@ -67,23 +67,35 @@ function RideForm() {
         }
     }
 
-    const handlePickUpSelect = (place: any) => {
-        setPickupValue(place)
-        const result = getLatAndLng(place);
-        if (result && result !== null) {
-            setSource(result)
-        } else{
+    const handlePickUpSelect = async (place: any) => {
+        setPickupValue(place);
+
+        try {
+            const result = await getLatAndLng(place);
+            console.log(result);
+            if (result) {
+                setSource(result);
+            } else {
+                setSource(null);
+            }
+        } catch (error) {
+            console.error("Error getting location details:", error);
             setSource(null);
         }
-
     };
-    const handleDropOffSelect = (place: any) => {
+
+    const handleDropOffSelect = async (place: any) => {
         setDropOffValue(place)
-        const result = getLatAndLng(place);
-        if (result && result !== null) {
-            setDestination(result)
-        } else {
-            setDestination(null);
+        try {
+            const result = await getLatAndLng(place);
+            if (result && result !== null) {
+                setDestination(result)
+            } else {
+                setDestination(null);
+            }
+        } catch (error) {
+            console.error("Error getting location details:", error);
+            setSource(null);
         }
 
     };

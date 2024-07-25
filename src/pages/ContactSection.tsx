@@ -15,10 +15,10 @@ export default function ContactSection({
         </span>
       </div>
 
-      <div className="text-gray-700 -mt-6 dark:text-white/80">
-        Please contact me directly at{" "}
+      <div className="text-gray-700 -mt-6 dark:text-white/80 text-center">
+        Contact us directly at{" "}
         <a className="underline" href="mailto:yethusteve217@gmail.com">
-          yethusteve217@gmail.com
+          wego@gmail.com
         </a>{" "}
         or through this form.
       </div>

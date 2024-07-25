@@ -4,6 +4,8 @@ import { Button } from '../ui/button';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { UserNav } from './UserNav';
 import { getUserData } from '@/actions/action';
+import Image from 'next/image';
+import logo from "@@/public/assets/logo.png"
 
 export async function DashboardNavbar() {
     const { getUser } = getKindeServerSession();
@@ -13,9 +15,7 @@ export async function DashboardNavbar() {
         <nav className="bg-background h-[10vh] flex items-center sticky z-50 top-0 inset-x-0">
             <div className="container flex items-center justify-between gap-x-4">
                 <Link href="/">
-                    <h1 className="font-bold text-lg md:text-3xl">
-                        We<span className="text-primary">Go</span>
-                    </h1>
+                    <Image src={logo} alt='WeGo profile Image' className='w-full h-5' />
                 </Link>
                 <div className="flex items-center gap-x-2 md:gap-x-3">
                     <div className='hidden md:flex'>

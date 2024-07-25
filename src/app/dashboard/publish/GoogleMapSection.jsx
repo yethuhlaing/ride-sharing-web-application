@@ -21,7 +21,7 @@ function GoogleMapSection() {
     const [directionRoutePoints, setDirectionRoutePoints] = useState([])
     useEffect(() => {
         if (source!=null&& map) {
-            console.log(typeof (source?.lat))
+            console.log(source?.lat)
             map.panTo(
                 {
                     lat: source?.lat,
