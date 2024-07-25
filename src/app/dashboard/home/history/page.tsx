@@ -17,7 +17,6 @@ export default  async function History() {
 
     const rides = await getRidewithDriverId(user?.id as string)
     const bookings = await getBookingwithUserId(user?.id as string) as BookingType[]
-
     return (
         <div className='flex flex-row flex-wrap space-y-2 md:space-y-0 space-x-0 md:space-x-2 justify-center w-full flex-1 h-screen'>
             <div className='w-full md:flex-1 h-full'>
@@ -67,7 +66,7 @@ export default  async function History() {
                 }
             </div>
             <div className='w-full md:flex-1 h-full'>
-                <div className='text-2xl lg:text-3xl font-bold py-4 px-2'>Your Rides</div>
+                <div className='text-2xl lg:text-3xl font-bold py-4 px-2'>Your Publishs</div>
                 {rides && rides.length > 0 && rides.map( (ride) => (
                     <Link href={`/dashboard/home/ride/${ride.ride_id}`} className='hover:bg-secondary-foreground'>
                         <Card key={ride.ride_id} className='flex-row items-center justify-center space-y-2 p-4 hover:bg-primary-foreground mt-2'>

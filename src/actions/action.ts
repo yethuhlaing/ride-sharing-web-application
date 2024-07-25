@@ -43,6 +43,7 @@ export async function deleteBooking(booking_id: string) {
 }
 
 export async function updateBooking(booking_id: string, status: string) {
+    noStore()
     try {
         await prisma.booking.update({
             where: {
@@ -53,7 +54,7 @@ export async function updateBooking(booking_id: string, status: string) {
         
         revalidatePath('/dashboard/home/', 'layout')
     } catch (error) {
-        console.error('Error cancelling booking:', error);
+        console.error('Something Wrong!', error);
         return error;
     }
 }
@@ -258,6 +259,7 @@ export async function getBookingwithUserId(user_id: string) {
 }
 
 export async function getBookingwithRideIdAndPassengerId(ride_id: string, passenger_id: string) {
+    noStore()
     try {
         const bookings = await prisma.booking.findMany({
             include: {

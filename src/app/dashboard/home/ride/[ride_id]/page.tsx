@@ -25,7 +25,7 @@ export default async function RidePage({ params } : any) {
     const ride = await getRidewithRideId(ride_id) as RideDataType
     const bookings = await getBookingwithRideId(ride_id) as BookingType[]
     const bookingsWithPassengerId = await getBookingwithRideIdAndPassengerId(ride_id, passenger_id ) as BookingType[]
-    
+    console.log(bookingsWithPassengerId)
     async function handleSubmit() {
         "use server"
 
@@ -70,6 +70,7 @@ export default async function RidePage({ params } : any) {
 
         try {
             await updateBooking(booking_id, "Pending")
+            revalidatePath(`/dashboard/home/ride/${ride_id}`, "page")
         } catch (error) {
             console.log(error)
         }
@@ -166,7 +167,7 @@ export default async function RidePage({ params } : any) {
                                                 </form>
                                             )}
                                             {bookingsWithPassengerId[0]?.status === "Declined" && (
-                                                <form action={handleRequestAgain.bind(null, ride.bookings[0].booking_id)}>
+                                                    <form action={handleRequestAgain.bind(null, bookingsWithPassengerId[0].booking_id)}>
                                                     <SubmitButton buttonName='Request Again' />
                                                 </form>
                                             )}

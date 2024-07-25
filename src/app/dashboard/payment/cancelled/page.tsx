@@ -32,7 +32,7 @@ export default async function CancelledRoute() {
 
                         <div className="mt-5 sm:mt-6 w-full">
                             <Button className="w-full" asChild>
-                                <Link href="/dashboard">Go back to Dashboard</Link>
+                                <Link href="/dashboard/home">Go back to Dashboard</Link>
                             </Button>
                         </div>
                     </div>
