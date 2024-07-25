@@ -34,7 +34,7 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType) {
         const channel = supabase.channel(channelName);
 
         channel.on("postgres_changes",
-            { event: "INSERT", schema: "public", table: "Message" },
+            { event: "INSERT", schema: "public", table: "Message", filter: `chat_room_id=eq.${chatRoom.chat_room_id}` },
             async (payload: any) => {
                 if (!optimisticIds.includes(payload.new.id)) {
                     try {
