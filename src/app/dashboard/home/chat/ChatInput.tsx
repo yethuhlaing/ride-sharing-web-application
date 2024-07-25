@@ -82,7 +82,7 @@ function ChatInput({ senderId, chatRoomId }: any) {
                         e.currentTarget.value = "";
                     }
                 }}
-                className="flex-1 px-4 py-2 rounded-lg outline-none focus:ring-0 focus:border-transparent text-xs placeholder:text-xs"
+                className="text-neutral-900 flex-1 px-4 py-2 rounded-lg outline-none focus:ring-0 focus:border-transparent text-xs placeholder:text-xs"
             />
             <Button
                 
@@ -90,9 +90,9 @@ function ChatInput({ senderId, chatRoomId }: any) {
                     handleSendMessage(message);
                     setMessage('');
                 }}
-                className='bg-primary-foreground w-fit h-fit flex justify-center items-center'
+                className='w-fit h-fit flex justify-center items-center  bg-secondary-foreground hover:bg-[#c7d640]'
             >
-                <SendHorizonal size={16} />
+                <SendHorizonal size={16} className=' text-neutral-900'/>
             </Button>
         </div>
 

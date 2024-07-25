@@ -62,7 +62,7 @@ export default function ChatHeader({chatRoom} : { chatRoom: ChatRoomType}) {
             </div>
             <ChatRoomAvatar passengerProfileImage={chatRoom.passenger?.profileImage ?? defaultImage} driverProfileImage={chatRoom.driver?.profileImage ?? defaultImage} />
             <div className="flex flex-col lg:px-14 px-12 items-start py-2">
-                <h1 className="lg:text-sm text-xs font-bold">{chatRoom.name}</h1>
+                <h1 className="lg:text-sm text-xs font-bold  text-neutral-900">{chatRoom.name}</h1>
                 <div className="flex items-center gap-1">
                     <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
                     <h1 className="text-xs text-gray-400">{onlineUsers} onlines</h1>

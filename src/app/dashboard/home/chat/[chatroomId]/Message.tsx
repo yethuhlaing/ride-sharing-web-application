@@ -29,7 +29,7 @@ export default function Message({ message }: { message: MessageType }) {
             <div className="flex-1 space-y-1">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-1">
-                        <h1 className="font-bold text-xs lg:text-sm">
+                        <h1 className="font-bold text-xs lg:text-sm text-neutral-900">
                             {message.sender?.fullName!}
                         </h1>
 
@@ -38,7 +38,7 @@ export default function Message({ message }: { message: MessageType }) {
                         )}
                     </div>
                     {message.sender_id === user?.id && (
-                        <MessageMenu message={message} />
+                        <MessageMenu message={message}/>
                     )}
                 </div>
                 <p className="text-xs lg:text-sm text-gray-800">{message.content}</p>
@@ -53,11 +53,11 @@ const MessageMenu = ({ message }: { message: MessageType }) => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger>
-                <MoreHorizontal size={18}/>
+                <MoreHorizontal size={18} className=" text-neutral-900"/>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                 <DropdownMenuLabel>
-                    <h1 className="text-xs lg:text-sm text-gray-400">
+                    <h1 className="text-xs lg:text-sm font-normal text-gray-400">
                         {new Date(message.createdAt).toDateString()}
                     </h1>
                 </DropdownMenuLabel>
