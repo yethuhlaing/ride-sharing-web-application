@@ -14,6 +14,11 @@ export default function GoogleMapInput( {value, handleSelect, placeholderName}) 
                     input: (provided) => ({
                         ...provided,
                     }),
+                    placeholder: (provided) => ({
+                        ...provided,
+                        fontSize: '14px',
+                        color: 'primary-foreground',
+                    }),
                     control: (provided) => ({
                         ...provided,
                         width: "300px",

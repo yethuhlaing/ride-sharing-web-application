@@ -75,7 +75,7 @@ export default function DashboardPage(){
                     </Suspense>
                 ) : (
                     <div className='flex flex-col h-full w-full p-2 items-center justify-between bg-secondary rounded-md text-secondary-foreground '>
-                        <div className='m-auto text-sm px-6 py-1 bg-primary rounded-3xl text-neutral-50'>Find your Journey</div>
+                        <div className='m-auto text-sm px-6 py-1 bg-primary rounded-3xl text-neutral-50'>No Data Available</div>
                     </div>
                 )
             }

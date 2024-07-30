@@ -21,7 +21,7 @@ export default function Features(){
             </div>
             <div className="flex flex-col justify-around lg:flex-row items-center lg:space-x-12">
                 <div className="w-full lg:w-1/2">
-                    <Image src={FeatureImage1} alt="Descriptive Alt Text" className="w-full h-auto rounded-lg" />
+                    <Image src={FeatureImage1} alt="Descriptive Alt Text" className="w-full h-auto rounded-lg" priority />
                 </div>
                 <div className='flex flex-col lg:w-1/2 mt-6 lg:mt-0 space-y-8'>
                     <div className="w-full">
@@ -54,7 +54,7 @@ export default function Features(){
                     </div>
                 </div>
                 <div className="w-full lg:w-1/2">
-                    <Image src={FeatureImage2} alt="Descriptive Alt Text" className="w-full h-auto rounded-lg" />
+                    <Image src={FeatureImage2} alt="Descriptive Alt Text" className="w-full h-auto rounded-lg" priority />
                 </div>
             </div>
         </section>

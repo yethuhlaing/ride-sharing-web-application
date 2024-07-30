@@ -399,7 +399,19 @@ export async function updateMessageWithId(message_id: string, content: string) {
         throw error
     } 
 }
+export async function deleteRide(rideId: string) {
+    try {
+        const deletedRide = await prisma.ride.delete({
+            where: { ride_id: rideId },
+        });
 
+        console.log('Deleted ride:', deletedRide);
+        revalidatePath('/dashboard/home/history', 'page')
+    } catch (error) {
+        console.error('Error deleting ride:', error);
+        throw error
+    }
+}
 export async function getMessagesWithChatRoomId(limit: number, chatRoomId: string) {
     try {
         const messages = await prisma.message.findMany({

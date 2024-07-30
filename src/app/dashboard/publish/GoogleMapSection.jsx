@@ -118,7 +118,7 @@ function GoogleMapSection() {
                         directions={directionRoutePoints}
                         options={{
                             polylineOptions:{
-                                strokeColor: "text-primary",
+                                strokeColor: "#5b60cb",
                                 strokeWeight: 2
                             },
                             suppressMarkers: true

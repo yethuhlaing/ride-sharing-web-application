@@ -9,7 +9,7 @@ import React from 'react'
 
 function RideList({ rides }: { rides: RideType[] }) {
     return (
-        <div className="space-y-2">
+        <div className="space-y-2 bg-secondary">
             {rides.map((ride, index) => (
                 <Card key={index} className="min-w-sm mx-auto p-4 shadow-sm border border-gray-200 flex items-center justify-between">
                     {/* <CardHeader>
@@ -47,11 +47,11 @@ function RideList({ rides }: { rides: RideType[] }) {
                             width={70}  // Set the appropriate width
                             height={70} // Set the appropriate height
                             className="rounded-full aspect-square object-cover"
-                            priority={true}
+                            priority                            
                         />
                         <Button className="btn btn-primary text-xs w-auto h-auto">
                             <Link href={`/dashboard/home/ride/${ride.ride_id}`}>
-                                See more...
+                                Check
                             </Link>
                         </Button>
                     </div>

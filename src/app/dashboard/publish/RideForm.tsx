@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useContext, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { SubmitButton } from '@/components/specific/SubmitButton';
 import GoogleMapInput from "@/components/specific/GoogleMapInput"
 import { Input } from '@/components/ui/input';
@@ -12,7 +12,6 @@ import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { Clock, MapPin } from 'lucide-react';
 import { CalendarIcon, Navigation, UserRound } from 'lucide-react';
 import { useLocation } from '@/context/LocationContextProvider';
-import { Location } from '@/libs/type';
 import { getLatAndLng } from '@/libs/utils';
 
 function RideForm() {

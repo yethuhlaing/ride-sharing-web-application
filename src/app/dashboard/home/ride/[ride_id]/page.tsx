@@ -112,6 +112,7 @@ export default async function RidePage({ params } : any) {
                                         width={80}  // Set the appropriate width
                                         height={80} // Set the appropriate height
                                         className="rounded-full aspect-square object-cover"
+                                        priority
                                     />
 
                                 </div>
@@ -185,7 +186,7 @@ export default async function RidePage({ params } : any) {
                                     
                                 
                             ) : (
-                                <div className='flex flex-wrap flex-row space-x-0 space-y-2 lg:space-x-4 lg:space-y-0'>
+                                <div className='w-full md:flex flex-wrap flex-row space-x-0 space-y-2 md:space-x-4 md:space-y-0'>
                                     {
                                         bookings.length > 0 ? (
                                                 bookings?.filter((booking: BookingType) => booking.status !== 'Declined').map((booking: BookingType) => (
@@ -200,6 +201,7 @@ export default async function RidePage({ params } : any) {
                                                                         width={80}  // Set the appropriate width
                                                                         height={80} // Set the appropriate height
                                                                         className="rounded-full aspect-square object-cover"
+                                                                        priority
                                                                     />
 
                                                                 </div>

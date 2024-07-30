@@ -47,7 +47,7 @@ export function UserNav({
                         <Avatar className="h-10 w-10 rounded-full">
                             <AvatarImage src={image} alt="Profile Image" />
                             <AvatarFallback>
-                                <span><Image src={image} width={10} height={10} alt="Profile Image"/></span>
+                                <span><Image src={image} width={10} height={10} alt="Profile Image" /></span>
                             </AvatarFallback>
                         </Avatar>
                     </Button>
