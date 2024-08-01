@@ -9,7 +9,7 @@ import React from 'react'
 
 function RideList({ rides }: { rides: RideType[] }) {
     return (
-        <div className="space-y-2 bg-secondary">
+        <div className="space-y-2">
             {rides.map((ride, index) => (
                 <Card key={index} className="min-w-sm mx-auto p-4 shadow-sm border border-gray-200 flex items-center justify-between">
                     {/* <CardHeader>
@@ -51,7 +51,7 @@ function RideList({ rides }: { rides: RideType[] }) {
                         />
                         <Button className="btn btn-primary text-xs w-auto h-auto">
                             <Link href={`/dashboard/home/ride/${ride.ride_id}`}>
-                                Check
+                                See More...
                             </Link>
                         </Button>
                     </div>

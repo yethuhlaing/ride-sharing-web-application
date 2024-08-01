@@ -28,7 +28,9 @@ function RideForm() {
     const passengersRef = useRef<HTMLInputElement | null>(null)
     const router = useRouter();
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+
         const combinedDateTime = date;
         const [hours, minutes] = time?.split(':');
         combinedDateTime?.setHours(parseInt(hours, 10));
@@ -99,7 +101,7 @@ function RideForm() {
 
     };
     return (
-        <form className="space-y-2" action={handleSubmit}>
+        <form className="space-y-2" onSubmit={handleSubmit}>
             <div className="flex items-center space-x-3">
                 <Navigation size={20} />
                 <GoogleMapInput value={pickupValue} handleSelect={handlePickUpSelect} placeholderName={"Pickup Location"} />

@@ -5,6 +5,7 @@ import {
     UserRound,
     BookMarked,
     MessageCircleMore,
+    Star
 } from 'lucide-react';
 
 export const MonthlyPlan = [
@@ -176,11 +177,15 @@ export const teamList: TeamProps[] = [
         ],
     },
 ];
-
+export const StarColors = {
+    hover: "hsl(67, 80%, 52%)",
+    current: "hsl(237, 52%, 53%) "
+};
 export const navItems = [
     { name: 'Home', href: '/dashboard/home', icon: Home },
     { name: 'Profile', href: '/dashboard/home/profile', icon: UserRound },
     { name: 'Billing', href: '/dashboard/home/billing', icon: CreditCard },
     { name: 'History', href: '/dashboard/home/history', icon: BookMarked },
     { name: 'Chat', href: '/dashboard/home/chat', icon: MessageCircleMore },
+    { name: 'Review', href: '/dashboard/home/review', icon: Star },
 ];

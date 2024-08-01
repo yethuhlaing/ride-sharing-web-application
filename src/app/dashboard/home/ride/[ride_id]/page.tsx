@@ -196,7 +196,7 @@ export default async function RidePage({ params } : any) {
                                                             <div className="flex items-center space-x-4">
                                                                 <div>
                                                                     <Image
-                                                                        src={booking.passenger.profileImage as string | StaticImport}
+                                                                        src={booking.passenger?.profileImage as string | StaticImport}
                                                                         alt="User Profile Image"
                                                                         width={80}  // Set the appropriate width
                                                                         height={80} // Set the appropriate height
@@ -206,7 +206,7 @@ export default async function RidePage({ params } : any) {
 
                                                                 </div>
                                                                 <div className="flex flex-col space-y-2 text-base lg:text-xl font-bold">
-                                                                    <span className='font-normal text-sm'>{booking.passenger.fullName}</span>
+                                                                    <span className='font-normal text-sm'>{booking.passenger?.fullName}</span>
                                                                     <Button className='btn-primary text-xs mr-2 mt-2 w-full h-fit' >
                                                                         <Link href={`/dashboard/home/profile/${booking.passenger_id}`}>
                                                                             Check Profile
@@ -228,7 +228,7 @@ export default async function RidePage({ params } : any) {
                                                         {
                                                             booking.status === "Pending" && (
                                                                 <div className='flex flex-row space-x-2'>
-                                                                    <form action={handleAccept.bind(null, booking.booking_id, booking.passenger_id, booking.ride.driver_id)}>
+                                                                    <form action={handleAccept.bind(null, booking.booking_id, booking.passenger_id, booking.ride?.driver_id as string)}>
                                                                         <SubmitButton buttonName='Accept Ride' />
                                                                     </form>
                                                                     <form action={handleDecline.bind(null, booking.booking_id)}>

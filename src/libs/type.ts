@@ -12,6 +12,8 @@ export interface SociaNetworkslProps {
     name: string;
     url: string;
 }
+export type StatusType = "Pending" | "Confirmed" | "Declined"
+    
 
 export type UserType = {
     user_id: string;
@@ -23,6 +25,14 @@ export type UserType = {
     createdAt: Date;
     updatedAt: Date;
     stripeCustomerId?: string | null;
+    Subscription?: SubscriptionType;
+    vehicles?: VehicleType[];
+    bookings?: BookingType[];
+    rides?: RideType[];
+    reviews?: ReviewType[];
+    messages?: MessageType[];
+    driverChatRooms?: ChatRoomType[];
+    passengerChatRooms?: ChatRoomType[];
 }
 
 export interface UserData {
@@ -39,8 +49,8 @@ export type BookingType = {
     passenger_id: string;
     createdAt: Date;
     status: string;
-    ride: RideType;
-    passenger: UserType;
+    ride?: RideType;
+    passenger?: UserType;
 }
 
 export type VehicleType = {
@@ -79,7 +89,7 @@ export type RideType = {
     available_seats: number;
     driver?: UserType;
     bookings?: BookingType[];
-    reviews?: Review
+    reviews?: Review[]
 };
 
 export type ReviewType = {
@@ -87,9 +97,8 @@ export type ReviewType = {
     ride_id: string;
     passenger_id: string;
     rating: number;
-    comment?: string;
+    comment?: string | null;
 };
-
 
 
 export type RideDataType = {

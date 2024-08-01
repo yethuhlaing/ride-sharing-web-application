@@ -6,7 +6,7 @@ import { stripe } from "@/libs/stripe";
 import { unstable_noStore as noStore } from 'next/cache';
 import { DashboardNavbar } from '@/components/specific/DashboardNavbar';
 import { DashboardSidebar } from '@/components/specific/DashboardSidebar';
-import Loading from "./loading";
+import Loading from "../../../components/loading/loading";
 import { getRandomAvatarUrl } from '@/libs/utils';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { getDataDashboard } from '@/actions/action';

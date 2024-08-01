@@ -1,7 +1,3 @@
-import image from './../../public/assets/growth.png';
-import image3 from './../../public/assets/reflecting.png';
-import image4 from './../../public/assets/looking-ahead.png';
-import { StaticImageData } from 'next/image';
 import FeatureImage1 from '@@/public/assets/a.jpg'
 import FeatureImage2 from '@@/public/assets/b.jpg'
 

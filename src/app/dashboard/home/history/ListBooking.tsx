@@ -30,11 +30,11 @@ function ListBooking({ bookings} : { bookings: BookingType[]}) {
                         </div>
                         <div className="flex items-center text-xs lg:text-base space-x-3">
                             <span className="font-semibold "><Navigation size={20} /></span>
-                            <span className=" text-gray-600">{booking.ride.origin}</span>
+                            <span className=" text-gray-600">{booking.ride?.origin}</span>
                         </div>
                         <div className="flex items-center text-xs lg:text-base space-x-3">
                             <span className="font-semibold "><MapPin size={20} /></span>
-                            <span className=" text-gray-600">{booking.ride.destination}</span>
+                            <span className=" text-gray-600">{booking.ride?.destination}</span>
                         </div>
                         <div className="flex items-center text-xs lg:text-base space-x-3">
                             <span className="font-semibold "><CalendarIcon size={20} /></span>
@@ -70,7 +70,7 @@ export async function PassengerProfile({ ride_id }: { ride_id: string }) {
                     ConfirmedRides.map((booking: BookingType) => (
                         <img
                             key={booking.booking_id}
-                            src={booking.passenger.profileImage as string}
+                            src={booking.passenger?.profileImage as string}
                             alt="User Profile Image"
                             width={30} // Set the appropriate width
                             height={30} // Set the appropriate height

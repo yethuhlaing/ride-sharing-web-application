@@ -19,6 +19,7 @@ import mime from "mime";
 import { join } from "path";
 import { stat, mkdir, writeFile } from "fs/promises";
 import { getUserData } from '@/actions/action';
+import Link from 'next/link';
 
 
 export default async function ProfilePage() {
@@ -36,7 +37,7 @@ export default async function ProfilePage() {
         const image = formData.get("profileImage") as File || null;
 
 
-        const buffer = Buffer.from(await image.arrayBuffer());
+        const buffer = Buffer.from(await image.arrayBuffer()) as any;
         const relativeUploadDir = `/uploads/${new Date(Date.now())
             .toLocaleDateString("id-ID", {
                 day: "2-digit",
@@ -137,9 +138,16 @@ export default async function ProfilePage() {
     }
     return (
         <div className="container flex flex-col md:flex-row gap-5 justify-center">
-            <Card className="max-w-lg">
+            <Card className="w-full lg:flex-1">
                     <CardHeader>
-                        <CardTitle>Your Profile</CardTitle>
+                    <CardTitle className='flex'>
+                        Your Profile
+                        <span className='text-xs m-auto px-4 py-1 bg-secondary-foreground rounded-3xl text-neutral-50 mx-2'>
+                            <Link href={`/dashboard/home/profile/${user?.id}`}>
+                                Link
+                            </Link>
+                        </span>
+                    </CardTitle>
                         <CardDescription>
                             Please provide general information about yourself.
                         </CardDescription>
@@ -203,7 +211,7 @@ export default async function ProfilePage() {
                         </CardContent>
                     </form>
             </Card>
-            <Card className="max-w-lg">
+            <Card className="w-full lg:flex-1">
                 <CardHeader>
                     <CardTitle>Your Vehicle</CardTitle>
                     <CardDescription>

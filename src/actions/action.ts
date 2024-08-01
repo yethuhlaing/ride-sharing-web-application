@@ -3,7 +3,7 @@
 import { LIMIT_MESSAGE } from "@/libs/data";
 import prisma from "@/libs/db";
 import { stripe } from "@/libs/stripe";
-import { RideDataType, RideType, UserData, UserType } from "@/libs/type";
+import { RideDataType, RideType, StatusType, UserData, UserType } from "@/libs/type";
 import { getFromAndTo, getRandomAvatarUrl } from "@/libs/utils";
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 
@@ -42,7 +42,7 @@ export async function deleteBooking(booking_id: string) {
     }
 }
 
-export async function updateBooking(booking_id: string, status: string) {
+export async function updateBooking(booking_id: string, status: StatusType) {
     noStore()
     try {
         await prisma.booking.update({
@@ -196,6 +196,9 @@ export async function getRidewithDriverId(driver_id: string) {
             where: {
                 driver_id: driver_id
             },
+            include: {
+                reviews: true
+            }
 
         });
         console.log(ride)
@@ -204,6 +207,35 @@ export async function getRidewithDriverId(driver_id: string) {
         console.error('Error fetching rides:', error);
         throw error;
     }
+}
+
+export async function getCompleteBooking(user_id: string) {
+    const currentDate = new Date()
+    const rides = await prisma.booking.findMany({
+        where: {
+            passenger_id: user_id,
+            status: "Confirmed",
+            ride: {
+                departure_time: {
+                    lt: currentDate,
+                }
+            },           
+        },
+        include: {
+            ride: {
+                include: {
+                    driver: true,
+                    reviews: true
+                }
+            }
+        },
+        orderBy: {
+            createdAt: 'desc',  // Assuming `createdAt` field exists in your model
+        },
+
+    })
+    console.log(rides)
+    return rides
 }
 
 export async function getRidewithRideId(ride_id: string) {
@@ -225,7 +257,6 @@ export async function getRidewithRideId(ride_id: string) {
         if (!ride) {
             return null;
         }
-        console.log(ride)
         return ride;
     } catch (error) {
         console.error('Error fetching rides:', error);
@@ -451,3 +482,35 @@ export async function getMessageWithPage(page: number ){
     }
 }
 
+export async function createReview(ride_id: string, passenger_id: string, rating: number, comment: string) {
+    try {
+        const review = await prisma.review.create({
+            data: {
+                ride_id: ride_id,
+                passenger_id: passenger_id,
+                rating: rating,
+                comment: comment,
+            },
+        });
+        revalidatePath('/dashboard/home/review', 'page')
+        console.log('Review created:', review);
+    } catch (error) {
+        console.error('Error creating review:', error);
+        throw error;
+    } 
+}
+
+export async function getReviewWithUserId( user_id: string) {
+    try {
+        const review = await prisma.review.findMany({
+            where: {
+                passenger_id : user_id,
+            }
+        });
+
+        console.log('Review:', review);
+    } catch (error) {
+        console.error( error);
+        throw error;
+    }
+}

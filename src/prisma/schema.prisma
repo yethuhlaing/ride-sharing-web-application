@@ -51,13 +51,18 @@ model Ride {
   reviews         Review[]
 }
 
+enum Status {
+  Pending
+  Confirmed
+  Declined
+}
 
 model Booking {
   booking_id    String   @id @default(uuid())
   ride_id       String
   passenger_id  String
   createdAt     DateTime @default(now())
-  status        String
+  status        Status   
   ride          Ride     @relation(fields: [ride_id], references: [ride_id])
   passenger     User     @relation(fields: [passenger_id], references: [user_id])
 
@@ -85,6 +90,8 @@ model Review {
   comment       String?
   ride          Ride     @relation(fields: [ride_id], references: [ride_id])
   passenger     User     @relation(fields: [passenger_id], references: [user_id])
+
+  @@unique([ride_id, passenger_id]) 
 }
 
 
