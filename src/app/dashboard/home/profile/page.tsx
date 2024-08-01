@@ -14,12 +14,12 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { SubmitButton, TrashDelete } from '@/components/specific/SubmitButton';
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 import { Textarea } from '@/components/ui/textarea';
-import AddVehicleDialog from '@/components/specific/AddVehicleDialog';
 import mime from "mime";
 import { join } from "path";
 import { stat, mkdir, writeFile } from "fs/promises";
-import { getUserData } from '@/actions/action';
+import { deleteVehicle, getUserData, getVehicles } from '@/actions/action';
 import Link from 'next/link';
+import AddVehicleDialog from './AddVehicleDialog';
 
 
 export default async function ProfilePage() {
@@ -105,37 +105,7 @@ export default async function ProfilePage() {
 
         revalidatePath('/dashboard', 'layout');
     }
-    async function getVehicles(user_id: string){
-        const vehicles = await prisma.vehicle.findMany({
-            where: {
-                user_id: user_id,
-            },
-            select: {
-                vehicle_id: true,
-                brand: true,
-                model: true,
-                color: true,
-                year: true,
-                licensePlate: true,
-            },
-        });
-        console.log(vehicles)
-        return vehicles;    
-    }
 
-    async function deleteVehicle(formData: FormData) {
-        "use server";
-
-        const vehicle_id = formData.get("vehicle_id") as string;
-
-        await prisma.vehicle.delete({
-            where: {
-                vehicle_id: vehicle_id,
-            },
-        });
-
-        revalidatePath('/dashboard', 'layout');
-    }
     return (
         <div className="container flex flex-col md:flex-row gap-5 justify-center">
             <Card className="w-full lg:flex-1">
@@ -229,11 +199,10 @@ export default async function ProfilePage() {
                         >
                             <div>
                                 <h2 className="font-semibold text-normal text-primary">
-                                    {vehicle.brand} | {vehicle.model}
+                                    {vehicle.brand} {vehicle.model}
                                 </h2>
                                 <p className='text-slate-600'>
-                                    {vehicle.year} {" "}
-                                    {vehicle.licensePlate}
+                                    License - {vehicle.licensePlate}
                                     
                                 </p>
                             </div>

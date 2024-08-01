@@ -1,9 +1,9 @@
 import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { getCompleteBooking, getRidewithDriverId, getUserData } from '@/actions/action';
+import { getCompleteBooking, getRidewithDriverId, getUserData, getVehicles } from '@/actions/action';
 import Image from 'next/image';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
-import { BookingType, ReviewType, RideType } from '@/libs/type';
+import { BookingType, ReviewType, RideType, VehicleType } from '@/libs/type';
 import { ChevronsRight, Star } from 'lucide-react';
 import { formatDate, getFirstLocationName } from '@/libs/utils';
 import { StarColors } from '@/libs/data';
@@ -13,7 +13,7 @@ export default async function ProfilePage({params} : any) {
     const { id } = params
     const useData = await getUserData(id as string);
     const rides = await getRidewithDriverId(id as string)
-
+    const vehicles = await getVehicles(id as string)
     return (
         <Card>
             <CardHeader>
@@ -44,6 +44,14 @@ export default async function ProfilePage({params} : any) {
                         <span className="font-semibold text-gray-700">Phone: </span>
                         <span className="ml-2 text-gray-600">{useData?.phone || "..."}</span>
                     </div>
+                    <div className="flex items-center mt-2">
+                        <span className="font-semibold text-gray-700">Vehicle: </span>
+                        {
+                            vehicles && vehicles.map((vehicle: VehicleType) => (
+                                <span className="ml-2 text-gray-600">{vehicle?.brand}{"-"}{vehicle?.model}{" "}({vehicle?.licensePlate}){" "}</span>
+                            ))
+                        }
+                    </div>
                 </div>
             </CardContent>
             <CardContent>
@@ -55,7 +63,7 @@ export default async function ProfilePage({params} : any) {
                                     <div className="flex items-center text-xs lg:text-sm bg-primary text-neutral-50 px-4 py-1 rounded-lg">
                                         <span className='flex flex-row justify-center'>
                                             {getFirstLocationName(ride?.origin as string)}
-                                            <ChevronsRight className='text-secondary-foreground text-xs lg:text-sm' size={14}/>
+                                            <ChevronsRight className='text-secondary-foreground text-xs lg:text-sm' size={18}/>
                                             {getFirstLocationName(ride?.destination as string)}
                                         </span>
                                     </div>

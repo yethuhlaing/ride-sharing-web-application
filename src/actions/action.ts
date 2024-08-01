@@ -189,6 +189,29 @@ export async function getDataDashboard({
         })
     }
 }
+export async function getVehicles(user_id: string) {
+    const vehicles = await prisma.vehicle.findMany({
+        where: {
+            user_id: user_id,
+        }
+    });
+    console.log(vehicles)
+    return vehicles;
+}
+
+export async function deleteVehicle(formData: FormData) {
+    "use server";
+
+    const vehicle_id = formData.get("vehicle_id") as string;
+
+    await prisma.vehicle.delete({
+        where: {
+            vehicle_id: vehicle_id,
+        },
+    });
+
+    revalidatePath('/dashboard', 'layout');
+}
 export async function getRidewithDriverId(driver_id: string) {
     noStore();
     try {

@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation'
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import ChatHeader from './ChatHeader'
 import { getChatRoomWithId, getMessagesWithChatRoomId } from '@/actions/action';
-import { cn } from '@/libs/utils';
 import { LIMIT_MESSAGE } from "@/libs/data";
 import { Suspense } from 'react';
 import ChatMessages from './ChatMessages';

@@ -56,11 +56,10 @@ export type BookingType = {
 export type VehicleType = {
     vehicle_id: string;
     brand: string;
-    model?: string;
-    color?: string;
-    year?: number;
-    licensePlate?: string;
-    user_id: string;
+    model?: string | null;
+    licensePlate?: string | null;
+    user_id?: string;
+
 };
 
 export type SubscriptionType = {
