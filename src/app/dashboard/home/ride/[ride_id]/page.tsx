@@ -11,7 +11,7 @@ import { createBooking, deleteBooking, getBookingwithRideId, getBookingwithRideI
 import { revalidatePath, unstable_cache } from 'next/cache';
 import { CancelButton, SubmitButton } from '@/components/specific/SubmitButton';
 import NotFound from '../../NotFound';
-import { BookingType, RideDataType } from '@/libs/type';
+import { BookingType, RideType } from '@/libs/type';
 
 
 
@@ -22,7 +22,7 @@ export default async function RidePage({ params } : any) {
     const user = await getUser();
     const passenger_id = user?.id as string
 
-    const ride = await getRidewithRideId(ride_id) as RideDataType
+    const ride = await getRidewithRideId(ride_id) as RideType
     const bookings = await getBookingwithRideId(ride_id) as BookingType[]
     const bookingsWithPassengerId = await getBookingwithRideIdAndPassengerId(ride_id, passenger_id ) as BookingType[]
     console.log(bookingsWithPassengerId)
@@ -90,7 +90,7 @@ export default async function RidePage({ params } : any) {
         "use server"
 
         try {
-            await deleteBooking(ride?.bookings[0]?.booking_id as string)
+            await deleteBooking(ride?.bookings?.[0]?.booking_id as string)
             revalidatePath(`/dashboard/home/ride/${ride_id}`, "page")
         } catch (error) {
             console.log(error)
@@ -107,7 +107,7 @@ export default async function RidePage({ params } : any) {
                             <div className="flex items-center space-x-4">
                                 <div>
                                     <Image
-                                        src={ride?.driver.profileImage as string | StaticImport}
+                                        src={ride?.driver?.profileImage as string | StaticImport}
                                         alt="User Profile Image"
                                         width={80}  // Set the appropriate width
                                         height={80} // Set the appropriate height
@@ -117,9 +117,9 @@ export default async function RidePage({ params } : any) {
 
                                 </div>
                                 <div className="flex flex-col space-y-2 text-base lg:text-xl font-bold">
-                                    {ride?.driver.fullName}
+                                    {ride?.driver?.fullName}
                                     <Button className='btn-primary text-xs mr-2 mt-2 w-fit h-fit' >
-                                        <Link href={`/dashboard/home/profile/${ride?.driver.user_id}`}>
+                                        <Link href={`/dashboard/home/profile/${ride?.driver?.user_id}`}>
                                             Check Profile
                                         </Link>
                                     </Button>
@@ -154,7 +154,7 @@ export default async function RidePage({ params } : any) {
                     </CardContent>
                     <CardContent>
                         {
-                            ride?.driver.user_id !== user?.id ? (                                                                
+                            ride?.driver?.user_id !== user?.id ? (                                                                
                                 <>
                                     {bookingsWithPassengerId.length === 0 ? (
                                         <form action={handleSubmit}>

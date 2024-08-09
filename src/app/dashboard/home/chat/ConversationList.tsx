@@ -23,13 +23,13 @@ export default async function ConversationList({ chatRooms }: {chatRooms: ChatRo
             <CardContent>
                 <div className='flex flex-col space-y-2 w-full'>
                     {chatRooms.map((chatRoom: ChatRoomType) => (
-                        <Link key={chatRoom.chat_room_id} href={`/dashboard/home/chat/${chatRoom.chat_room_id}`}>
+                        <a key={chatRoom.chat_room_id} href={`/dashboard/home/chat/${chatRoom.chat_room_id}`}>
                             <div className="flex flex-row max-w-lg justify-start items-center min-h-14 space-x-14 border px-4 py-2 hover:bg-slate-300 rounded-lg">
                                 <ChatRoomAvatar passengerProfileImage={chatRoom.passenger?.profileImage! ?? defaultImage
                                 } driverProfileImage={chatRoom.driver?.profileImage ?? defaultImage} />
                                 <div className='text-sm font-semibold'>{chatRoom.name}</div>
                             </div>
-                        </Link>
+                        </a>
                     ))}
                 </div>
             </CardContent>

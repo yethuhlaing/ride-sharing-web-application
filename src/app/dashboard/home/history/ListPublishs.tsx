@@ -1,4 +1,4 @@
-import { RideType } from '@/libs/type'
+import { BookingType, RideType } from '@/libs/type'
 import React from 'react'
 import { Card, CardContent } from '@/components/ui/card';
 import { CalendarIcon, Navigation, MapPin, Clock12 } from 'lucide-react';
@@ -9,6 +9,7 @@ import { CancelButton } from '@/components/specific/SubmitButton';
 import { deleteRide } from '@/actions/action';
 import { Prisma } from '@prisma/client';
 import toast from 'react-hot-toast';
+import { AnimatedTooltip } from './AnimatedTooltip';
 
 function ListPublishs({ rides }: { rides: RideType[]}) {
     const handleDelete = async (ride_id: string) => {
@@ -33,6 +34,7 @@ function ListPublishs({ rides }: { rides: RideType[]}) {
             }
         }
     }
+    console.log(rides)
     return (
         <div className='w-full md:flex-1'>
             <div className='text-2xl lg:text-3xl font-bold py-4 px-2'>Your Publishs</div>
@@ -57,7 +59,7 @@ function ListPublishs({ rides }: { rides: RideType[]}) {
                                 <span className=" text-gray-600">{formatTime(ride.departure_time.toLocaleString())}</span>
                             </div>
                         </div>
-                        <div className='flex flex-col justify-between p-4'>
+                        <div className='flex flex-col justify-around p-4'>
                             <Button className="bg-primary hover:bg-[#6d71ba] text-xs mr-2 mt-2 w-full h-fit" type="submit">
                                 <Link href={`/dashboard/home/ride/${ride.ride_id}`}>
                                     Check
@@ -70,8 +72,9 @@ function ListPublishs({ rides }: { rides: RideType[]}) {
                                     </form>
                                 ) : (
                                     <div>
-                                        <div className='m-auto text-sm px-6 py-1 bg-green-500 rounded-3xl text-neutral-50'>Published</div>
+                                        <AnimatedTooltip bookings={ride?.bookings ?? []} />
                                     </div>
+                                    
                                 )
                             }
 

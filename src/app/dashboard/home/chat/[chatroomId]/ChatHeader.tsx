@@ -56,9 +56,9 @@ export default function ChatHeader({chatRoom} : { chatRoom: ChatRoomType}) {
     return (                
         <div className="relative flex flex-row justify-start items-center min-h-14 border px-4 rounded-lg">
             <div className="lg:hidden pr-4">
-                <Link href={'/dashboard/home/chat'}>
+                <a href={'/dashboard/home/chat'}>
                     <ArrowLeft />
-                </Link>
+                </a>
             </div>
             <ChatRoomAvatar passengerProfileImage={chatRoom.passenger?.profileImage ?? defaultImage} driverProfileImage={chatRoom.driver?.profileImage ?? defaultImage} />
             <div className="flex flex-col lg:px-14 px-12 items-start py-2">

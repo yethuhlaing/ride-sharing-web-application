@@ -3,9 +3,10 @@
 import { LIMIT_MESSAGE } from "@/libs/data";
 import prisma from "@/libs/db";
 import { stripe } from "@/libs/stripe";
-import { RideDataType, RideType, StatusType, UserData, UserType } from "@/libs/type";
+import { RideType, StatusType, UserData, UserType } from "@/libs/type";
 import { getFromAndTo, getRandomAvatarUrl } from "@/libs/utils";
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
+import { cache } from 'react'
 
 export async function createBooking(ride_id: any, passenger_id: any) {
     "use server"
@@ -213,14 +214,18 @@ export async function deleteVehicle(formData: FormData) {
     revalidatePath('/dashboard', 'layout');
 }
 export async function getRidewithDriverId(driver_id: string) {
-    noStore();
     try {
         const ride = await prisma.ride.findMany({
             where: {
                 driver_id: driver_id
             },
             include: {
-                reviews: true
+                reviews: true,
+                bookings: {
+                    include: {
+                        passenger: true
+                    }
+                }
             }
 
         });
@@ -296,7 +301,7 @@ export async function getBookingwithUserId(user_id: string) {
             include: {
                 ride: {
                     include: {
-                        driver: true
+                        driver: true,
                     }
                 },
                 passenger: true
@@ -481,6 +486,7 @@ export async function getMessagesWithChatRoomId(limit: number, chatRoomId: strin
             },
             take: limit,
         });
+        console.log(messages)
         return messages;
     } catch (error) {
         throw error

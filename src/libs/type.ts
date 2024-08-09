@@ -100,30 +100,6 @@ export type ReviewType = {
 };
 
 
-export type RideDataType = {
-    driver: {
-        user_id: string;
-        email: string;
-        fullName: string | null;
-        phone: string | null;
-        userBio: string | null;
-        profileImage: string | null;
-        createdAt: Date;
-        updatedAt: Date;
-        stripeCustomerId: string | null;
-    };
-    bookings: {
-        booking_id: string,
-        passenger_id: string,
-        status: string,
-        passenger: {
-            fullName: string,
-            profileImage: string
-        }
-    }[];
-} & RideType
-
-
 export interface ChatRoomType {
     chat_room_id: string;
     name: string | null;

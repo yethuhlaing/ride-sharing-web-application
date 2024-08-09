@@ -80,22 +80,6 @@ function ChatInput({ senderId, chatRoomId }: any) {
     }
 
     return (
-        // <div className='space-x-2 flex justify-center'>
-        //     <input
-        //         className='flex-1 px-4 py-2 rounded-lg outline-none focus:ring-0 focus:border-transparent text-xs placeholder:text-xs'
-        //         placeholder="send message"
-        //         value={message}
-        //         onChange={(e) => setMessage(e.target.value)}
-        //         onKeyDown={(e: any) => {
-        //             if (e.key === "Enter") {
-        //                 handleSendMessage();
-        //             }
-        //         }}
-        //     />
-        //     <Button type="submit" className='bg-primary-foreground flex justify-center items-center' onClick={handleSendMessage}>
-        //         <SendHorizonal size={10} />
-        //     </Button>
-        // </div>
         <div
             className="space-x-2 flex justify-center"
         >

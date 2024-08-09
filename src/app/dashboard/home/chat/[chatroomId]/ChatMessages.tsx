@@ -91,7 +91,7 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType) {
         return () => {
             channel.unsubscribe()
         };
-    }, [messages]);
+    }, []);
 
     useEffect(() => {
         const scrollContainer = scrollRef.current;

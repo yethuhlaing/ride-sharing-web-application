@@ -8,7 +8,7 @@ import RideList from './RideList';
 import { SubmitButton } from '@/components/specific/SubmitButton';
 import { findRides } from '@/actions/action';
 import toast from 'react-hot-toast';
-import { RideDataType, RideType } from '@/libs/type';
+import { RideType } from '@/libs/type';
 import LoadingComponent from '@/app/dashboard/LoadingComponent';
 import { Card } from '@/components/ui/card';
 

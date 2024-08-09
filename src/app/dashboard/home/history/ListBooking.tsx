@@ -72,9 +72,9 @@ export async function PassengerProfile({ ride_id }: { ride_id: string }) {
                             key={booking.booking_id}
                             src={booking.passenger?.profileImage as string}
                             alt="User Profile Image"
-                            width={30} // Set the appropriate width
-                            height={30} // Set the appropriate height
-                            className="rounded-full aspect-square object-cover"
+                            width={100} // Set the appropriate width
+                            height={100} // Set the appropriate height
+                            className="rounded-full aspect-square object-cover !m-0 !p-0 object-top h-8 w-8 border-2 group-hover:z-30 border-white "
                         />
                     ))
                 ) : (
