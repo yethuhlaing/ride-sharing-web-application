@@ -17,9 +17,10 @@ import { Textarea } from '@/components/ui/textarea';
 import mime from "mime";
 import { join } from "path";
 import { stat, mkdir, writeFile } from "fs/promises";
-import { deleteVehicle, getUserData, getVehicles } from '@/actions/action';
+import { deleteVehicle, getUserData, getVehicles, updateProfileImage } from '@/actions/action';
 import Link from 'next/link';
 import AddVehicleDialog from './AddVehicleDialog';
+import { getRandomAvatarUrl } from '@/libs/utils';
 
 
 export default async function ProfilePage() {
@@ -105,6 +106,7 @@ export default async function ProfilePage() {
 
         revalidatePath('/dashboard', 'layout');
     }
+    // <RefreshCcw className="w-4 h-4 p-0 text-primary" />
 
     return (
         <div className="container flex flex-col md:flex-row gap-5 justify-center">
@@ -122,19 +124,22 @@ export default async function ProfilePage() {
                             Please provide general information about yourself.
                         </CardDescription>
                     </CardHeader>
-                    <form action={postProfileImage}>
-                        <CardContent>
-                            <Label>Edit Profile Picture</Label>
-                            <Input
-                                name="profileImage"
-                                className="mt-2 mb-2"
-                                type="file"                                
-                            />
-                            <SubmitButton buttonName={"Change Profile"}/>
-                        </CardContent>
-                    </form>
-                    <form action={postProfileData}>
-                        <CardContent>
+                    <CardContent>
+                        <form action={postProfileImage}>
+                                <Label>Edit Profile Picture</Label>
+                                <Input
+                                    name="profileImage"
+                                    className="mt-2 mb-2"
+                                    type="file"                                
+                                />
+                                <SubmitButton buttonName={"Upload Profile"}/>
+                        </form>
+                        <form action={updateProfileImage.bind(null, user?.id as string)}>
+                            <SubmitButton buttonName={"Change Avatar"} />
+                        </form>
+                    </CardContent>
+                    <CardContent>
+                        <form action={postProfileData}>
                             <div className="space-y-2">
                                 <div className="space-y-1">
                                     <Label className="mb-2">Your Name</Label>
@@ -178,8 +183,9 @@ export default async function ProfilePage() {
                                 </div>
                                 <SubmitButton buttonName="Save Now" />
                             </div>
-                        </CardContent>
-                    </form>
+                        </form>
+                    </CardContent>
+
             </Card>
             <Card className="w-full lg:flex-1">
                 <CardHeader>
@@ -191,31 +197,32 @@ export default async function ProfilePage() {
                 <CardContent>
                     <AddVehicleDialog />
                 </CardContent>
-                <div className="flex flex-col px-6 gap-2 mt-4 sm:mt-auto justify-center items-left">
-                    {vehicles?.map((vehicle) => (
-                        <Card
-                            key={vehicle.vehicle_id}
-                            className="flex items-center justify-between p-4"
-                        >
-                            <div>
-                                <h2 className="font-semibold text-normal text-primary">
-                                    {vehicle.brand} {vehicle.model}
-                                </h2>
-                                <p className='text-slate-600'>
-                                    License - {vehicle.licensePlate}
-                                    
-                                </p>
-                            </div>
+                <CardContent>
+                    <div className="flex flex-col gap-2 sm:mt-auto justify-center items-left">
+                        {vehicles?.map((vehicle) => (
+                            <Card
+                                key={vehicle.vehicle_id}
+                                className="flex items-center justify-between p-4"
+                            >
+                                <div>
+                                    <h2 className="font-semibold text-normal text-primary">
+                                        {vehicle.brand} {vehicle.model}
+                                    </h2>
+                                    <p className='text-slate-600'>
+                                        License - {vehicle.licensePlate}
+                                    </p>
+                                </div>
 
-                            <div className="flex gap-x-4">
-                                <form action={deleteVehicle}>
-                                    <input type="hidden" name="vehicle_id" value={vehicle.vehicle_id} />
-                                    <TrashDelete />
-                                </form>
-                            </div>
-                        </Card>
-                    ))}
-                </div>
+                                <div className="flex gap-x-4">
+                                    <form action={deleteVehicle}>
+                                        <input type="hidden" name="vehicle_id" value={vehicle.vehicle_id} />
+                                        <TrashDelete />
+                                    </form>
+                                </div>
+                            </Card>
+                        ))}
+                    </div>
+                </CardContent>
             </Card>
         </div>
     );

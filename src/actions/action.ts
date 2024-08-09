@@ -227,7 +227,6 @@ export async function getRidewithDriverId(driver_id: string) {
                     }
                 }
             }
-
         });
         console.log(ride)
         return ride;
@@ -316,7 +315,23 @@ export async function getBookingwithUserId(user_id: string) {
         return error;
     }
 }
+export async function updateProfileImage(user_id: string) {
+    try {
+        const AvatarUrl = getRandomAvatarUrl()
+        await prisma.user.update({
+            where: {
+                user_id: user_id,
+            },
+            data: {
+                profileImage: AvatarUrl
+            },
+        });
+    } catch (error) {
+        console.log(error)
+    }
 
+    revalidatePath('/dashboard', 'layout');
+}
 export async function getBookingwithRideIdAndPassengerId(ride_id: string, passenger_id: string) {
     noStore()
     try {

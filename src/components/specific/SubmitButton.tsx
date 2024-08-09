@@ -45,7 +45,6 @@ export function CancelButton({ buttonName }: Prop) {
                         {buttonName}
                     </Button>
                 </div>
-
             )}
         </>
     );
