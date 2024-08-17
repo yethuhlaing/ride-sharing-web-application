@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
   directUrl= env("DIRECT_URL")
 }
+enum Plan {
+  free
+  basic
+  premium
+}
 
 model User {
   user_id           String          @id @default(uuid())
@@ -14,7 +19,8 @@ model User {
   fullName          String?
   phone             String?         @unique
   userBio           String?
-  profileImage      String?         
+  profileImage      String?      
+  plan              Plan            @default(free)   
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   stripeCustomerId  String?         @unique
@@ -69,6 +75,7 @@ model Booking {
 
 model Subscription {
   stripeSubscriptionId String   @id @unique
+  plan                 Plan
   interval             String
   status               String
   planId               String

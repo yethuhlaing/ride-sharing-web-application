@@ -58,7 +58,7 @@ export default async function BillingPage() {
         const subscriptionUrl = await getStripeSession({
             customerId: dbUser.stripeCustomerId,
             domainUrl: process.env.NODE_ENV === "production" ? process.env.PRODUCTION_URL : 'http://localhost:3000',
-            priceId: process.env.STRIPE_PRICE_ID ,
+            priceId: process.env.BASIC_PRICE_ID ,
         })
         return redirect(subscriptionUrl);
     }
