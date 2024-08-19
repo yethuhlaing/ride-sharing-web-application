@@ -1,26 +1,18 @@
 import { ReactNode, Suspense } from 'react';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { redirect, useParams } from 'next/navigation';
-import prisma from '@/libs/db';
-import { stripe } from "@/libs/stripe";
-import { unstable_noStore as noStore } from 'next/cache';
-import { DashboardNavbar } from '@/components/specific/DashboardNavbar';
 import { DashboardSidebar } from '@/components/specific/DashboardSidebar';
 import Loading from "../../../components/loading/loading";
-import { getRandomAvatarUrl } from '@/libs/utils';
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
-import { getDataDashboard } from '@/actions/action';
-
-
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { checkAuthStatus } from '@/actions/action';
 
 export default async function DashboardLayout({
     children,
 }: {
     children: ReactNode;
 }) {
+
     const { getUser } = getKindeServerSession();
     const user = await getUser();
-    await getDataDashboard({
+    await checkAuthStatus({
         email: user?.email as string,
         firstName: user?.given_name as string,
         id: user?.id as string,

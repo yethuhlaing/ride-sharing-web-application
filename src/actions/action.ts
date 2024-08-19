@@ -6,7 +6,7 @@ import { stripe } from "@/libs/stripe";
 import { RideType, StatusType, UserData, UserType } from "@/libs/type";
 import { getFromAndTo, getRandomAvatarUrl } from "@/libs/utils";
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
-import { cache } from 'react'
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export async function createBooking(ride_id: any, passenger_id: any) {
     "use server"
@@ -62,24 +62,56 @@ export async function updateBooking(booking_id: string, status: StatusType) {
 
 
 export async function getUserData(user_id: string) {
-    noStore();
-    const data = await prisma.user.findUnique({
-        where: {
-            user_id: user_id,
-        },
-        select: {
-            fullName: true,
-            email: true,
-            phone: true,
-            userBio: true,
-            profileImage: true,
-        },
-    });
-
-    return data;
+    try {
+        const data = await prisma.user.findUnique({
+            where: {
+                user_id: user_id,
+            },
+            select: {
+                fullName: true,
+                email: true,
+                phone: true,
+                userBio: true,
+                profileImage: true,
+            },
+        });
+        return data;
+    } catch (error) {
+        console.error('Something Wrong!', error);
+        throw error;
+    } 
 }
-
-
+export async function getUserSubscriptionData(user_id: string) {
+    try {
+        const SubscriptionData = await prisma.user.findUnique({
+            where: {
+                user_id: user_id,
+            },
+            select: {
+                email: true,
+                plan: true,
+                customerId: true
+            },
+        });
+        if (!SubscriptionData?.customerId) {
+            const customerId = await stripe.customers.create({
+                email: SubscriptionData?.email,
+            })
+            await prisma.user.update({
+                where: {
+                    user_id: user_id
+                },
+                data: {
+                    customerId: customerId.id
+                }
+            })
+        }
+        return SubscriptionData;
+    } catch (error) {
+        console.error('Something Wrong!', error);
+        throw error;
+    }
+}
 export async function createRide({ driver_id,
     origin,
     destination,
@@ -144,24 +176,19 @@ export async function getRides() {
         throw error;
     }
 }
-export async function getDataDashboard({
+
+export async function checkAuthStatus({
     email,
     id,
     firstName,
     lastName,
     profileImage,
 }: UserData) {
-    noStore();
-    const user = await prisma.user.findUnique({
-        where: {
-            user_id: id,
-        },
-        select: {
-            user_id: true,
-            stripeCustomerId: true,
-        },
-    });
-    if (!user) {
+
+    const existingUser = await prisma.user.findUnique({ where: { user_id: id } });
+
+    // sign up
+    if (!existingUser) {
         const fullName = `${firstName ?? ''} ${lastName ?? ''}`;
         const avatarUrl = getRandomAvatarUrl();
         await prisma.user.create({
@@ -169,27 +196,62 @@ export async function getDataDashboard({
                 email: email,
                 user_id: id,
                 fullName: fullName,
-                profileImage: avatarUrl,
+                profileImage: profileImage || avatarUrl,
             },
             select: {
                 user_id: true,
             },
         });
     }
-    if (!user?.stripeCustomerId) {
+    if (!existingUser?.customerId) {
         const data = await stripe.customers.create({
-            email: email,
+            email: existingUser?.email,
         })
         await prisma.user.update({
             where: {
-                user_id: id
+                user_id: existingUser?.user_id
             },
             data: {
-                stripeCustomerId: data.id
+                customerId: data.id
             }
         })
     }
-}
+    return { success: true };
+} 
+// export async function getDataDashboard({
+//     email,
+//     id,
+//     firstName,
+//     lastName,
+//     profileImage,
+// }: UserData) {
+//     noStore();
+//     const user = await prisma.user.findUnique({
+//         where: {
+//             user_id: id,
+//         },
+//         select: {
+//             user_id: true,
+//             stripeCustomerId: true,
+//         },
+//     });
+//     if (!user) {
+//         const fullName = `${firstName ?? ''} ${lastName ?? ''}`;
+//         const avatarUrl = getRandomAvatarUrl();
+//         await prisma.user.create({
+//             data: {
+//                 email: email,
+//                 user_id: id,
+//                 fullName: fullName,
+//                 profileImage: avatarUrl,
+//             },
+//             select: {
+//                 user_id: true,
+//             },
+//         });
+//     }
+
+// }
 export async function getVehicles(user_id: string) {
     const vehicles = await prisma.vehicle.findMany({
         where: {

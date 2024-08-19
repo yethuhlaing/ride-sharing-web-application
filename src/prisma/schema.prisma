@@ -23,7 +23,7 @@ model User {
   plan              Plan            @default(free)   
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
-  stripeCustomerId  String?         @unique
+  customerId        String?         @unique
   Subscription      Subscription?
   vehicles          Vehicle[]
   bookings          Booking[]
@@ -74,17 +74,16 @@ model Booking {
 }
 
 model Subscription {
-  stripeSubscriptionId String   @id @unique
-  plan                 Plan
-  interval             String
-  status               String
-  planId               String
-  currentPeriodStart   Int
-  currentPeriodEnd     Int
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
-  user_id              String   @unique
-  user                 User     @relation(fields: [user_id], references: [user_id])
+  stripeSubscriptionId  String   @id @unique 
+  currentPeriodStart    Int
+  currentPeriodEnd      Int
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  interval              String
+  status                String
+  planId                String
+  user_id               String   @unique
+  user                  User     @relation(fields: [user_id], references: [user_id])
 }
 
 model Review {

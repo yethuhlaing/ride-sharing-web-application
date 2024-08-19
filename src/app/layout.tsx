@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { ThemeProvider } from '@/components/specific/ThemeProvider';
-import { LocationProvider } from '@/context/LocationContextProvider';
+import { ThemeProvider } from '@/components/provider/ThemeProvider';
 import { Toaster } from 'react-hot-toast';
+import TanStackProvider from '@/components/provider/TanStackProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -32,7 +32,9 @@ export default async function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
-                    {children}
+                    <TanStackProvider>
+                        {children}
+                    </TanStackProvider>
                 </ThemeProvider>
             </body>
         </html>

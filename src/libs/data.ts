@@ -8,28 +8,60 @@ import {
     Star
 } from 'lucide-react';
 
-export const MonthlyPlan = [
-    { name: "Unlimited rides within the month" },
-    { name: "Priority customer support" },
-    { name: "Real-time Chat Features" },
-    { name: "Easy cancellation" },
-] as const;
-export const AnnaulPlan = [
-    { name: "Unlimited rides for the year" },
-    { name: "Priority customer support" },
-    { name: "Real-time Chat Features" },
-    { name: "Two months free compared to monthly plan" }, 
-    { name: "Exclusive promotions and discounts" },
-    { name: "Free ride vouchers" },
-] as const;
-export const OneTimePlan = [
-    { name: "Unlimited lifetime rides" },
-    { name: "Priority customer support" },
-    { name: "Real-time Chat Features" },
-    { name: "Special perks and bonuses" },
-    { name: "Exclusive lifetime promotions and discounts" },
-    { name: "Membership rewards" },
-] as const;
+
+
+export enum PopularPlanType {
+    NO = 0,
+    YES = 1,
+}
+
+export interface PricingProps {
+    title: string;
+    popular: PopularPlanType;
+    price: number;
+    description: string;
+    buttonText: string;
+    benefitList: string[];
+    href: string;
+    billing: string;
+    priceId?: string;
+}
+
+export const pricingList: PricingProps[] = [
+    {
+        title: "Free",
+        popular: 1,
+        price: 0,
+        description: "Lorem ipsum dolor sit, amet ipsum consectetur adipisicing elit.",
+        buttonText: "Get Started",
+        benefitList: ["Unlimited rides within the month", "Priority customer support", "Real-time Chat Features", "Easy cancellation"],
+        href: "/api/auth/login",
+        billing: "/month",
+    },
+    {
+        title: "Basic",
+        popular: 1,
+        price: 10,
+        description: "Lorem ipsum dolor sit, amet ipsum consectetur adipisicing elit.",
+        buttonText: "Buy Now",
+        benefitList: ["Unlimited rides for the year", "Priority customer support", "Real-time Chat Features", "Two months free compared to monthly plan", "Exclusive promotions and discounts", "Free ride vouchers"],
+        href: "/api/auth/login",
+        priceId: process.env.BASIC_PRICE_ID,
+        billing: "/month",
+    },
+    {
+        title: "Premium",
+        popular: 0,
+        price: 20,
+        description: "Lorem ipsum dolor sit, amet ipsum consectetur adipisicing elit.",
+        buttonText: "Buy Now",
+        benefitList: ["Unlimited lifetime rides", "Priority customer support", "Real-time Chat Features", "Special perks and bonuses", "Exclusive promotions and discounts", "Exclusive lifetime promotions and discounts", "Membership rewards"],
+        href: "/api/auth/login",
+        priceId: process.env.PREMIUM_PRICE_ID,
+        billing: "/month",
+    },
+];
+
 
 // FEATURES SECTION
 export const FEATURES = [

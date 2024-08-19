@@ -7,7 +7,7 @@ import ContactSection from '@/pages/ContactSection';
 import ContactForm from '@/components/specific/ContactForm';
 import { Navbar } from '@/components/specific/Navbar';
 import Features from '@/pages/FeatureSection';
-import Pricing from '@/pages/Pricing';
+// import Pricing from '@/pages/Pricing';
 import HowItWorkSection from '@/pages/HowItWorkSection';
 
 export default async function Home() {
@@ -18,7 +18,7 @@ export default async function Home() {
             <HeroSection />
             <Features />
             <HowItWorkSection />
-            <Pricing />
+            {/* <Pricing /> */}
             {/* <Team /> */}
             <FAQ />
             <ContactSection>

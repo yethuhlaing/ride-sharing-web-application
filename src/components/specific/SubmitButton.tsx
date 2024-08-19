@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Loader2, Trash } from 'lucide-react';
+import Link from 'next/link';
 import { useFormStatus } from 'react-dom';
 
 
@@ -49,8 +50,10 @@ export function CancelButton({ buttonName }: Prop) {
         </>
     );
 }
-
-export function StripeSubscriptionCreationButton() {
+type PaymentLinkProps = {
+    text: string;
+};
+export function StripeSubscriptionCreationButton({ text }: PaymentLinkProps) {
     const { pending } = useFormStatus();
     return (
         <>
@@ -61,7 +64,7 @@ export function StripeSubscriptionCreationButton() {
                 </Button>
             ) : (
                 <Button type="submit" className="w-full">
-                    Create Subscriptioin
+                    {text}
                 </Button>
             )}
         </>
@@ -79,6 +82,7 @@ export function StripePortal() {
                     Wait
                 </Button>
             ) : (
+
                 <Button className="w-fit" type="submit">
                     View payment details
                 </Button>

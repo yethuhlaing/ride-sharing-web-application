@@ -7,11 +7,12 @@ import LoadingComponent from "../../app/dashboard/LoadingComponent";
 
 export default function ProtectedRoute({ children }){
     
-    const { isAuthenticated, isLoading } = useKindeBrowserClient();
+    const { isAuthenticated, isLoading, getUser } = useKindeBrowserClient();
+    const user = getUser()
     const router = useRouter();
 
     useEffect(() => {
-        if (!isLoading && !isAuthenticated) {
+        if (!isLoading && !isAuthenticated && !user) {
             router.push('/api/auth/login?post_login_redirect_url=/dashboard/home');
         }
     }, [isLoading, isAuthenticated, router]);
