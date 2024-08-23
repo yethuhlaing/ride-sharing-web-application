@@ -81,11 +81,14 @@ export async function getUserData(user_id: string) {
         throw error;
     } 
 }
-export async function getUserSubscriptionData(user_id: string) {
+export async function getUserSubscriptionData() {
     try {
+        const { getUser } = getKindeServerSession();
+        const user = await getUser();
+        console.log(user?.id)
         const SubscriptionData = await prisma.user.findUnique({
             where: {
-                user_id: user_id,
+                user_id: user?.id,
             },
             select: {
                 email: true,
@@ -93,19 +96,6 @@ export async function getUserSubscriptionData(user_id: string) {
                 customerId: true
             },
         });
-        if (!SubscriptionData?.customerId) {
-            const customerId = await stripe.customers.create({
-                email: SubscriptionData?.email,
-            })
-            await prisma.user.update({
-                where: {
-                    user_id: user_id
-                },
-                data: {
-                    customerId: customerId.id
-                }
-            })
-        }
         return SubscriptionData;
     } catch (error) {
         console.error('Something Wrong!', error);
@@ -177,45 +167,31 @@ export async function getRides() {
     }
 }
 
-export async function checkAuthStatus({
-    email,
-    id,
-    firstName,
-    lastName,
-    profileImage,
-}: UserData) {
+export async function checkAuthStatus() {
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
 
-    const existingUser = await prisma.user.findUnique({ where: { user_id: id } });
+    if (!user) return { success: false };
+
+    const existingUser = await prisma.user.findUnique({ where: { user_id: user.id } });
 
     // sign up
     if (!existingUser) {
-        const fullName = `${firstName ?? ''} ${lastName ?? ''}`;
+        const fullName = `${user.given_name ?? ''} ${user.family_name ?? ''}`;
         const avatarUrl = getRandomAvatarUrl();
         await prisma.user.create({
             data: {
-                email: email,
-                user_id: id,
+                email: user.email!,
+                user_id: user.id,
                 fullName: fullName,
-                profileImage: profileImage || avatarUrl,
+                profileImage: user.picture || avatarUrl,
             },
             select: {
                 user_id: true,
             },
         });
     }
-    if (!existingUser?.customerId) {
-        const data = await stripe.customers.create({
-            email: existingUser?.email,
-        })
-        await prisma.user.update({
-            where: {
-                user_id: existingUser?.user_id
-            },
-            data: {
-                customerId: data.id
-            }
-        })
-    }
+
     return { success: true };
 } 
 // export async function getDataDashboard({

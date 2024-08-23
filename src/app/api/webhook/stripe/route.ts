@@ -20,75 +20,109 @@ export async function POST(req: Request) {
         return new Response("webhook error", { status: 400 });
     }
 
-    const session = event.data.object as Stripe.Checkout.Session; 
-    // Handle the event
-    console.log(session.id)
-
     try {
         switch (event.type) {
-            case "checkout.session.completed":
-                console.log(event.type)
+            case "checkout.session.completed": {
+                const session = event.data.object
+
                 const subscription = await stripe.subscriptions.retrieve(
                     session.subscription as string
                 );
-                const customerId = String(session.customer);
-                console.log(customerId)
-                const user = await prisma.user.findUnique({
-                    where: {
-                        customerId: customerId,
-                    },
-                });
-                console.log(subscription)
-                if (!user) throw new Error("User not found...");
-                const lineItems = subscription?.items.data || [];
-                console.log(lineItems)
-                for (const item of lineItems) {
-                    const priceId = item.price?.id;
-                    const isSubscription = item.price?.type === "recurring";
 
-                    if (isSubscription) {
-                        await prisma.subscription.upsert({
-                            where: { user_id: user.user_id! },
-                            // data: {
-                            //     stripeSubscriptionId: subscription.id,
-                            //     user_id: user.user_id,
-                            //     currentPeriodStart: subscription.current_period_start,
-                            //     currentPeriodEnd: subscription.current_period_end,
-                            //     status: subscription.status,
-                            //     planId: subscription.items.data[0].plan.id,
-                            //     interval: String(subscription.items.data[0].plan.interval),
-                            // },
-                            create: {
-                                stripeSubscriptionId: subscription.id,
-                                user_id: user.user_id,
-                                currentPeriodStart: subscription.current_period_start,
-                                currentPeriodEnd: subscription.current_period_end,
-                                status: subscription.status,
-                                planId: subscription.items.data[0].plan.id,
-                                interval: String(subscription.items.data[0].plan.interval),
-                            },
-                            update: {
-                                currentPeriodStart: subscription.current_period_start,
-                                currentPeriodEnd: subscription.current_period_end,
-                                status: subscription.status,
-                                planId: subscription.items.data[0].plan.id,
-                                interval: String(subscription.items.data[0].plan.interval),
-                            },
-                        });
-                        console.log(subscription.description)
+                const customerId = String(session.customer);
+                const customerDetails = session.customer_details;
+                console.log(session)
+                console.log(subscription)
+                console.log(customerId)
+                if (customerDetails?.email) {
+                    const user = await prisma.user.findUnique({ where: { email: customerDetails.email } });
+
+                    if (!user) throw new Error("User not found...");
+                    if (!user.customerId) {
                         await prisma.user.update({
                             where: { user_id: user.user_id },
-                            data: { plan: priceId === process.env.BASIC_PRICE_ID! ? "basic" : "premium"! },
+                            data: { customerId: customerId },
                         });
-                    } else {
-                        console.log("THis is for One-time Purchase")
-                        // one_time_purchase
+                    }
+                    const lineItems = subscription?.items?.data || [];
+                    console.log(lineItems)
+
+                    for (const item of lineItems) {
+                        const priceId = item.price?.id;
+                        const isSubscription = item.price?.type === "recurring";
+
+                        if (isSubscription) {
+                            await prisma.subscription.upsert({
+                                where: { user_id: user.user_id! },
+                                // data: {
+                                //     stripeSubscriptionId: subscription.id,
+                                //     user_id: user.user_id,
+                                //     currentPeriodStart: subscription.current_period_start,
+                                //     currentPeriodEnd: subscription.current_period_end,
+                                //     status: subscription.status,
+                                //     planId: subscription.items.data[0].plan.id,
+                                //     interval: String(subscription.items.data[0].plan.interval),
+                                // },
+                                create: {
+                                    stripeSubscriptionId: subscription.id,
+                                    user_id: user.user_id,
+                                    currentPeriodStart: subscription.current_period_start,
+                                    currentPeriodEnd: subscription.current_period_end,
+                                    status: subscription.status,
+                                    planId: subscription.items.data[0].plan.id,
+                                    interval: String(subscription.items.data[0].plan.interval),
+                                },
+                                update: {
+                                    currentPeriodStart: subscription.current_period_start,
+                                    currentPeriodEnd: subscription.current_period_end,
+                                    status: subscription.status,
+                                    planId: subscription.items.data[0].plan.id,
+                                    interval: String(subscription.items.data[0].plan.interval),
+                                },
+                            });
+                            console.log(subscription.description)
+                            await prisma.user.update({
+                                where: { user_id: user.user_id },
+                                data: { plan: priceId === process.env.BASIC_PRICE_ID! ? "basic" : "premium"! },
+                            });
+                        } else {
+                            console.log("THis is for One-time Purchase")
+                            // one_time_purchase
+                        }
                     }
                 }
-                
                 break;
-            case "customer.subscription.deleted": {
-                const subscription = await stripe.subscriptions.retrieve((event.data.object as Stripe.Subscription).id);
+            }
+            case 'customer.subscription.updated': {
+                const session = event.data.object as Stripe.Subscription
+                const subscription = await stripe.subscriptions.retrieve(session.id);
+
+                // Update the subscription details in your database
+                await prisma.subscription.update({
+                    where: { stripeSubscriptionId: subscription.id },
+                    data: {
+                        stripeSubscriptionId: subscription.id,
+                        currentPeriodStart: subscription.current_period_start,
+                        currentPeriodEnd: subscription.current_period_end,
+                        status: subscription.status,
+                        planId: subscription.items.data[0].plan.id,
+                        interval: String(subscription.items.data[0].plan.interval),
+                    },
+                });
+                break;
+            }
+            case 'customer.subscription.deleted': {
+                const session = event.data.object as Stripe.Subscription
+                const subscription = await stripe.subscriptions.retrieve(session.id);
+
+                // Update the subscription status in your database
+                await prisma.subscription.update({
+                    where: { stripeSubscriptionId: subscription.id },
+                    data: {
+                        status: 'canceled',
+                        updatedAt: new Date(),
+                    },
+                });
                 const user = await prisma.user.findUnique({
                     where: { customerId: subscription.customer as string },
                 });
@@ -101,7 +135,6 @@ export async function POST(req: Request) {
                     console.error("User not found for the subscription deleted event.");
                     throw new Error("User not found for the subscription deleted event.");
                 }
-
                 break;
             }
 

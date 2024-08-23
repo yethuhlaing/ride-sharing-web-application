@@ -15,7 +15,7 @@ export async function Navbar() {
                 <div className="flex items-center gap-x-3">
                     <ThemeToggle />
                     <div className="flex items-center gap-x-3">
-                        <LoginLink postLoginRedirectURL="/dashboard/home">
+                        <LoginLink>
                             <Button>Sign in</Button>
                         </LoginLink>
                     </div>

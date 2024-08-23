@@ -10,26 +10,25 @@ import prisma from "@/libs/db";
 import { PopularPlanType, pricingList, PricingProps } from "@/libs/data";
 import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
-import PaymentLink from "@/components/specific/PaymentLink";
-import { getUserData, getUserSubscriptionData } from "@/actions/action";
+import { getUserSubscriptionData } from "@/actions/action";
 
 
 export default async function BillingPage() {
-  
+
     const { getUser } = getKindeServerSession();
     const user = await getUser();
-    const UserSubscription = await getUserSubscriptionData(user?.id!)
+    const UserSubscription = await getUserSubscriptionData()
 
-    async function createSubscription(priceId: string) {
+    async function createSubscription() {
         "use server";
-        const subscriptionUrl = await createCheckoutSession({
-            customerId: UserSubscription?.customerId!,
-            domainUrl: process.env.NODE_ENV === "production" ? process.env.PRODUCTION_URL! : 'http://localhost:3000',
-            priceId: priceId!,
-        })
-        return redirect(subscriptionUrl);
-    }
 
+        return redirect(`${process.env.BASIC_PAYMENT_LINK!}?prefilled_email=${user?.email}`);
+    }
+    async function viewBillingPortal() {
+        "use server"
+
+        return redirect(process.env.BILLING_PORTAL_LINK!)
+    }
     if (UserSubscription?.plan !== "free") {
         return (
             <div className="container grid items-start gap-8 mt-10">
@@ -52,7 +51,7 @@ export default async function BillingPage() {
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <form action="">
+                        <form action={viewBillingPortal}>
                             <StripePortal />
                         </form>
                     </CardContent>
@@ -101,7 +100,7 @@ export default async function BillingPage() {
                         </CardHeader>
 
                         <CardContent>
-                            <form className="w-full" action={createSubscription.bind(null, pricing.priceId!)}>
+                            <form className="w-full" action={createSubscription}>
                                 <StripeSubscriptionCreationButton text={pricing.buttonText} />
                             </form>
                         </CardContent>

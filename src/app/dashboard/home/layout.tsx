@@ -9,16 +9,6 @@ export default async function DashboardLayout({
 }: {
     children: ReactNode;
 }) {
-
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
-    await checkAuthStatus({
-        email: user?.email as string,
-        firstName: user?.given_name as string,
-        id: user?.id as string,
-        lastName: user?.family_name as string,
-        profileImage: user?.picture as string,
-    });
     return (
         <Suspense fallback={<Loading />}>
             <div className="flex flex-col space-y-6 mt-5">
