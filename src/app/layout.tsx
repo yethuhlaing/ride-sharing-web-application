@@ -4,6 +4,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/provider/ThemeProvider';
 import { Toaster } from 'react-hot-toast';
 import TanStackProvider from '@/components/provider/TanStackProvider';
+import CookieConsent from '@/components/specific/CookieConsent';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -34,6 +35,7 @@ export default async function RootLayout({
                 >
                     <TanStackProvider>
                         {children}
+                        <CookieConsent />
                     </TanStackProvider>
                 </ThemeProvider>
             </body>
