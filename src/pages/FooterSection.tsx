@@ -1,5 +1,7 @@
 "use client"
 
+import CookiePolicy from '@/app/(legal)/cookie-policy/page';
+import PrivacyPolicy from '@/app/(legal)/privacy-policy/page';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
@@ -122,11 +124,10 @@ export default function Footer() {
                     | All rights reserved
                 </h3>
                 <div className='flex space-x-8'>
-                    <Link href={"/terms-and-condition"}>
-                        <span className=' font-semi-bold'>Terms & Condition</span>
-                    </Link>
-                    <Link href={"/terms-and-condition"}>
-                        <span className=' font-semi-bold'>Privacy</span>
+                    <CookiePolicy />
+                    <PrivacyPolicy />
+                    <Link href={'/terms-and-condition'}>
+                        Terms & Conditions
                     </Link>
                 </div>
             </section>
