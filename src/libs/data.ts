@@ -103,7 +103,8 @@ export interface FAQProps {
     answer: string;
     value: string;
 }
-
+export const MAILINGADDRESS = 'yethusteve217@gmail.com'
+export const EMAILADDRESS = 'wego@gmail.com'
 export const LIMIT_MESSAGE = 20;
 export const FAQList: FAQProps[] = [
     {

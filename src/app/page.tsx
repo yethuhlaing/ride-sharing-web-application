@@ -4,7 +4,6 @@ import { Team } from '../pages/TeamSection';
 import Footer from '../pages/FooterSection';
 import { ScrollToTop } from '../components/specific/ScrollToTop';
 import ContactSection from '@/pages/ContactSection';
-import ContactForm from '@/components/specific/ContactForm';
 import { Navbar } from '@/components/specific/Navbar';
 import Features from '@/pages/FeatureSection';
 // import Pricing from '@/pages/Pricing';
@@ -23,9 +22,7 @@ export default async function Home() {
             {/* <Team /> */}
             <PricingPage />
             <FAQ />
-            <ContactSection>
-                <ContactForm />
-            </ContactSection>
+            <ContactSection />
             <Footer />
         </>
     );
