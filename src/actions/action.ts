@@ -81,14 +81,13 @@ export async function getUserData(user_id: string) {
         throw error;
     } 
 }
-export async function getUserSubscriptionData() {
+export async function getUserSubscriptionData(user_id: string) {
     try {
-        const { getUser } = getKindeServerSession();
-        const user = await getUser();
-        console.log(user?.id)
+
+        console.log(user_id)
         const SubscriptionData = await prisma.user.findUnique({
             where: {
-                user_id: user?.id,
+                user_id: user_id,
             },
             select: {
                 email: true,

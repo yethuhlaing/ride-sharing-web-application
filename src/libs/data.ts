@@ -25,6 +25,7 @@ export interface PricingProps {
     href: string;
     billing: string;
     priceId?: string;
+    paymentLink?: string
 }
 
 export const pricingList: PricingProps[] = [
@@ -47,6 +48,7 @@ export const pricingList: PricingProps[] = [
         benefitList: ["Unlimited rides for the year", "Priority customer support", "Real-time Chat Features", "Two months free compared to monthly plan", "Exclusive promotions and discounts", "Free ride vouchers"],
         href: "/api/auth/login",
         priceId: process.env.BASIC_PRICE_ID,
+        paymentLink: process.env.NEXT_PUBLIC_BASIC_PAYMENT_LINK as string,
         billing: "/month",
     },
     {
@@ -58,6 +60,7 @@ export const pricingList: PricingProps[] = [
         benefitList: ["Unlimited lifetime rides", "Priority customer support", "Real-time Chat Features", "Special perks and bonuses", "Exclusive promotions and discounts", "Exclusive lifetime promotions and discounts", "Membership rewards"],
         href: "/api/auth/login",
         priceId: process.env.PREMIUM_PRICE_ID,
+        paymentLink: process.env.NEXT_PUBLIC_PREMIUM_PAYMENT_LINK as string,
         billing: "/month",
     },
 ];

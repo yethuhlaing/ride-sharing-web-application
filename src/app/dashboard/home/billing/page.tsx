@@ -2,11 +2,8 @@ import {
     Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle
 } from "@/components/ui/card";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { createCheckoutSession, stripe } from "@/libs/stripe";
 import { redirect } from "next/navigation";
 import { StripeSubscriptionCreationButton, StripePortal, } from "@/components/specific/SubmitButton";
-import { unstable_noStore as noStore } from "next/cache";
-import prisma from "@/libs/db";
 import { PopularPlanType, pricingList, PricingProps } from "@/libs/data";
 import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
@@ -17,7 +14,7 @@ export default async function BillingPage() {
 
     const { getUser } = getKindeServerSession();
     const user = await getUser();
-    const UserSubscription = await getUserSubscriptionData()
+    const UserSubscription = await getUserSubscriptionData(user?.id as string)
 
     async function createSubscription() {
         "use server";

@@ -1,4 +1,5 @@
 "use client";
+
 import { checkAuthStatus } from "@/actions/action";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useQuery } from "@tanstack/react-query";
@@ -16,6 +17,7 @@ const Page = () => {
 
     useEffect(() => {
         const stripePaymentLink = localStorage.getItem("stripePaymentLink");
+        console.log(stripePaymentLink)
         if (data?.success && stripePaymentLink && user?.email) {
             localStorage.removeItem("stripePaymentLink");
             router.push(stripePaymentLink + `?prefilled_email=${user.email}`);

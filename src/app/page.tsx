@@ -9,6 +9,7 @@ import { Navbar } from '@/components/specific/Navbar';
 import Features from '@/pages/FeatureSection';
 // import Pricing from '@/pages/Pricing';
 import HowItWorkSection from '@/pages/HowItWorkSection';
+import PricingPage from '@/pages/PricingSection';
 
 export default async function Home() {
     return (
@@ -20,6 +21,7 @@ export default async function Home() {
             <HowItWorkSection />
             {/* <Pricing /> */}
             {/* <Team /> */}
+            <PricingPage />
             <FAQ />
             <ContactSection>
                 <ContactForm />
