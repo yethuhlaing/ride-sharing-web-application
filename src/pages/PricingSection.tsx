@@ -3,16 +3,12 @@
 import {
     Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle
 } from "@/components/ui/card";
-import { StripeSubscriptionCreationButton } from "@/components/specific/SubmitButton";
 import { PopularPlanType, pricingList, PricingProps } from "@/libs/data";
 import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
-import { redirect, useRouter } from "next/navigation";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Button } from "@/components/ui/button";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import Link from "next/link";
 import { cn } from "@/libs/utils";
+import { useRouter } from "next/navigation";
 
 export default function PricingPage() {
 

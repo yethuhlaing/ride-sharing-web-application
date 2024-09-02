@@ -38,12 +38,19 @@ function RideForm() {
 
         const rideData = {
             driver_id: user_id?.id,
-            origin: pickupValue?.label,
-            destination: dropOffValue?.label,
+            origin: pickupValue,
+            destination: dropOffValue,
             departure_time: combinedDateTime,
             available_seats: Number(passengersRef.current?.value),
         };
         console.log(rideData)
+            // {
+            //     driver_id: 'kp_022a23efa79f43c1ab6e6c41cb77623c',
+            //     origin: 'Lappeenranta, Finland',
+            //     destination: 'Helsinki Airport (HEL), Lentoasemantie, Vantaa, Finland',
+            //     departure_time: new Date('2024-10-24T00:13:00.000Z'),
+            //     available_seats: 1
+            // }
         try {
             await createRide({ ...rideData })
             toast.success("Successfully Published the ride!")

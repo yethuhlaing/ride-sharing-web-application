@@ -123,7 +123,23 @@ export async function createRide({ driver_id,
         throw error;
     }
 }
-export async function findRides(origin: string, destination: string, departureTime: Date) {
+export async function getAllRides(page: number, pageSize: number){
+
+    try {
+        const profiles = await prisma.ride.findMany({
+            orderBy: {
+                departure_time: 'asc',
+            },
+            skip: (page - 1) * pageSize,
+            take: pageSize,
+        });
+        return profiles
+    } catch (error) {
+        console.error('Error fetching rides:', error);
+        throw error;
+    }
+}
+export async function findRides(origin: string, destination: string, departureTime: Date, page: number , pageSize: number ) {
     try {
         // Create a range for the entire day
         const startOfDay = new Date(departureTime);
@@ -137,6 +153,8 @@ export async function findRides(origin: string, destination: string, departureTi
                     gte: startOfDay, 
                 },
             },
+            skip: (page - 1) * pageSize,
+            take: pageSize,
             orderBy: {
                 departure_time: 'asc',
             },

@@ -6,7 +6,6 @@ import { ScrollToTop } from '../components/specific/ScrollToTop';
 import ContactSection from '@/pages/ContactSection';
 import { Navbar } from '@/components/specific/Navbar';
 import Features from '@/pages/FeatureSection';
-// import Pricing from '@/pages/Pricing';
 import HowItWorkSection from '@/pages/HowItWorkSection';
 import PricingPage from '@/pages/PricingSection';
 
@@ -18,7 +17,6 @@ export default async function Home() {
             <HeroSection />
             <Features />
             <HowItWorkSection />
-            {/* <Pricing /> */}
             {/* <Team /> */}
             <PricingPage />
             <FAQ />

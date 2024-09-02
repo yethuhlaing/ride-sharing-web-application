@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import React, { useState } from "react"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { addDays, format } from "date-fns"
 
@@ -19,8 +19,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { ifError } from "assert"
 
 export function DatePickerWithPresets({ date, setDate, placeholderName }) {
+
     return (
         <Popover>
             <PopoverTrigger asChild>
@@ -31,7 +33,7 @@ export function DatePickerWithPresets({ date, setDate, placeholderName }) {
                         !date && "text-muted-foreground"
                     )}
                 >
-                    {date ? format(date, "PPP") : <span>{placeholderName}</span>}
+                    {date ? format(date, "PP") : <span>{placeholderName}</span>}
                 </Button>
             </PopoverTrigger>
             <PopoverContent
@@ -39,9 +41,14 @@ export function DatePickerWithPresets({ date, setDate, placeholderName }) {
                 className="flex w-auto flex-col space-y-2 p-2"
             >
                 <Select
-                    onValueChange={(value) =>
-                        setDate(addDays(new Date(), parseInt(value)))
+                    onValueChange={(value) => {
+                        if (value) {
+                            setDate(addDays(new Date(), parseInt(value)))
+                        } else{
+                            setDate(null)
+                        }
                     }
+                }
                 >
                     <SelectTrigger>
                         <SelectValue placeholder="Select" />
@@ -53,9 +60,13 @@ export function DatePickerWithPresets({ date, setDate, placeholderName }) {
                         <SelectItem value="7">In a week</SelectItem>
                     </SelectContent>
                 </Select>
-                <div className="rounded-md border">
-                    <Calendar mode="single" selected={date} onSelect={setDate} />
-                </div>
+                <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    required
+                    initialFocus
+                />
             </PopoverContent>
         </Popover>
     )

@@ -1,12 +1,13 @@
-import React from 'react'
+import React from 'react';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 
 export default function GoogleMapInput( {value, handleSelect, placeholderName}) {
+
     return (
         <GooglePlacesAutocomplete
             selectProps={{
-                value: value,
-                onChange: (place) => handleSelect(place),
+                defaultInputValue: value,
+                onChange: (place) => handleSelect(place?.label || null),
                 placeholder: placeholderName,
                 isClearable: true,
                 required: true,

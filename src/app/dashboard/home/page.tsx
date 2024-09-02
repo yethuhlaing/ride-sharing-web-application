@@ -1,85 +1,71 @@
-"use client"
-
 import React, { Suspense, useEffect, useState } from 'react';
-import GoogleMapInput from "@/components/specific/GoogleMapInput"
-import { MapPin, Navigation, CalendarIcon } from "lucide-react";
-import { DatePickerWithPresets } from '@/components/specific/DatePicker';
 import RideList from './RideList';
-import { SubmitButton } from '@/components/specific/SubmitButton';
-import { findRides } from '@/actions/action';
-import toast from 'react-hot-toast';
-import { RideType } from '@/libs/type';
-import LoadingComponent from '@/app/dashboard/LoadingComponent';
-import { Card } from '@/components/ui/card';
+import PaginationComponent from './PaginationComponent';
+import prisma from '@/libs/db';
+import SearchForm from './SearchForm';
 
+export type RideQuery = {
+    pickUpValue: string,
+    dropOffValue: string,
+    date: string,
+    page_size: string;
+    page: string;
+};
 
-export default function DashboardPage(){
-    const [pickupValue, setPickupValue] = useState<any>(null)
-    const [dropOffValue, setDropOffValue] = useState<any>(null)
-    const [date, setDate] = useState<Date | null>(null)
-    const [ rides, setRides ] = useState<RideType[]>([])
-    const handlePickUpSelect = (place: any) => {
-        console.log(place)
-        if (place) {
-            setPickupValue(place)
-        }else{
-            setPickupValue(null)
-        }
+export default async function DashboardPage({
+    searchParams,
+}: {
+    searchParams: RideQuery;
+}){
+    
+    // const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1));
+    // const [pageSize, setPageSize] = useQueryState('page_size', parseAsInteger.withDefault(8));
 
+    const page = parseInt(searchParams.page, 10) || 1;
+    const pageSize = 3;
 
-    };
-    const handleDropOffSelect = (place: any) => {
-        if (place) {
-            setDropOffValue(place)
-        } else {
-            setDropOffValue(null)
-        }
-    };
-    const SearchRide = async () => {
-        try {
-            const rides = await findRides(
-                pickupValue?.label,
-                dropOffValue?.label,
-                date as Date
-            )
-            setRides(rides)
-        } catch (error: any) {
-            toast.error(error)
-        }
+    const filters: any = {};
+
+    if (searchParams.pickUpValue) {
+        filters.origin = searchParams.pickUpValue;
     }
 
-    
+    if (searchParams.dropOffValue) {
+        filters.destination = searchParams.dropOffValue;
+    }
+
+    if (searchParams.date) {
+        const startOfDay = new Date(searchParams.date);
+        startOfDay.setHours(0, 0, 0, 0);
+        filters.departure_time = {
+            gte: startOfDay, // Filter rides that depart on or after the specified date
+        };
+    }
+    const rides = await prisma.ride.findMany({
+        where: filters,
+        orderBy: {
+            departure_time: 'desc',
+        },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        include: {
+            driver: true
+        }
+    });
+    const rideCount = await prisma.ride.count({
+        where: filters
+    });
     return(
-        <div className='relative flex flex-col h-full w-full'>
-            <div className="bg-[#ffffff] py-4 sticky top-0 flex flex-wrap lg:space-x-2 space-x-0 lg:space-y-0 space-y-2 lg:justify-between justify-center">
-                <div className="flex items-center space-x-1">
-                    <Navigation size={20} />
-                    <GoogleMapInput value={pickupValue} handleSelect={handlePickUpSelect} placeholderName={"Pickup Location"} />
-                </div>
-                <div className="flex items-center space-x-1">
-                    <MapPin size={20} />
-                    <GoogleMapInput value={dropOffValue} handleSelect={handleDropOffSelect} placeholderName={"DropOff Location"} />
-                </div>
-                <div className='flex items-center space-x-2 w-[320px] md:w-[500px] lg:w-[250px] '>
-                    <CalendarIcon size={20} />
-                    <DatePickerWithPresets date={date} setDate={setDate} placeholderName={"Departure Date"} />
-                </div>
-                <form action={SearchRide} className='w-[320px] md:w-[550px] lg:flex-1'>
-                    <SubmitButton buttonName='Search'/>
-                </form>
-            </div>
-            {
-                rides && rides.length > 0 ? (
-                    <Suspense fallback={<LoadingComponent />}>
-                        <RideList rides={rides} />
-                    </Suspense>
-                ) : (
-                    <div className='flex flex-col h-full w-full p-2 items-center justify-between bg-secondary rounded-md text-secondary-foreground '>
-                        <div className='m-auto text-sm px-6 py-1 bg-primary rounded-3xl text-neutral-50'>No Data Available</div>
-                    </div>
-                )
-            }
+        <div className='relative flex flex-col'>
+            <SearchForm />
+            <RideList rides={rides} />
+            <PaginationComponent
+                rideCount={rideCount}
+                pageSize={pageSize}
+                currentPage={page}
+            />
         </div>
 
     )
 }
+

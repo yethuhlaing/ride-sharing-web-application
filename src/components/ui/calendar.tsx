@@ -6,33 +6,47 @@ import { DayPicker } from "react-day-picker"
 import { useState } from "react"
 import { cn } from "@/libs/utils"
 import { buttonVariants } from "@/components/ui/button"
-
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
     required?: boolean;
-    onDateChange?: (date: Date | undefined) => void;
 }
 function Calendar({
     className,
     classNames,
     showOutsideDays = true,
-    required = false,
-    onDateChange,
+    required,
     ...props
 }: CalendarProps) {
-    const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
-    const handleDateChange = (date: Date | undefined) => {
-        setSelectedDate(date);
-        if (onDateChange) {
-            onDateChange(date);
+    const handleSelect = (newSelected: Date) => {
+        // Update the selected dates
+        const year = newSelected.getFullYear();
+        const month = String(newSelected.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const day = String(newSelected.getDate()).padStart(2, '0');
+
+        const newSelectedDate = `${year}-${month}-${day}`;
+
+        const params = new URLSearchParams(window.location.search);
+        const oldSelectedDate = params.get('date')
+
+        if (newSelectedDate !== oldSelectedDate) {
+            params.set('date', newSelectedDate);
+        } else {
+            params.delete('date');
         }
-    }
+
+        // Construct the new URL with updated query parameters
+        const newUrl = `${window.location.pathname}?${params.toString()}`;
+
+        // Update the URL without reloading the page
+        window.history.replaceState(null, '', newUrl);
+    };
     return (
         <div>
-
             <DayPicker
                 showOutsideDays={showOutsideDays}
                 className={cn("p-3", className)}
+                onDayClick={handleSelect}
                 classNames={{
                     months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
                     month: "space-y-4",
@@ -79,11 +93,6 @@ function Calendar({
                 }}
                 {...props}
             />
-            {
-                required && !selectedDate && (
-                    <p className="mt-2 text-sm text-red-600">Date is required</p>
-                )
-            }
         </div>
     )
 }
