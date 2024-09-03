@@ -10,18 +10,16 @@ export default async function DashboardLayout({
     children: ReactNode;
 }) {
     return (
-        <Suspense fallback={<Loading />}>
-            <div className="flex flex-col space-y-6 mt-5">
-                <div className="container grid flex-1 gap-12 md:grid-cols-[200px_1fr]">
-                    <aside className="hidden w-[200px] flex-col md:flex md:sticky top-0">
-                        <DashboardSidebar />
-                    </aside>
-                    <main className="overflow-y-auto no-scrollbar h-[85vh]">
-                        {children}
-                    </main>
-                </div>
+        <div className="flex flex-col space-y-6 mt-5">
+            <div className="container grid flex-1 gap-12 md:grid-cols-[200px_1fr]">
+                <aside className="hidden w-[200px] flex-col md:flex md:sticky top-0">
+                    <DashboardSidebar />
+                </aside>
+                <main className="overflow-y-auto no-scrollbar h-[85vh]">
+                    {children}
+                </main>
             </div>
-        </Suspense>
+        </div>
 
     )
 }
