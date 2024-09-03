@@ -123,17 +123,50 @@ export async function createRide({ driver_id,
         throw error;
     }
 }
-export async function getAllRides(page: number, pageSize: number){
+// export async function getAllRides(page: number, pageSize: number){
 
+//     try {
+//         const rides = await prisma.ride.findMany({
+//             orderBy: {
+//                 departure_time: 'asc',
+//             },
+//             skip: (page - 1) * pageSize,
+//             take: pageSize,
+//             include: {
+//                 driver: true
+//             }
+//         });
+//         return rides
+//     } catch (error) {
+//         console.error('Error fetching rides:', error);
+//         throw error;
+//     }
+// }
+// export async function countAllRides() {
+//     try {
+
+//         const rideCount = await prisma.ride.count();
+//         return rideCount
+//     } catch (error) {
+//         console.error('Error fetching rides:', error);
+//         throw error;
+//     }
+// }
+export async function countRides(origin: string, destination: string, departureTime: Date) {
     try {
-        const profiles = await prisma.ride.findMany({
-            orderBy: {
-                departure_time: 'asc',
-            },
-            skip: (page - 1) * pageSize,
-            take: pageSize,
+        // Create a range for the entire day
+        const startOfDay = new Date(departureTime);
+        startOfDay.setHours(0, 0, 0, 0);
+        const rideCount = await prisma.ride.count({
+            where: {
+                origin: origin,
+                destination: destination,
+                departure_time: {
+                    gte: startOfDay,
+                },
+            }
         });
-        return profiles
+        return rideCount
     } catch (error) {
         console.error('Error fetching rides:', error);
         throw error;
@@ -162,22 +195,7 @@ export async function findRides(origin: string, destination: string, departureTi
                 driver: true
             }
         });
-        console.log(rides)
-        return rides;
-    } catch (error) {
-        console.error('Error fetching rides:', error);
-        throw error;
-    }
-}
-export async function getRides() {
-    try {
-        const rides = await prisma.ride.findMany({
-            include: {
-                driver: true,
-            },
-        });
-        console.log(rides)
-        return rides;
+        return rides
     } catch (error) {
         console.error('Error fetching rides:', error);
         throw error;
