@@ -26,7 +26,7 @@ export default function SearchForm() {
     const [ ridesCount, setRidesCount ] = useState(0)
 
     const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1));
-    const [pageSize, setPageSize] = useQueryState('page_size', parseAsInteger.withDefault(3));
+    const [pageSize, setPageSize] = useQueryState('page_size', parseAsInteger.withDefault(4));
 
     const handlePickUpSelect = (place: any) => {
         console.log(pickUpValue)
@@ -93,7 +93,6 @@ export default function SearchForm() {
                 pageSize={pageSize}
                 currentPage={page}
             />
-
         </div>
 
     )

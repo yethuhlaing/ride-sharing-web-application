@@ -14,7 +14,7 @@ function RideList({ rides }: { rides: RideType[] }) {
         rides && rides.length > 0 ? (
             <div className="space-y-2">
                 {rides.map((ride, index) => (
-                    <Card key={index} className="min-w-sm mx-auto py-2 px-4 lg:p-4 shadow-sm border border-gray-200 flex items-center justify-between">
+                    <Link href={`/dashboard/home/ride/${ride.ride_id}`} key={index} className="rounded-lg hover:bg-slate-100 min-w-sm mx-auto py-2 px-4 lg:p-4 shadow-sm border border-gray-200 flex items-center justify-between">
                         <div className='flex-row items-center justify-center space-y-1'>
                             <div className="flex items-center text-xs lg:text-base">
                                 <span className="font-semibold text-gray-700">Origin: </span>
@@ -41,18 +41,12 @@ function RideList({ rides }: { rides: RideType[] }) {
                             <Image
                                 src={ride.driver?.profileImage as string | StaticImport}
                                 alt="User Profile Image"
-                                width={30}  // Set the appropriate width
-                                height={30} // Set the appropriate height
-                                className="rounded-full aspect-square object-cover lg:w-12 lg:h-12 "
-                                priority
+                                width={100}  // Set the appropriate width
+                                height={100} // Set the appropriate height
+                                className="rounded-full aspect-square w-12 h-12 md:w-16 md:h-16"
                             />
-                            <Button className="btn btn-primary text-xs lg:w-auto lg:h-auto h-6">
-                                <Link href={`/dashboard/home/ride/${ride.ride_id}`}>
-                                    See More...
-                                </Link>
-                            </Button>
                         </div>
-                    </Card>
+                    </Link>
 
                 ))}
             </div>
