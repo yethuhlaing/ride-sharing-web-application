@@ -3,6 +3,7 @@ import { DashboardSidebar } from '@/components/specific/DashboardSidebar';
 import Loading from "../../../components/loading/loading";
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { checkAuthStatus } from '@/actions/action';
+import { RidesProvider } from '@/context/RideContext';
 
 export default async function DashboardLayout({
     children,
@@ -16,7 +17,9 @@ export default async function DashboardLayout({
                     <DashboardSidebar />
                 </aside>
                 <main className="overflow-y-auto no-scrollbar h-[85vh]">
-                    {children}
+                    <RidesProvider>
+                        {children}
+                    </RidesProvider>
                 </main>
             </div>
         </div>

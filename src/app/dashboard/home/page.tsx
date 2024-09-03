@@ -15,6 +15,7 @@ import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import prisma from '@/libs/db';
 import { createParser } from 'nuqs'
 import LoadingComponent from '@/components/specific/LoadingComponent';
+import { useRides } from '@/context/RideContext';
 
 export type RideQuery = {
     pickUpValue: string,
@@ -29,8 +30,8 @@ export default function DashboardPage(){
     const [dropOffValue, setDropOffValue] = useQueryState('dropOffValue');
     const [date, setDate] = useState<Date | undefined>();
 
-    const [rides, setRides] = useState<RideType[]>([])
-    const [ridesCount, setRidesCount] = useState(0)
+
+    const { rides, ridesCount, setRides, setRidesCount } = useRides();
 
     const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1));
     const [pageSize, setPageSize] = useQueryState('page_size', parseAsInteger.withDefault(4));
@@ -58,9 +59,7 @@ export default function DashboardPage(){
                 if (searchedRidesCount == 0) toast.error('No Rides Found!')
                 setRides(searchedRides)
                 setRidesCount(searchedRidesCount)
-            } else {
-                toast.error('Please fill in your form completely!')
-            }
+            } 
         } catch (error: any) {
             console.log(error);
             toast.error("Failed to search the ride")

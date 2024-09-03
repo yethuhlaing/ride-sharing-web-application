@@ -10,7 +10,6 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { createBooking, deleteBooking, getBookingwithRideId, getBookingwithRideIdAndPassengerId, getRidewithRideId, getUserData, updateBooking } from '@/actions/action';
 import { revalidatePath, unstable_cache } from 'next/cache';
 import { CancelButton, SubmitButton } from '@/components/specific/SubmitButton';
-import NotFound from '../../NotFound';
 import { BookingType, RideType } from '@/libs/type';
 
 
@@ -99,7 +98,7 @@ export default async function RidePage({ params } : any) {
     
     return (
         <>
-            { ride ? (
+            { ride && (
                 <Card>
                     <CardHeader>
                         <CardTitle className="text-lg font-semibold text-gray-900">Ride Details</CardTitle>
@@ -249,9 +248,6 @@ export default async function RidePage({ params } : any) {
                         }
                     </CardContent>
                 </Card >
-                ): 
-                (
-                    <NotFound />
                 )
             }
         </>
