@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import GoogleMapInput from "@/components/specific/GoogleMapInput"
 import { MapPin, Navigation, CalendarIcon } from "lucide-react";
 import { DatePickerWithPresets } from '@/components/specific/DatePicker';
@@ -14,6 +14,7 @@ import PaginationComponent from './PaginationComponent';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import prisma from '@/libs/db';
 import { createParser } from 'nuqs'
+import LoadingComponent from '@/components/specific/LoadingComponent';
 
 
 export default function SearchForm() {
@@ -47,6 +48,7 @@ export default function SearchForm() {
             if (pickUpValue && dropOffValue && date) {
                 const searchedRides = await findRides(pickUpValue, dropOffValue, date, page, pageSize)
                 const searchedRidesCount = await countRides(pickUpValue, dropOffValue, date)
+                if (searchedRidesCount == 0) toast.error('No Rides Found!')
                 setRides(searchedRides)
                 setRidesCount(searchedRidesCount)
             } else{
@@ -82,7 +84,9 @@ export default function SearchForm() {
                     <SubmitButton buttonName='Search' />
                 </form>
             </div>
-            <RideList rides={rides} />
+            <Suspense fallback={<LoadingComponent />}>
+                <RideList rides={rides} />
+            </Suspense>
             <PaginationComponent
                 rideCount={ridesCount}
                 setPage={setPage}

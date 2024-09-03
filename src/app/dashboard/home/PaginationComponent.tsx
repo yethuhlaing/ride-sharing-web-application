@@ -1,16 +1,13 @@
 'use client'
 
 import React from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
 
 import {
     Pagination,
     PaginationContent,
     PaginationEllipsis,
-    PaginationItem,
     PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
+
 } from "@/components/ui/pagination"
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from '@/components/ui/button'
@@ -23,45 +20,43 @@ type Props = {
 };
 
 export default function PaginationComponent({ rideCount, pageSize, currentPage, setPage }: Props){
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const displayPageCount = 3;
-    // const generatePaginationLinks = () => {
-    //     const paginationLinks = [];
-    //     const leftEllipsis = currentPage > 2;
-    //     const rightEllipsis = currentPage < pageCount - 1;
 
-    //     for (let i = 1; i <= pageCount; i++) {
-    //         if (
-    //             i === 1 ||
-    //             i === pageCount ||
-    //             (i >= currentPage - 1 && i <= currentPage + 1)
-    //         ) {
-    //             paginationLinks.push(
-    //                 <PaginationLink
-    //                     key={i}
-    //                     onClick={() => changePage(i)}
-    //                     isActive={currentPage === i}
-    //                 >
-    //                     {i}
-    //                 </PaginationLink>
-    //             );
-    //         }
-    //     }
+    const generatePaginationLinks = () => {
+        const paginationLinks = [];
+        const leftEllipsis = currentPage > 2;
+        const rightEllipsis = currentPage < pageCount - 1;
 
-    //     if (leftEllipsis) {
-    //         paginationLinks.splice(1, 0, <PaginationEllipsis key="left" />);
-    //     }
-    //     if (rightEllipsis) {
-    //         paginationLinks.splice(
-    //             paginationLinks.length - 1,
-    //             0,
-    //             <PaginationEllipsis key="right" />
-    //         );
-    //     }
+        for (let i = 1; i <= pageCount; i++) {
+            if (
+                i === 1 ||
+                i === pageCount ||
+                (i >= currentPage - 1 && i <= currentPage + 1)
+            ) {
+                paginationLinks.push(
+                    <PaginationLink
+                        key={i}
+                        onClick={() => setPage(i)}
+                        isActive={currentPage === i}
+                    >
+                        {i}
+                    </PaginationLink>
+                );
+            }
+        }
 
-    //     return paginationLinks;
-    // };
+        if (leftEllipsis) {
+            paginationLinks.splice(1, 0, <PaginationEllipsis key="left" />);
+        }
+        if (rightEllipsis) {
+            paginationLinks.splice(
+                paginationLinks.length - 1,
+                0,
+                <PaginationEllipsis key="right" />
+            );
+        }
+
+        return paginationLinks;
+    };
 
     const pageCount = Math.ceil(rideCount / pageSize);
     if (pageCount <= 1) return null;
@@ -95,7 +90,7 @@ export default function PaginationComponent({ rideCount, pageSize, currentPage, 
                         Previous
                     </Button>
                 </form>
-                {/* {generatePaginationLinks()} */}
+                {generatePaginationLinks()}
                 <form action={changeNext}>
                     <Button
                         variant="ghost"
