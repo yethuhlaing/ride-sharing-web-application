@@ -1,15 +1,13 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { MessageType } from '@/libs/type';
 import toast from 'react-hot-toast';
-import { Input } from '@/components/ui/input';
 import { v4 as uuidv4 } from 'uuid';
 import { supabasebrowser } from '@/supabase/browser';
 import { Button } from '@/components/ui/button';
 import { SendHorizonal } from 'lucide-react';
 import { useMessage } from '@/context/MessageContext';
-import { getUserData } from '@/actions/action';
 
 
 function ChatInput({ senderId, chatRoomId }: any) {

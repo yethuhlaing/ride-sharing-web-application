@@ -7,6 +7,7 @@ import { RideType, StatusType, UserData, UserType } from "@/libs/type";
 import { getFromAndTo, getRandomAvatarUrl } from "@/libs/utils";
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { redirect } from "next/navigation";
 
 export async function createBooking(ride_id: any, passenger_id: any) {
     "use server"
@@ -64,6 +65,9 @@ export async function updateBooking(booking_id: string, status: StatusType) {
 export async function getUserData(user_id: string) {
 
     console.log(user_id)
+    if (!user_id) {
+        redirect("/api/auth/callback")
+    }
     try {
         const data = await prisma.user.findUnique({
             where: {
