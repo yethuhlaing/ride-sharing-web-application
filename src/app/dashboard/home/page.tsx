@@ -4,16 +4,12 @@ import React, { Suspense, useEffect, useState } from 'react'
 import GoogleMapInput from "@/components/specific/GoogleMapInput"
 import { MapPin, Navigation, CalendarIcon } from "lucide-react";
 import { DatePickerWithPresets } from '@/components/specific/DatePicker';
-import { useQueryState, parseAsInteger, parseAsTimestamp, parseAsIsoDateTime } from 'nuqs'
+import { useQueryState, parseAsInteger } from 'nuqs'
 import toast from 'react-hot-toast';
-import { SubmitButton } from '@/components/specific/SubmitButton';
+import { SearchButton } from '@/components/specific/SubmitButton';
 import { countRides, findRides } from '@/actions/action';
-import { RideType } from '@/libs/type';
 import RideList from './RideList';
 import PaginationComponent from './PaginationComponent';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import prisma from '@/libs/db';
-import { createParser } from 'nuqs'
 import LoadingComponent from '@/components/specific/LoadingComponent';
 import { useRides } from '@/context/RideContext';
 
@@ -88,7 +84,7 @@ export default function DashboardPage(){
                     <DatePickerWithPresets date={date} setDate={setDate} placeholderName={"Departure Date"} />
                 </div>
                 <form action={SearchRide} className='w-[320px] md:w-[550px] lg:flex-1'>
-                    <SubmitButton buttonName='Search' />
+                    <SearchButton />
                 </form>
             </div>
             <Suspense fallback={<LoadingComponent />}>

@@ -62,6 +62,8 @@ export async function updateBooking(booking_id: string, status: StatusType) {
 
 
 export async function getUserData(user_id: string) {
+
+    console.log(user_id)
     try {
         const data = await prisma.user.findUnique({
             where: {
@@ -207,7 +209,6 @@ export async function checkAuthStatus() {
     const user = await getUser();
 
     if (!user) return { success: false };
-
     const existingUser = await prisma.user.findUnique({ where: { user_id: user.id } });
 
     // sign up
