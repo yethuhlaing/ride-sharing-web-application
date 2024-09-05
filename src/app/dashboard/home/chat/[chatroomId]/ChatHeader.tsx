@@ -1,11 +1,9 @@
 "use client";
 
 import ChatRoomAvatar from "@/components/specific/ChatRoomAvatar";
-import { Button } from "@/components/ui/button";
-import { ChatRoomType, UserType } from "@/libs/type";
+import { ChatRoomType } from "@/libs/type";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import defaultImage from "@@/public/assets/avatar.png"
 import { DeleteChatRoom } from "./MessageAction";

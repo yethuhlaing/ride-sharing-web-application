@@ -12,7 +12,7 @@ export default function ContactSection() {
 
 
   const handleSubmit = async (formData: FormData) => {
-    const { data, error } = await sendEmail(formData);
+    const { error } = await sendEmail(formData);
     toast.success("Successfully sent messages!")
     if (error) {
       console.log(error)

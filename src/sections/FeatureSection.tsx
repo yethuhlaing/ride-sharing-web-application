@@ -23,13 +23,13 @@ export default function Features(){
                     <div className="w-full">
                         <h2 className="text-xl lg:text-3xl font-bold mb-4">Share Your Journey, Share the Cost</h2>
                         <p className="text-base">
-                            Have empty seats in your car? Offer them to fellow students and split the travel expenses. It's an easy and eco-friendly way to travel.
+                            Have empty seats in your car? Offer them to fellow students and split the travel expenses. It&apos;s an easy and eco-friendly way to travel.
                         </p>
                     </div>
                     <div className="w-full">
                         <h2 className="text-xl lg:text-3xl font-bold mb-4">Join the Ride, Make New Friends</h2>
                         <p className="text-base">
-                            Looking for a ride? Quickly find and join rides published by other students. It's a convenient way to meet new people and travel together.                        
+                            Looking for a ride? Quickly find and join rides published by other students. It&apos;s a convenient way to meet new people and travel together.
                         </p>
                     </div>
                 </div>
@@ -39,7 +39,7 @@ export default function Features(){
                     <div className="w-full">
                         <h2 className="text-xl lg:text-3xl font-bold mb-4">Travel Smart, Save More</h2>
                         <p className="text-base">
-                            Reduce your travel costs by sharing rides. It's a budget-friendly solution that helps you save money on every trip.
+                            Reduce your travel costs by sharing rides. It&apos;s a budget-friendly solution that helps you save money on every trip.
                         </p>
                     </div>
                     <div className="w-full">

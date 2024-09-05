@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/ui/button';
 import { Loader2, Trash } from 'lucide-react';
-import Link from 'next/link';
 import { useFormStatus } from 'react-dom';
 
 
@@ -50,10 +49,10 @@ export function CancelButton({ buttonName }: Prop) {
         </>
     );
 }
-type PaymentLinkProps = {
+
+export function StripeSubscriptionCreationButton({ text }: {
     text: string;
-};
-export function StripeSubscriptionCreationButton({ text }: PaymentLinkProps) {
+}) {
     const { pending } = useFormStatus();
     return (
         <>

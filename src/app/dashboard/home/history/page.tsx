@@ -1,6 +1,6 @@
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import React, { Suspense } from 'react'
-import { getBookingwithUserId, getRidewithDriverId, getRidewithRideId } from '@/actions/action';
+import { getBookingwithUserId, getRidewithDriverId } from '@/actions/action';
 import { BookingType} from '@/libs/type';
 
 import ListPublishs from './ListPublishs';

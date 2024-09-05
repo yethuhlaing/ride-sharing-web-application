@@ -32,10 +32,22 @@ function RideForm() {
         e.preventDefault()
 
         const combinedDateTime = date;
-        const [hours, minutes] = time?.split(':');
-        combinedDateTime?.setHours(parseInt(hours, 10));
-        combinedDateTime?.setMinutes(parseInt(minutes, 10));
+        // const [hours, minutes] = time?.split(':');
+        // combinedDateTime?.setHours(parseInt(hours, 10));
+        // combinedDateTime?.setMinutes(parseInt(minutes, 10));
+        if (time) {
+            const [hoursStr, minutesStr] = time.split(':');
 
+            // Convert to numbers and check for NaN
+            const hours = parseInt(hoursStr, 10);
+            const minutes = parseInt(minutesStr, 10);
+
+            // Check if the values are valid numbers
+            if (!isNaN(hours) && !isNaN(minutes) && combinedDateTime) {
+                combinedDateTime.setHours(hours);
+                combinedDateTime.setMinutes(minutes);
+            }
+        }
         const rideData = {
             driver_id: user_id?.id,
             origin: pickupValue,

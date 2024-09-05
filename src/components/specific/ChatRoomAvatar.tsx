@@ -1,5 +1,5 @@
 import React from 'react'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
 
 export default function ChatRoomAvatar({ passengerProfileImage, driverProfileImage }: any) {

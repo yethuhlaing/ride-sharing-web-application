@@ -1,12 +1,9 @@
-import LoadingComponent from '@/components/specific/LoadingComponent'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { RideType } from '@/libs/type'
-import { formatTime, formatDate } from '@/libs/utils'
+import { formatDate } from '@/libs/utils'
 import { StaticImport } from 'next/dist/shared/lib/get-img-props'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { Suspense } from 'react'
+import React from 'react'
 
 function RideList({ rides }: { rides: RideType[] }) {
     

@@ -66,7 +66,7 @@ export default function DashboardPage(){
         if (page > 0 && page <= totalPages) {
             SearchRide();
         }
-    }, [page, ridesCount]); 
+    }, [page, ridesCount]);  // eslint-disable-line react-hooks/exhaustive-deps
 
     return(
         <div className='relative flex flex-col h-full'>

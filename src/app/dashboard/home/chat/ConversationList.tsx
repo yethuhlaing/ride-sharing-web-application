@@ -3,13 +3,11 @@
 import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ChatRoomType } from '@/libs/type';
-import Link from 'next/link';
 import { cn } from '@/libs/utils';
 import { useConversation } from '@/hooks/useConversation';
 import ChatRoomAvatar from '@/components/specific/ChatRoomAvatar';
 import defaultImage from "@@/public/assets/avatar.png"
-export default async function ConversationList({ chatRooms }: {chatRooms: ChatRoomType[]}) {
-
+export default function ConversationList({ chatRooms }: {chatRooms: ChatRoomType[]}) {
 
     const { isActive } = useConversation()
     return (

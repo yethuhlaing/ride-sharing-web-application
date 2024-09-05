@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
     motion,
     useTransform,
@@ -11,11 +11,6 @@ import {
 } from "framer-motion";
 import { BookingType } from "@/libs/type";
 
-type ItemType = {
-    id: string;
-    name: string | null | undefined;
-    image: string | null | undefined;
-}
 export const AnimatedTooltip = ({bookings} : { bookings: BookingType[]}) => {
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
     const springConfig = { stiffness: 100, damping: 5 };

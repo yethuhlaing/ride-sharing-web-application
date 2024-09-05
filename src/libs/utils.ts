@@ -49,17 +49,17 @@ export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 export function getLatAndLng(place: any): Promise<Location | null> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const placeId = place?.value.place_id;
         if (!placeId) {
             resolve(null);
             return;
         }
 
-        const service = new google.maps.places.PlacesService(document.createElement('div'));
+        const service = new window.google.maps.places.PlacesService(document.createElement('div'));
 
         service.getDetails({ placeId }, (place, status) => {
-            if (status === google.maps.places.PlacesServiceStatus.OK && place?.geometry && place?.geometry.location) {
+            if (status === window.google.maps.places.PlacesServiceStatus.OK && place?.geometry && place?.geometry.location) {
                 const result = {
                     lat: place.geometry.location.lat(),
                     lng: place.geometry.location.lng(),

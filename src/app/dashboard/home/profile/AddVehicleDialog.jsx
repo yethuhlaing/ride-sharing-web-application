@@ -15,7 +15,6 @@ import prisma from '@/libs/db';
 import { Plus } from 'lucide-react';
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { revalidatePath } from 'next/cache';
-import toast from 'react-hot-toast';
 
 export default async function AddVehicleDialog() {
 
@@ -63,7 +62,7 @@ export default async function AddVehicleDialog() {
                     <DialogTitle className='mb-3'>Your vehicle</DialogTitle>
                     <DialogDescription>
                         Make changes to your profile here. Click save when
-                        you're done.
+                        you&apos;re done.
                     </DialogDescription>
                 </DialogHeader>
                 <form action={createVehicle}>

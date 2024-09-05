@@ -1,5 +1,4 @@
 import { Review } from "@prisma/client";
-import { Home, Settings } from "lucide-react";
 
 export interface TeamProps {
     imageUrl: string;

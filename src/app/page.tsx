@@ -1,13 +1,13 @@
-import HeroSection from '../pages/HeroSection';
-import { FAQ } from '../pages/FAQSection';
-import { Team } from '../pages/TeamSection';
-import Footer from '../pages/FooterSection';
+import HeroSection from '../sections/HeroSection';
+import { FAQ } from '../sections/FAQSection';
+// import { Team } from '../sections/TeamSection';
+import Footer from '../sections/FooterSection';
 import { ScrollToTop } from '../components/specific/ScrollToTop';
-import ContactSection from '@/pages/ContactSection';
+import ContactSection from '@/sections/ContactSection';
 import { Navbar } from '@/components/specific/Navbar';
-import Features from '@/pages/FeatureSection';
-import HowItWorkSection from '@/pages/HowItWorkSection';
-import PricingPage from '@/pages/PricingSection';
+import Features from '@/sections/FeatureSection';
+import HowItWorkSection from '@/sections/HowItWorkSection';
+import PricingPage from '@/sections/PricingSection';
 
 export default async function Home() {
     return (

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { GoogleMap, MarkerF, OverlayViewF, OverlayView, DirectionsRenderer } from '@react-google-maps/api';
 import { useLocation } from '@/context/LocationContextProvider';
 const containerStyle = {
@@ -68,13 +68,13 @@ function GoogleMapSection() {
     }, [])
 
     const directionRoute = () =>{
-        const DirectionsService = new google.maps.DirectionsService();
+        const DirectionsService = new window.google.maps.DirectionsService();
         DirectionsService.route({
             origin: { lat:source?.lat, lng:source?.lng},
             destination: { lat: destination?.lat, lng: destination?.lng },
-            travelMode: google.maps.TravelMode.DRIVING
+            travelMode: window.google.maps.TravelMode.DRIVING
         }, (result, status) => {
-            if(status===google.maps.DirectionsStatus.OK){
+            if (status === window.google.maps.DirectionsStatus.OK){
                 console.log(result)
                 setDirectionRoutePoints(result)
             }
@@ -83,7 +83,7 @@ function GoogleMapSection() {
             }
         })
     }
-    const onUnmount = React.useCallback(function callback(map) {
+    const onUnmount = React.useCallback(function callback() {
         setMap(null)
     }, [])
 

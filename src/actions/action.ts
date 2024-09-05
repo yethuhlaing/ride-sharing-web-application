@@ -2,8 +2,7 @@
 
 import { LIMIT_MESSAGE } from "@/libs/data";
 import prisma from "@/libs/db";
-import { stripe } from "@/libs/stripe";
-import { RideType, StatusType, UserData, UserType } from "@/libs/type";
+import { StatusType } from "@/libs/type";
 import { getFromAndTo, getRandomAvatarUrl } from "@/libs/utils";
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
@@ -565,43 +564,35 @@ export async function deleteRide(rideId: string) {
     }
 }
 export async function getMessagesWithChatRoomId(limit: number, chatRoomId: string) {
-    try {
-        const messages = await prisma.message.findMany({
-            include: {
-                sender: true,
-                chatRoom: true
-            },
-            where: {
-                chat_room_id: chatRoomId
-            },
-            orderBy: {
-                createdAt: 'desc',  // Assuming `createdAt` field exists in your model
-            },
-            take: limit,
-        });
-        console.log(messages)
-        return messages;
-    } catch (error) {
-        throw error
-    }
+    const messages = await prisma.message.findMany({
+        include: {
+            sender: true,
+            chatRoom: true
+        },
+        where: {
+            chat_room_id: chatRoomId
+        },
+        orderBy: {
+            createdAt: 'desc',  // Assuming `createdAt` field exists in your model
+        },
+        take: limit,
+    });
+    console.log(messages)
+    return messages;
 }
 export async function getMessageWithPage(page: number ){
-    try {
-        const { from, to } = getFromAndTo(page, LIMIT_MESSAGE);
-        const messages = await prisma.message.findMany({
-            skip: from,
-            take: to - from + 1,
-            orderBy: {
-                createdAt: 'desc',
-            },
-            include: {
-                sender: true,
-            },
-        });
-        return messages
-    } catch (error) {
-        throw error
-    }
+    const { from, to } = getFromAndTo(page, LIMIT_MESSAGE);
+    const messages = await prisma.message.findMany({
+        skip: from,
+        take: to - from + 1,
+        orderBy: {
+            createdAt: 'desc',
+        },
+        include: {
+            sender: true,
+        },
+    });
+    return messages
 }
 
 export async function createReview(ride_id: string, passenger_id: string, rating: number, comment: string) {

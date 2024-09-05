@@ -3,10 +3,8 @@
 import * as React from "react"
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons"
 import { DayPicker } from "react-day-picker"
-import { useState } from "react"
 import { cn } from "@/libs/utils"
 import { buttonVariants } from "@/components/ui/button"
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
     required?: boolean;
 }
@@ -14,7 +12,6 @@ function Calendar({
     className,
     classNames,
     showOutsideDays = true,
-    required,
     ...props
 }: CalendarProps) {
 
@@ -88,8 +85,8 @@ function Calendar({
                     ...classNames,
                 }}
                 components={{
-                    IconLeft: ({ ...props }) => <ChevronLeftIcon className="h-4 w-4" />,
-                    IconRight: ({ ...props }) => <ChevronRightIcon className="h-4 w-4" />,
+                    IconLeft: () => <ChevronLeftIcon className="h-4 w-4" />,
+                    IconRight: () => <ChevronRightIcon className="h-4 w-4" />,
                 }}
                 {...props}
             />

@@ -10,9 +10,9 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import { MessageState, MessageType } from "@/libs/type";
 import defaultImage from "@@/public/assets/avatar.png"
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { useMessage } from "@/store/message";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import Image from "next/image";
 
 export default function Message({ message }: { message: MessageType }) {
     const { getUser } = useKindeBrowserClient();
@@ -20,7 +20,7 @@ export default function Message({ message }: { message: MessageType }) {
     return (
         <div className="flex gap-2 justify-center items-center">
             <div>
-                <img
+                <Image
                     src={message.sender?.profileImage! ?? defaultImage}
                     alt={message.sender?.fullName!}
                     className="lg:w-10 lg:h-10 w-7 h-7 rounded-full"

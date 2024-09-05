@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import prisma from '@/libs/db';
 import { formatDate, formatTime, getFirstName } from '@/libs/utils';
 import Image from 'next/image';
@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { createBooking, deleteBooking, getBookingwithRideId, getBookingwithRideIdAndPassengerId, getRidewithRideId, getUserData, updateBooking } from '@/actions/action';
-import { revalidatePath, unstable_cache } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 import { CancelButton, SubmitButton } from '@/components/specific/SubmitButton';
 import { BookingType, RideType } from '@/libs/type';
 

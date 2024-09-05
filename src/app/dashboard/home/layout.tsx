@@ -1,8 +1,5 @@
-import { ReactNode, Suspense } from 'react';
+import { ReactNode } from 'react';
 import { DashboardSidebar } from '@/components/specific/DashboardSidebar';
-import Loading from "../../../components/loading/loading";
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { checkAuthStatus } from '@/actions/action';
 import { RidesProvider } from '@/context/RideContext';
 
 export default async function DashboardLayout({

@@ -1,7 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
-import { CalendarIcon } from "@radix-ui/react-icons"
+import React from "react"
 import { addDays, format } from "date-fns"
 
 import { cn } from "@/libs/utils"
@@ -19,7 +18,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { ifError } from "assert"
 
 export function DatePickerWithPresets({ date, setDate, placeholderName }) {
 

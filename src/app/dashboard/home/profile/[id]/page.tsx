@@ -1,9 +1,9 @@
-import React from 'react'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { getCompleteBooking, getRidewithDriverId, getUserData, getVehicles } from '@/actions/action';
+import React, { Fragment } from 'react'
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { getRidewithDriverId, getUserData, getVehicles } from '@/actions/action';
 import Image from 'next/image';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
-import { BookingType, ReviewType, RideType, VehicleType } from '@/libs/type';
+import { ReviewType, RideType, VehicleType } from '@/libs/type';
 import { ChevronsRight, Star } from 'lucide-react';
 import { formatDate, getFirstLocationName } from '@/libs/utils';
 import { StarColors } from '@/libs/data';
@@ -48,7 +48,9 @@ export default async function ProfilePage({params} : any) {
                         <span className="font-semibold text-gray-700">Vehicle: </span>
                         {
                             vehicles && vehicles.map((vehicle: VehicleType) => (
-                                <span className="ml-2 text-gray-600">{vehicle?.brand}{"-"}{vehicle?.model}{" "}({vehicle?.licensePlate}){" "}</span>
+                                <Fragment key={vehicle.vehicle_id}>
+                                    <span className="ml-2 text-gray-600">{vehicle?.brand}{"-"}{vehicle?.model}{" "}({vehicle?.licensePlate}){" "}</span>
+                                </Fragment>
                             ))
                         }
                     </div>

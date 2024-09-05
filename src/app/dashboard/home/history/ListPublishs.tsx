@@ -1,4 +1,4 @@
-import { BookingType, RideType } from '@/libs/type'
+import { RideType } from '@/libs/type'
 import React from 'react'
 import { Card, CardContent } from '@/components/ui/card';
 import { CalendarIcon, Navigation, MapPin, Clock12 } from 'lucide-react';
@@ -84,7 +84,7 @@ function ListPublishs({ rides }: { rides: RideType[]}) {
             ))
             }
             {rides && rides.length === 0 && (
-                <div className='text-center p-6 text-green-500 font-semibold'>You haven't published yet!</div>
+                <div className='text-center p-6 text-green-500 font-semibold'>You haven&apos;t published yet!</div>
             )
             }
         </div>

@@ -27,6 +27,4 @@ export default function CookiePolicy(){
             Cookie Policy
         </Link>
     );
-};
-
-
+}

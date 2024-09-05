@@ -20,7 +20,6 @@ import { stat, mkdir, writeFile } from "fs/promises";
 import { deleteVehicle, getUserData, getVehicles, updateProfileImage } from '@/actions/action';
 import Link from 'next/link';
 import AddVehicleDialog from './AddVehicleDialog';
-import { getRandomAvatarUrl } from '@/libs/utils';
 
 
 export default async function ProfilePage() {

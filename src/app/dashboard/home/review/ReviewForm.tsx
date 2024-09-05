@@ -5,7 +5,6 @@ import {
     Dialog,
     DialogContent,
     DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -17,8 +16,6 @@ import toast from 'react-hot-toast'
 import { Star } from 'lucide-react'
 import { StarColors } from '@/libs/data'
 import { Textarea } from '@/components/ui/textarea'
-import { Prisma } from '@prisma/client'
-
 
 function ReviewForm({ ride_id, passenger_id }: any) {
     const [comment, setComment] = useState<string>('');

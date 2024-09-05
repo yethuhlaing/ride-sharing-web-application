@@ -2,8 +2,6 @@ import React from "react";
 import toast from "react-hot-toast";
 import { MessageState } from "@/libs/type";
 import { useMessage } from "@/store/message";
-import { getFromAndTo } from "@/libs/utils";
-import { LIMIT_MESSAGE } from "@/libs/data";
 import { Button } from "@/components/ui/button";
 import { getMessageWithPage } from "@/actions/action";
 

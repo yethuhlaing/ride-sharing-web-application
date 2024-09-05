@@ -8,7 +8,6 @@ import { ChatRoomType, MessageType } from "@/libs/type";
 import { useMessage } from "@/store/message";
 import { getUserData } from "@/actions/action";
 import { DeleteAlert, EditAlert } from "./MessageAction";
-import { ScrollToTop } from "@/components/specific/ScrollToTop";
 import { supabasebrowser } from '@/supabase/browser';
 import toast from "react-hot-toast";
 
@@ -91,6 +90,7 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType) {
         return () => {
             channel.unsubscribe()
         };
+        // eslint-disable-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -98,6 +98,7 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType) {
         if (scrollContainer && !userScrolled) {
             scrollContainer.scrollTop = scrollContainer.scrollHeight;
         }
+        // eslint-disable-line react-hooks/exhaustive-deps
     }, [messages]);
 
     const handleOnScroll = () => {

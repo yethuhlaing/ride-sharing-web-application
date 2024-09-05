@@ -104,5 +104,5 @@ export default function PaginationComponent({ rideCount, pageSize, currentPage, 
             </PaginationContent>
         </Pagination>
     );
-};
+}
 

@@ -1,7 +1,7 @@
 import { BookingType, RideType } from '@/libs/type'
 import React from 'react'
 import { Card, CardContent } from '@/components/ui/card';
-import { CalendarIcon, Navigation, MapPin, Clock12, TrendingUp, Users } from 'lucide-react';
+import { CalendarIcon, Navigation, MapPin, TrendingUp, Users } from 'lucide-react';
 import defaultPic from "@@/public/assets/avatar.png"
 import { formatDate, formatTime } from '@/libs/utils';
 import Image from 'next/image';
@@ -68,7 +68,7 @@ export async function PassengerProfile({ ride_id }: { ride_id: string }) {
             <div className="flex flex-row space-x-2 flex-wrap">
                 {ConfirmedRides && ConfirmedRides.length > 0 ? (
                     ConfirmedRides.map((booking: BookingType) => (
-                        <img
+                        <Image
                             key={booking.booking_id}
                             src={booking.passenger?.profileImage as string}
                             alt="User Profile Image"
