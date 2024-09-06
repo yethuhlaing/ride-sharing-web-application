@@ -3,7 +3,7 @@ import { ThemeToggle } from '@/components/specific/ThemeToggle';
 import { Button } from '../ui/button';
 import { LoginLink } from '@kinde-oss/kinde-auth-nextjs/components';
 import Image from 'next/image';
-import logo from "../../../public/assets/logo.png"
+import logo from "$/public/assets/logo.png"
 export async function Navbar() {
 
     return (

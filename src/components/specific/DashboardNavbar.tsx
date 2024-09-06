@@ -5,7 +5,7 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { UserNav } from './UserNav';
 import { getUserData } from '@/actions/action';
 import Image from 'next/image';
-import logo from "../../../public/assets/logo.png"
+import logo from "$/public/assets/logo.png"
 
 export async function DashboardNavbar() {
     const { getUser } = getKindeServerSession();
