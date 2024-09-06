@@ -4,15 +4,19 @@ import { LIMIT_MESSAGE } from "@/libs/data";
 import prisma from "@/libs/db";
 import { StatusType } from "@/libs/type";
 import { getFromAndTo, getRandomAvatarUrl } from "@/libs/utils";
-import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 
 export async function createBooking(ride_id: any, passenger_id: any) {
-    "use server"
-
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated){
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     try {
+
         const newBooking = await prisma.booking.create({
             data: {
                 ride_id,
@@ -32,7 +36,11 @@ export async function createBooking(ride_id: any, passenger_id: any) {
 }
 
 export async function deleteBooking(booking_id: string) {
-
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     try {
         await prisma.booking.delete({
             where: { booking_id: booking_id },
@@ -45,7 +53,12 @@ export async function deleteBooking(booking_id: string) {
 }
 
 export async function updateBooking(booking_id: string, status: StatusType) {
-    noStore()
+
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     try {
         await prisma.booking.update({
             where: {
@@ -63,10 +76,10 @@ export async function updateBooking(booking_id: string, status: StatusType) {
 
 
 export const getUserData = cache( async (user_id: string) => {
-
-    console.log(user_id)
-    if (!user_id) {
-        redirect("/api/auth/callback")
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
     }
     try {
         const data = await prisma.user.findUnique({
@@ -88,8 +101,12 @@ export const getUserData = cache( async (user_id: string) => {
     }
 })
 export async function getUserSubscriptionData(user_id: string) {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     try {
-
         console.log(user_id)
         const SubscriptionData = await prisma.user.findUnique({
             where: {
@@ -112,6 +129,11 @@ export async function createRide({ driver_id,
     destination,
     departure_time,
     available_seats } : any) {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     try {
         const newRide = await prisma.ride.create({
             data: {
@@ -159,6 +181,11 @@ export async function createRide({ driver_id,
 //     }
 // }
 export async function countRides(origin: string, destination: string, departureTime: Date) {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     try {
         // Create a range for the entire day
         const startOfDay = new Date(departureTime);
@@ -179,6 +206,11 @@ export async function countRides(origin: string, destination: string, departureT
     }
 }
 export async function findRides(origin: string, destination: string, departureTime: Date, page: number , pageSize: number ) {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     try {
         // Create a range for the entire day
         const startOfDay = new Date(departureTime);
@@ -269,6 +301,11 @@ export async function checkAuthStatus() {
 
 // }
 export const getVehicles = cache( async (user_id: string) => {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     const vehicles = await prisma.vehicle.findMany({
         where: {
             user_id: user_id,
@@ -279,8 +316,11 @@ export const getVehicles = cache( async (user_id: string) => {
 }
 )
 export async function deleteVehicle(formData: FormData) {
-    "use server";
-
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     const vehicle_id = formData.get("vehicle_id") as string;
 
     await prisma.vehicle.delete({
@@ -292,6 +332,11 @@ export async function deleteVehicle(formData: FormData) {
     revalidatePath('/dashboard', 'layout');
 }
 export const getRidewithDriverId = cache(async (driver_id: string) => {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     try {
         const ride = await prisma.ride.findMany({
             where: {
@@ -315,6 +360,11 @@ export const getRidewithDriverId = cache(async (driver_id: string) => {
 }
 )
 export async function getCompleteBooking(user_id: string) {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     const currentDate = new Date()
     const rides = await prisma.booking.findMany({
         where: {
@@ -344,7 +394,11 @@ export async function getCompleteBooking(user_id: string) {
 }
 
 export const getRidewithRideId = cache(async (ride_id: string) =>{
-
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     try {
         const ride = await prisma.ride.findUnique({
             where: {
@@ -370,6 +424,11 @@ export const getRidewithRideId = cache(async (ride_id: string) =>{
 }) 
 
 export async function getBookingwithUserId(user_id: string) {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     try {
         const bookings = await prisma.booking.findMany({
             where: {
@@ -394,6 +453,11 @@ export async function getBookingwithUserId(user_id: string) {
     }
 }
 export async function updateProfileImage(user_id: string) {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     try {
         const AvatarUrl = getRandomAvatarUrl()
         await prisma.user.update({
@@ -411,7 +475,11 @@ export async function updateProfileImage(user_id: string) {
     revalidatePath('/dashboard', 'layout');
 }
 export async function getBookingwithRideIdAndPassengerId(ride_id: string, passenger_id: string) {
-    noStore()
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     try {
         const bookings = await prisma.booking.findMany({
             include: {
@@ -435,6 +503,11 @@ export async function getBookingwithRideIdAndPassengerId(ride_id: string, passen
     }
 }
 export async function getChatRoomWithUserId(user_id: string) {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     const chatRooms = await prisma.chatRoom.findMany({
         include: {
             passenger: true,
@@ -450,6 +523,11 @@ export async function getChatRoomWithUserId(user_id: string) {
     return chatRooms
 }
 export async function getChatRoomWithId(chatRoom_Id: string) {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     const chatRooms = await prisma.chatRoom.findUnique({
         where: {
             chat_room_id: chatRoom_Id
@@ -462,6 +540,11 @@ export async function getChatRoomWithId(chatRoom_Id: string) {
     return chatRooms
 }
 export async function deleteChatRoomWithId(chatRoomId: string) {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     try {
         const deletedChatRoom = await prisma.chatRoom.delete({
             where: {
@@ -477,6 +560,11 @@ export async function deleteChatRoomWithId(chatRoomId: string) {
     }
 }
 export const getBookingwithRideId = cache( async (ride_id: string) => {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     try {
         const bookings = await prisma.booking.findMany({
             where: {
@@ -498,6 +586,11 @@ export const getBookingwithRideId = cache( async (ride_id: string) => {
 }) 
 
 export async function createMessages(content: string, senderId: string, chatRoomId: string ) {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     try {
         const newMessage = await prisma.message.create({
             data: {
@@ -517,6 +610,11 @@ export async function createMessages(content: string, senderId: string, chatRoom
 }
 
 export async function deleteMessageWithId(message_id: string){
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     try {
         const deletedMessage = await prisma.message.delete({
             where: {
@@ -535,6 +633,11 @@ export async function deleteMessageWithId(message_id: string){
 }
 
 export async function updateMessageWithId(message_id: string, content: string) {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     try {
         const updatedMessage = await prisma.message.update({
             where: {
@@ -552,6 +655,11 @@ export async function updateMessageWithId(message_id: string, content: string) {
     } 
 }
 export async function deleteRide(rideId: string) {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     try {
         const deletedRide = await prisma.ride.delete({
             where: { ride_id: rideId },
@@ -565,6 +673,11 @@ export async function deleteRide(rideId: string) {
     }
 }
 export async function getMessagesWithChatRoomId(limit: number, chatRoomId: string) {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     const messages = await prisma.message.findMany({
         include: {
             sender: true,
@@ -582,6 +695,11 @@ export async function getMessagesWithChatRoomId(limit: number, chatRoomId: strin
     return messages;
 }
 export async function getMessageWithPage(page: number ){
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     const { from, to } = getFromAndTo(page, LIMIT_MESSAGE);
     const messages = await prisma.message.findMany({
         skip: from,
@@ -597,6 +715,11 @@ export async function getMessageWithPage(page: number ){
 }
 
 export async function createReview(ride_id: string, passenger_id: string, rating: number, comment: string) {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     try {
         const review = await prisma.review.create({
             data: {
@@ -615,6 +738,11 @@ export async function createReview(ride_id: string, passenger_id: string, rating
 }
 
 export async function getReviewWithUserId( user_id: string) {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
     try {
         const review = await prisma.review.findMany({
             where: {

@@ -1,5 +1,5 @@
-import FeatureImage1 from '@@/public/assets/a.jpg'
-import FeatureImage2 from '@@/public/assets/b.jpg'
+import FeatureImage1 from '$/public/assets/a.jpg'
+import FeatureImage2 from '$/public/assets/b.jpg'
 
 import Image from 'next/image'
 

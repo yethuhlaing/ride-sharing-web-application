@@ -1,7 +1,6 @@
 import { DashboardNavbar } from '@/components/specific/DashboardNavbar';
 import React from 'react'
 import ProtectedRoute from '@/components/specific/ProtectedRoute';
-
 export default async function Dashboardlayout({
     children,
 }: Readonly<{
@@ -12,7 +11,7 @@ export default async function Dashboardlayout({
         <div>
             <ProtectedRoute>
                 <DashboardNavbar />
-                {children}
+                {children}   
             </ProtectedRoute>
         </div>
 

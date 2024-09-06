@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import React from 'react'
-import FeatureImage3 from '@@/public/assets/c.jpg'
+import FeatureImage3 from '$/public/assets/c.jpg'
 
 function HowItWorkSection() {
     return (
