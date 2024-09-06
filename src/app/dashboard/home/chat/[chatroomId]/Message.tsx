@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import { MessageState, MessageType } from "@/libs/type";
-import defaultImage from "@@/public/assets/avatar.png"
+import defaultImage from "$/public/assets/avatar.png"
 import { useMessage } from "@/store/message";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import Image from "next/image";

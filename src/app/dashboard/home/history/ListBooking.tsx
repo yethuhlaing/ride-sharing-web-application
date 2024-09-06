@@ -2,7 +2,7 @@ import { BookingType, RideType } from '@/libs/type'
 import React from 'react'
 import { Card, CardContent } from '@/components/ui/card';
 import { CalendarIcon, Navigation, MapPin, TrendingUp, Users } from 'lucide-react';
-import defaultPic from "@@/public/assets/avatar.png"
+import defaultPic from "$/public/assets/avatar.png"
 import { formatDate, formatTime } from '@/libs/utils';
 import Image from 'next/image';
 import { getRidewithRideId } from '@/actions/action';

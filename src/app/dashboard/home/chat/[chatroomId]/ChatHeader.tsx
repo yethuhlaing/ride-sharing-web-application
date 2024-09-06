@@ -5,7 +5,7 @@ import { ChatRoomType } from "@/libs/type";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { ArrowLeft } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import defaultImage from "@@/public/assets/avatar.png"
+import defaultImage from "$/public/assets/avatar.png"
 import { DeleteChatRoom } from "./MessageAction";
 import { supabasebrowser } from "@/supabase/browser";
 

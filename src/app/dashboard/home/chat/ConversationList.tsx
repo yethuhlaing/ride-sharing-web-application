@@ -6,7 +6,7 @@ import { ChatRoomType } from '@/libs/type';
 import { cn } from '@/libs/utils';
 import { useConversation } from '@/hooks/useConversation';
 import ChatRoomAvatar from '@/components/specific/ChatRoomAvatar';
-import defaultImage from "@@/public/assets/avatar.png"
+import defaultImage from "$/public/assets/avatar.png"
 export default function ConversationList({ chatRooms }: {chatRooms: ChatRoomType[]}) {
 
     const { isActive } = useConversation()
