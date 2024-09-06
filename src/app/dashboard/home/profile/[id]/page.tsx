@@ -9,7 +9,11 @@ import { formatDate, getFirstLocationName } from '@/libs/utils';
 import { StarColors } from '@/libs/data';
 
 
-export default async function ProfilePage({params} : any) {
+export default async function ProfilePage({params} : {
+    params : {
+        id: string
+    }
+}) {
     const { id } = params
     const useData = await getUserData(id as string);
     const rides = await getRidewithDriverId(id as string)
@@ -93,7 +97,7 @@ export default async function ProfilePage({params} : any) {
 
 
 
-export function ReviewCard({ review }: { review: ReviewType}){
+const ReviewCard: React.FC<{ review: ReviewType }> = ({ review }) => {
     console.log(review)
     return (
         <Card className='max-w-lg p-4'>
@@ -104,8 +108,7 @@ export function ReviewCard({ review }: { review: ReviewType}){
         </Card>
     );
 }
-export function StarRating({ rating }: { rating: number }) {
-    console.log(rating)
+const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
     const totalStars = 5;
     return (
         <>

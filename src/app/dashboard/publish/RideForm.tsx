@@ -11,8 +11,8 @@ import toast from 'react-hot-toast';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { Clock, MapPin } from 'lucide-react';
 import { CalendarIcon, Navigation, UserRound } from 'lucide-react';
-import { useLocation } from '@/context/LocationContextProvider';
 import { getLatAndLng } from '@/libs/utils';
+import { useLocation } from '@/context/LocationContext';
 
 function RideForm() {
 
@@ -88,7 +88,8 @@ function RideForm() {
     }
 
     const handlePickUpSelect = async (place: any) => {
-        setPickupValue(place);
+        console.log(place)
+        setPickupValue(place?.label);
 
         try {
             const result = await getLatAndLng(place);
@@ -105,7 +106,7 @@ function RideForm() {
     };
 
     const handleDropOffSelect = async (place: any) => {
-        setDropOffValue(place)
+        setDropOffValue(place?.label)
         try {
             const result = await getLatAndLng(place);
             if (result && result !== null) {

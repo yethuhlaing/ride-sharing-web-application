@@ -30,7 +30,7 @@ export default function DashboardPage(){
     const { rides, ridesCount, setRides, setRidesCount } = useRides();
 
     const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1));
-    const [pageSize, setPageSize] = useQueryState('page_size', parseAsInteger.withDefault(4));
+    const [pageSize, setPageSize] = useQueryState('page_size', parseAsInteger.withDefault(4)); // eslint-disable-line no-unused-vars
 
     const handlePickUpSelect = (place: any) => {
         console.log(pickUpValue)

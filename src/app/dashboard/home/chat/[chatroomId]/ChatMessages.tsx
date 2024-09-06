@@ -90,16 +90,14 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType) {
         return () => {
             channel.unsubscribe()
         };
-        // eslint-disable-line react-hooks/exhaustive-deps
-    }, []);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         const scrollContainer = scrollRef.current;
         if (scrollContainer && !userScrolled) {
             scrollContainer.scrollTop = scrollContainer.scrollHeight;
         }
-        // eslint-disable-line react-hooks/exhaustive-deps
-    }, [messages]);
+    }, [messages]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleOnScroll = () => {
         const scrollContainer = scrollRef.current;

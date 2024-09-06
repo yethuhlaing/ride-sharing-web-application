@@ -11,8 +11,8 @@ import {
 
 
 export enum PopularPlanType {
-    NO = 0,
-    YES = 1,
+    NO = 0, // eslint-disable-line no-unused-vars
+    YES = 1,// eslint-disable-line no-unused-vars
 }
 
 export interface PricingProps {

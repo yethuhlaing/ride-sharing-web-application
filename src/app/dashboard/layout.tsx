@@ -1,7 +1,6 @@
 import { DashboardNavbar } from '@/components/specific/DashboardNavbar';
 import React from 'react'
 import ProtectedRoute from '@/components/specific/ProtectedRoute';
-import { LocationProvider } from '@/context/LocationContextProvider';
 
 export default async function Dashboardlayout({
     children,
@@ -13,10 +12,7 @@ export default async function Dashboardlayout({
         <div>
             <ProtectedRoute>
                 <DashboardNavbar />
-                <LocationProvider>
-                    {children}
-                </LocationProvider>
-                
+                {children}
             </ProtectedRoute>
         </div>
 

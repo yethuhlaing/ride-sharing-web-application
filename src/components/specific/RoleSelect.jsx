@@ -23,7 +23,7 @@ export default function RoleSelect() {
         } else if (selectedRole === 'passenger') {
             router.push('/dashboard/passenger');
         }
-    }, [selectedRole]);
+    }, [selectedRole, router]);
     return (
         <Select value={selectedRole} onValueChange={handleRoleChange}>
             <SelectTrigger className="w-[180px]">

@@ -128,10 +128,10 @@ export type MessageState = {
     messages: MessageType[];
     actionMessage: MessageType | undefined;
     optimisticIds: string[];
-    addMessage: (message: MessageType) => void;
-    setActionMessage: (message: MessageType | undefined) => void;
-    optimisticDeleteMessage: (messageId: string) => void;
-    optimisticUpdateMessage: (message: MessageType) => void;
-    setOptimisticIds: (id: string) => void;
-    setMesssages: (messages: MessageType[]) => void;
+    addMessage: (message: MessageType) => void; // eslint-disable-line no-unused-vars
+    setActionMessage: (message: MessageType | undefined) => void; // eslint-disable-line no-unused-vars
+    optimisticDeleteMessage: (messageId: string) => void; // eslint-disable-line no-unused-vars
+    optimisticUpdateMessage: (message: MessageType) => void; // eslint-disable-line no-unused-vars
+    setOptimisticIds: (id: string) => void; // eslint-disable-line no-unused-vars
+    setMesssages: (messages: MessageType[]) => void; // eslint-disable-line no-unused-vars
 }

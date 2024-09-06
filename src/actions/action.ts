@@ -7,6 +7,7 @@ import { getFromAndTo, getRandomAvatarUrl } from "@/libs/utils";
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
+import { cache } from "react";
 
 export async function createBooking(ride_id: any, passenger_id: any) {
     "use server"
@@ -61,7 +62,7 @@ export async function updateBooking(booking_id: string, status: StatusType) {
 }
 
 
-export async function getUserData(user_id: string) {
+export const getUserData = cache( async (user_id: string) => {
 
     console.log(user_id)
     if (!user_id) {
@@ -84,8 +85,8 @@ export async function getUserData(user_id: string) {
     } catch (error) {
         console.error('Something Wrong!', error);
         throw error;
-    } 
-}
+    }
+})
 export async function getUserSubscriptionData(user_id: string) {
     try {
 
@@ -267,7 +268,7 @@ export async function checkAuthStatus() {
 //     }
 
 // }
-export async function getVehicles(user_id: string) {
+export const getVehicles = cache( async (user_id: string) => {
     const vehicles = await prisma.vehicle.findMany({
         where: {
             user_id: user_id,
@@ -276,7 +277,7 @@ export async function getVehicles(user_id: string) {
     console.log(vehicles)
     return vehicles;
 }
-
+)
 export async function deleteVehicle(formData: FormData) {
     "use server";
 
@@ -290,7 +291,7 @@ export async function deleteVehicle(formData: FormData) {
 
     revalidatePath('/dashboard', 'layout');
 }
-export async function getRidewithDriverId(driver_id: string) {
+export const getRidewithDriverId = cache(async (driver_id: string) => {
     try {
         const ride = await prisma.ride.findMany({
             where: {
@@ -312,7 +313,7 @@ export async function getRidewithDriverId(driver_id: string) {
         throw error;
     }
 }
-
+)
 export async function getCompleteBooking(user_id: string) {
     const currentDate = new Date()
     const rides = await prisma.booking.findMany({
@@ -342,8 +343,8 @@ export async function getCompleteBooking(user_id: string) {
     return rides
 }
 
-export async function getRidewithRideId(ride_id: string) {
-    noStore();
+export const getRidewithRideId = cache(async (ride_id: string) =>{
+
     try {
         const ride = await prisma.ride.findUnique({
             where: {
@@ -366,7 +367,7 @@ export async function getRidewithRideId(ride_id: string) {
         console.error('Error fetching rides:', error);
         return error;
     }
-}
+}) 
 
 export async function getBookingwithUserId(user_id: string) {
     try {
@@ -475,7 +476,7 @@ export async function deleteChatRoomWithId(chatRoomId: string) {
         throw error;
     }
 }
-export async function getBookingwithRideId(ride_id: string) {
+export const getBookingwithRideId = cache( async (ride_id: string) => {
     try {
         const bookings = await prisma.booking.findMany({
             where: {
@@ -494,7 +495,7 @@ export async function getBookingwithRideId(ride_id: string) {
         console.error('Error fetching bookings:', error);
         return error;
     }
-}
+}) 
 
 export async function createMessages(content: string, senderId: string, chatRoomId: string ) {
     try {

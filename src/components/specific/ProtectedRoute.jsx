@@ -15,7 +15,8 @@ export default function ProtectedRoute({ children }){
         if (!isLoading && !isAuthenticated && !user) {
             router.push('/api/auth/login?post_login_redirect_url=/dashboard/home');
         }
-    }, [isLoading, isAuthenticated, router]);
+        // eslint-disable-line react-hooks/exhaustive-deps
+    }, [isLoading, isAuthenticated, router, user]);
 
     if (isLoading || !isAuthenticated) {
         return <LoadingComponent />;

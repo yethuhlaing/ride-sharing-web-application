@@ -50,6 +50,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 export function getLatAndLng(place: any): Promise<Location | null> {
     return new Promise((resolve) => {
+        console.log(place)
         const placeId = place?.value.place_id;
         if (!placeId) {
             resolve(null);

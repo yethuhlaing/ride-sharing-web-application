@@ -39,7 +39,7 @@ function ChatInput({ senderId, chatRoomId }: any) {
         return () => {
             supabase.removeChannel(messageSubscription)
         };
-    }, [])
+    }, [])  // eslint-disable-line react-hooks/exhaustive-deps
 
     const fetchMessages = async () => {
         const { data, error } = await supabase

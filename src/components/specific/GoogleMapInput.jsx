@@ -7,7 +7,7 @@ export default function GoogleMapInput( {value, handleSelect, placeholderName}) 
         <GooglePlacesAutocomplete
             selectProps={{
                 defaultInputValue: value,
-                onChange: (place) => handleSelect(place?.label || null),
+                onChange: (place) => handleSelect(place || null),
                 placeholder: placeholderName,
                 isClearable: true,
                 required: true,

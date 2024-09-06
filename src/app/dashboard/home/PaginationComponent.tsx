@@ -16,7 +16,7 @@ type Props = {
     rideCount: number;
     pageSize: number;
     currentPage: number;
-    setPage: ( page: number) => void;
+    setPage: (page: number) => void; // eslint-disable-line no-unused-vars
 };
 
 export default function PaginationComponent({ rideCount, pageSize, currentPage, setPage }: Props){

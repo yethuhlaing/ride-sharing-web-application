@@ -32,7 +32,7 @@ export function LocationProvider({
 }
 export const useLocation = () => {
     const context = useContext(LocationContext);
-
+    console.log(context)
     if (context === null) {
         throw new Error(
             "useActiveSectionContext must be used within an ActiveSectionContextProvider"

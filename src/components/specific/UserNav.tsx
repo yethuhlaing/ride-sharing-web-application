@@ -44,10 +44,14 @@ export function UserNav({
                         variant="ghost"
                         className="relative h-10 w-10 rounded-full"
                     >
-                        <Avatar className="h-10 w-10 rounded-full">
+                        {/* <Avatar className="lg:h-7 lg:w-7 h-6 w-6 rounded-full absolute lg:top-[-23px] top-[-20px] ring-1">
+                            <AvatarImage src={image} alt="Profile Image" />
+                        </Avatar>
+                        <Image className="rounded-full h-full w-full" src={image} width={10} height={10} alt="Profile Image" /> */}
+                        <Avatar className=" h-10 w-10 rounded-full">
                             <AvatarImage src={image} alt="Profile Image" />
                             <AvatarFallback>
-                                <span><Image src={image} width={10} height={10} alt="Profile Image" /></span>
+                                <Image src={image} width={100} height={100} alt="Profile Image" />
                             </AvatarFallback>
                         </Avatar>
                     </Button>

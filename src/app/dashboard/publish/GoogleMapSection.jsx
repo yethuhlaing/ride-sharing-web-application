@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { GoogleMap, MarkerF, OverlayViewF, OverlayView, DirectionsRenderer } from '@react-google-maps/api';
-import { useLocation } from '@/context/LocationContextProvider';
+import { useLocation } from '@/context/LocationContext';
 const containerStyle = {
     width: '100%',
     height: '85vh'
@@ -11,8 +11,7 @@ function GoogleMapSection() {
     //     id: 'google-map-script',
     //     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY
     // })
-    const { source, destination, } = useLocation()
-    console.log(source)
+    const { source, destination } = useLocation()
     const [ center , setCenter ] = useState({
         lat: 61.05497219999999,
         lng: 28.1896039,
@@ -37,7 +36,7 @@ function GoogleMapSection() {
             setDirectionRoutePoints(null);
         }
         console.log(source)
-    }, [source]);
+    }, [source]); // eslint-disable-line react-hooks/exhaustive-deps
 
     
     useEffect(() => {
@@ -58,14 +57,14 @@ function GoogleMapSection() {
         if( source?.length !=[] && destination?.length!=[]){
             directionRoute()
         }
-    }, [destination]);
+    }, [destination]); // eslint-disable-line react-hooks/exhaustive-deps
     const onLoad = React.useCallback(function callback(map) {
         // This is just an example of getting and using the map instance!!! don't just blindly copy!
         const bounds = new window.google.maps.LatLngBounds(center);
         map.fitBounds(bounds);
 
-        setMap(map)
-    }, [])
+        setMap(map)       
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     const directionRoute = () =>{
         const DirectionsService = new window.google.maps.DirectionsService();
@@ -85,7 +84,7 @@ function GoogleMapSection() {
     }
     const onUnmount = React.useCallback(function callback() {
         setMap(null)
-    }, [])
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps         
 
     return(
         <GoogleMap
@@ -95,7 +94,7 @@ function GoogleMapSection() {
             onLoad={onLoad}
             onUnmount={onUnmount}
         >
-            {source?.length !=[] ? 
+            {source ? 
                 <MarkerF position={{ lat: source?.lat, lng: source?.lng }}>
                     <OverlayViewF position={{ lat: source?.lat, lng: source?.lng }} mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
                         <div className='p-2 inline-block'>
@@ -104,7 +103,7 @@ function GoogleMapSection() {
                     </OverlayViewF>
                 </MarkerF> 
                 : null}
-            {destination?.length != [] ?
+            {destination ?
                 <MarkerF position={{ lat: destination?.lat, lng: destination?.lng }}>
                     <OverlayViewF position={{ lat: destination?.lat, lng: destination?.lng }} mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
                         <div className='p-2 inline-block'>
