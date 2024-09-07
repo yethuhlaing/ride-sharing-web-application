@@ -35,14 +35,14 @@ export default function DashboardPage(){
     const handlePickUpSelect = (place: any) => {
         console.log(pickUpValue)
         if (place) {
-            setPickupValue(place)
+            setPickupValue(place?.label)
         } else {
             setPickupValue(null)
         }
     };
     const handleDropOffSelect = (place: any) => {
         if (place) {
-            setDropOffValue(place)
+            setDropOffValue(place?.label)
         } else {
             setDropOffValue(null)
         }
