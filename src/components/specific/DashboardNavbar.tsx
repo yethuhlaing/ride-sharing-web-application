@@ -1,11 +1,11 @@
-import Link from 'next/link';
 import { ThemeToggle } from '@/components/specific/ThemeToggle';
 import { Button } from '../ui/button';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { UserNav } from './UserNav';
 import { getUserData } from '@/actions/action';
-import Image from 'next/image';
 import logo from '$/public/assets/logo.png'
+import Link from 'next/link';
+import Image from 'next/image';
 
 export async function DashboardNavbar() {
     const { getUser } = getKindeServerSession();
