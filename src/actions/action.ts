@@ -76,9 +76,10 @@ export async function updateBooking(booking_id: string, status: StatusType) {
 
 
 export const getUserData = cache( async (user_id: string) => {
-    const { isAuthenticated } = getKindeServerSession();
+    const { isAuthenticated, getUser } = getKindeServerSession();
     const isUserAuthenticated = await isAuthenticated();
-    if (!isUserAuthenticated) {
+    const user = await getUser()
+    if (!isUserAuthenticated && user) {
         redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
     }
     try {
@@ -747,7 +748,8 @@ export async function getReviewWithUserId( user_id: string) {
         const review = await prisma.review.findMany({
             where: {
                 passenger_id : user_id,
-            }
+            },
+
         });
 
         console.log('Review:', review);

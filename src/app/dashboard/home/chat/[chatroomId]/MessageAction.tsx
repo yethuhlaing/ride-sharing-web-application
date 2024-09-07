@@ -29,7 +29,7 @@ import { CopyX } from 'lucide-react';
 import { revalidatePath } from "next/cache";
 
 
-export async function DeleteChatRoom({ style, chat_room_id } : any){
+export function DeleteChatRoom({ style, chat_room_id } : any){
     const handleDeleteChatRoom = async () => {
         try {
             await deleteChatRoomWithId(chat_room_id as string)
@@ -69,7 +69,7 @@ export async function DeleteChatRoom({ style, chat_room_id } : any){
         </div>
     );
 }
-export async function DeleteAlert() {
+export function DeleteAlert() {
     const actionMessage = useMessage((state: MessageState) => state.actionMessage);
     const optimisticDeleteMessage = useMessage(
         (state: MessageState) => state.optimisticDeleteMessage

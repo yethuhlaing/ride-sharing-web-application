@@ -15,7 +15,6 @@ export default async function BillingPage() {
     const { getUser } = getKindeServerSession();
     const user = await getUser();
     const UserSubscription = await getUserSubscriptionData(user?.id as string)
-
     async function createSubscription() {
         "use server";
 
