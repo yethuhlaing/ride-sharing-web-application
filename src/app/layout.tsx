@@ -5,7 +5,8 @@ import { ThemeProvider } from '@/components/provider/ThemeProvider';
 import { Toaster } from 'react-hot-toast';
 import TanStackProvider from '@/components/provider/TanStackProvider';
 import CookieConsent from '@/components/specific/CookieConsent';
-import favicon from "$/public/favicon.png"
+import logo from "$/public/favicon.png"
+
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -23,7 +24,7 @@ export default async function RootLayout({
     return (
         <html lang="en" className="!scroll-smooth">
             <head>
-                <link rel="icon" href={favicon.src} />
+                <link rel="icon" href={logo.src} />
             </head>
             <body className={inter.className}>
                 <Toaster
