@@ -25,7 +25,6 @@ export async function createBooking(ride_id: any, passenger_id: any) {
             },
         });
         console.log(newBooking);
-        revalidatePath('/dashboard/home/', 'layout')
     } catch (error: any) {
         if (error.code === 'P2002' && error.meta?.target?.includes('Booking.ride_id_passenger_id_unique')) {
             console.log("Duplicate booking error");
@@ -45,8 +44,6 @@ export async function deleteBooking(booking_id: string) {
         await prisma.booking.delete({
             where: { booking_id: booking_id },
         });
-        revalidatePath('/dashboard/home/', 'layout')
-
     } catch (error: any) {
         console.error('Error creating booking:', error);
     }
@@ -66,8 +63,6 @@ export async function updateBooking(booking_id: string, status: StatusType) {
             },
             data: { status: status },
         });
-        
-        revalidatePath('/dashboard/home/', 'layout')
     } catch (error) {
         console.error('Something Wrong!', error);
         return error;
@@ -420,6 +415,35 @@ export const getRidewithRideId = cache(async (ride_id: string) =>{
     }
 }) 
 
+export async function getBookingwithBookingId(booking_id: string) {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
+    try {
+        const bookings = await prisma.booking.findUnique({
+            where: {
+                booking_id: booking_id
+            },
+            include: {
+                passenger: true,
+                ride: {
+                    select: {
+                        driver_id: true
+                    }
+                }
+            },
+        });
+        if (!bookings) {
+            return null;
+        }
+        return bookings;
+    } catch (error) {
+        console.error('Error fetching bookings:', error);
+        return error;
+    }
+}
 export async function getBookingwithUserId(user_id: string) {
     const { isAuthenticated } = getKindeServerSession();
     const isUserAuthenticated = await isAuthenticated();
@@ -480,8 +504,11 @@ export async function getBookingwithRideIdAndPassengerId(ride_id: string, passen
     try {
         const bookings = await prisma.booking.findMany({
             include: {
-                ride: true,
-                passenger: true
+                passenger: {
+                    select: {
+                        profileImage: true
+                    }
+                }
             },
             where: {
                 ride_id: ride_id,
@@ -580,6 +607,34 @@ export const getBookingwithRideId = cache( async (ride_id: string) => {
         return error;
     }
 }) 
+export async function createChatRoom(chatRoomname: string, driver_id: string, passenger_id: string ) {
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
+    try {
+        const existingChatRoom = await prisma.chatRoom.findFirst({
+            where: {
+                driver_id: driver_id,
+                passenger_id: passenger_id,
+            },
+        });
+        if (!existingChatRoom) {
+            const chatRoom = await prisma.chatRoom.create({
+                data: {
+                    name: chatRoomname,
+                    driver_id: driver_id,
+                    passenger_id: passenger_id,
+                },
+            });
+            console.log(chatRoom)
+            revalidatePath('/dashboard/home/chat', 'layout')
+        } 
+    } catch (error) {
+        console.error('Error creating message:', error);
+    }
+}
 
 export async function createMessages(content: string, senderId: string, chatRoomId: string ) {
     const { isAuthenticated } = getKindeServerSession();
