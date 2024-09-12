@@ -53,8 +53,8 @@ export default function DashboardPage(){
                 const searchedRides = await findRides(pickUpValue, dropOffValue, date, page, pageSize)
                 const searchedRidesCount = await countRides(pickUpValue, dropOffValue, date)
                 if (searchedRidesCount == 0) toast.error('No Rides Found!')
-                setRides(searchedRides)
-                setRidesCount(searchedRidesCount)
+                if (searchedRides) setRides(searchedRides)
+                if (searchedRidesCount) setRidesCount(searchedRidesCount)
             } 
         } catch (error: any) {
             console.log(error);
@@ -66,7 +66,7 @@ export default function DashboardPage(){
         if (page > 0 && page <= totalPages) {
             SearchRide();
         }
-    }, [page, ridesCount]);  // eslint-disable-line react-hooks/exhaustive-deps
+    }, [page, ridesCount]); 
 
     return(
         <div className='relative flex flex-col h-full'>

@@ -23,7 +23,6 @@ import { Input } from "@/components/ui/input";
 import { useRef } from "react";
 import toast from "react-hot-toast";
 import { MessageState, MessageType } from "@/libs/type";
-import { useMessage } from "@/store/message";
 import { deleteChatRoomWithId, deleteMessageWithId, updateMessageWithId } from "@/actions/action";
 import { CopyX } from 'lucide-react';
 import { revalidatePath } from "next/cache";
@@ -69,13 +68,11 @@ export function DeleteChatRoom({ style, chat_room_id } : any){
         </div>
     );
 }
-export function DeleteAlert() {
-    const actionMessage = useMessage((state: MessageState) => state.actionMessage);
-    const optimisticDeleteMessage = useMessage(
-        (state: MessageState) => state.optimisticDeleteMessage
-    );
+export function DeleteAlert({ actionMessage } : {
+    actionMessage: MessageType
+}) {
+
     const handleDeleteMessage = async () => {
-        optimisticDeleteMessage(actionMessage?.message_id!);
     
         try {
             await deleteMessageWithId(actionMessage?.message_id as string)
@@ -113,23 +110,14 @@ export function DeleteAlert() {
     );
 }
 
-export function EditAlert() {
-    const actionMessage = useMessage((state: MessageState) => state.actionMessage);
-    const optimisticUpdateMessage = useMessage(
-        (state: MessageState) => state.optimisticUpdateMessage
-    );
-
+export function EditAlert({ actionMessage }: {
+    actionMessage: MessageType
+}) {
     const inputRef = useRef() as React.MutableRefObject<HTMLInputElement>;
 
     const handleEdit = async () => {
         const content = inputRef.current.value.trim();
         if (content) {
-            optimisticUpdateMessage({
-                ...actionMessage,
-                content,
-                is_edit: true,
-            } as MessageType);
-
             try {
                 await updateMessageWithId(actionMessage?.message_id as string, content )
                 toast.success("Update Successfully");

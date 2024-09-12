@@ -24,7 +24,8 @@ export default async function RidePage({ params } : any) {
     const ride = await getRidewithRideId(ride_id) as RideType
     const bookings = await getBookingwithRideId(ride_id) as BookingType[]
     const bookingsWithPassengerId = await getBookingwithRideIdAndPassengerId(ride_id, passenger_id ) as BookingType[]
-    console.log(bookingsWithPassengerId)
+
+
     async function handleSubmit() {
         "use server"
 
@@ -50,15 +51,15 @@ export default async function RidePage({ params } : any) {
             const driver = await getUserData(driver_id)
             const passenger = await getUserData(passenger_id)
             const chatRoomname = `${getFirstName(driver?.fullName as string)} • ${getFirstName(passenger?.fullName as string) }`
-            await prisma.chatRoom.create({
-                data: {
-                    name: chatRoomname,
-                    driver_id: driver_id,
-                    passenger_id: passenger_id,
-                },
+            // await prisma.chatRoom.create({
+            //     data: {
+            //         name: chatRoomname,
+            //         driver_id: driver_id,
+            //         passenger_id: passenger_id,
+            //     },
 
-            });
-            revalidatePath(`/dashboard/home/ride/${ride_id}`, "page")
+            // });
+            // revalidatePath(`/dashboard/home/ride/${ride_id}`, "page")
         } catch (error) {
             console.log(error)
         }

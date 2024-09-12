@@ -98,7 +98,6 @@ export const getUserData = cache( async (user_id: string) => {
         return data;
     } catch (error) {
         console.error('Something Wrong!', error);
-        throw error;
     }
 })
 export async function getUserSubscriptionData(user_id: string) {
@@ -122,7 +121,6 @@ export async function getUserSubscriptionData(user_id: string) {
         return SubscriptionData;
     } catch (error) {
         console.error('Something Wrong!', error);
-        throw error;
     }
 }
 export async function createRide({ driver_id,
@@ -149,7 +147,6 @@ export async function createRide({ driver_id,
         return newRide;
     } catch (error) {
         console.error('Error creating ride:', error);
-        throw error;
     }
 }
 // export async function getAllRides(page: number, pageSize: number){
@@ -203,7 +200,7 @@ export async function countRides(origin: string, destination: string, departureT
         return rideCount
     } catch (error) {
         console.error('Error fetching rides:', error);
-        throw error;
+        return
     }
 }
 export async function findRides(origin: string, destination: string, departureTime: Date, page: number , pageSize: number ) {
@@ -237,7 +234,7 @@ export async function findRides(origin: string, destination: string, departureTi
         return rides
     } catch (error) {
         console.error('Error fetching rides:', error);
-        throw error;
+        return
     }
 }
 
@@ -356,7 +353,6 @@ export const getRidewithDriverId = cache(async (driver_id: string) => {
         return ride;
     } catch (error) {
         console.error('Error fetching rides:', error);
-        throw error;
     }
 }
 )
@@ -557,7 +553,6 @@ export async function deleteChatRoomWithId(chatRoomId: string) {
         revalidatePath('/chat', 'page')
     } catch (error) {
         console.error('Error deleting ChatRoom:', error);
-        throw error;
     }
 }
 export const getBookingwithRideId = cache( async (ride_id: string) => {
@@ -593,7 +588,7 @@ export async function createMessages(content: string, senderId: string, chatRoom
         redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
     }
     try {
-        const newMessage = await prisma.message.create({
+        const message = await prisma.message.create({
             data: {
                 content,
                 sender_id: senderId,
@@ -603,10 +598,10 @@ export async function createMessages(content: string, senderId: string, chatRoom
                 sender: true,  // Include sender data
             },
         });
-        return newMessage;
+        console.log(message)
+        revalidatePath(`/dashboard/home/chat/${chatRoomId}`)
     } catch (error) {
         console.error('Error creating message:', error);
-        throw error;
     }
 }
 
@@ -627,7 +622,6 @@ export async function deleteMessageWithId(message_id: string){
 
     } catch (error: any) {
         console.error('Error deleting message:', error);
-        throw error
 
     } 
 
@@ -652,7 +646,6 @@ export async function updateMessageWithId(message_id: string, content: string) {
         console.log('Message updated:', updatedMessage);
     } catch (error) {
         console.error('Error updating message:', error);
-        throw error
     } 
 }
 export async function deleteRide(rideId: string) {
@@ -670,10 +663,10 @@ export async function deleteRide(rideId: string) {
         revalidatePath('/dashboard/home/history', 'page')
     } catch (error) {
         console.error('Error deleting ride:', error);
-        throw error
     }
 }
 export async function getMessagesWithChatRoomId(limit: number, chatRoomId: string) {
+    
     const { isAuthenticated } = getKindeServerSession();
     const isUserAuthenticated = await isAuthenticated();
     if (!isUserAuthenticated) {
@@ -692,8 +685,33 @@ export async function getMessagesWithChatRoomId(limit: number, chatRoomId: strin
         },
         take: limit,
     });
-    console.log(messages)
     return messages;
+}
+
+export async function fetchMoreMessages(oldestMessageTimestamp: Date) {
+    try {
+        const { isAuthenticated } = getKindeServerSession();
+        const isUserAuthenticated = await isAuthenticated();
+        if (!isUserAuthenticated) {
+            redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+        }
+        const messages = await prisma.message.findMany({
+            where: {
+                createdAt: {
+                    lt: new Date(oldestMessageTimestamp)
+                }
+            },
+            orderBy: {
+                createdAt: 'desc'
+            },
+            take: LIMIT_MESSAGE
+        })
+
+        return messages.reverse()
+    } catch (error) {
+        console.error('Error fetching more messages:', error)
+        return []
+    }
 }
 export async function getMessageWithPage(page: number ){
     const { isAuthenticated } = getKindeServerSession();
@@ -755,6 +773,5 @@ export async function getReviewWithUserId( user_id: string) {
         console.log('Review:', review);
     } catch (error) {
         console.error( error);
-        throw error;
     }
 }

@@ -8,13 +8,13 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
-import { MessageState, MessageType } from "@/libs/type";
+import { MessageType } from "@/libs/type";
 import defaultImage from "$/public/assets/avatar.png"
-import { useMessage } from "@/store/message";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import Image from "next/image";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
-export default function Message({ message }: { message: MessageType }) {
+export default async function Message({ message }: { message: MessageType }) {
     const { getUser } = useKindeBrowserClient();
     const user = getUser()
     return (
@@ -22,6 +22,8 @@ export default function Message({ message }: { message: MessageType }) {
             <div>
                 <Image
                     src={message.sender?.profileImage! ?? defaultImage}
+                    width={100}
+                    height={100}
                     alt={message.sender?.fullName!}
                     className="lg:w-10 lg:h-10 w-7 h-7 rounded-full"
                 />
@@ -37,9 +39,9 @@ export default function Message({ message }: { message: MessageType }) {
                             <h1 className="text-xs lg:text-sm text-gray-400">edited</h1>
                         )}
                     </div>
-                    {message.sender_id === user?.id && (
-                        <MessageMenu message={message}/>
-                    )}
+                    {message.sender_id === user?.id && 
+                        <MessageMenu message={message} />
+                    }
                 </div>
                 <p className="text-xs lg:text-sm text-gray-800">{message.content}</p>
             </div>
@@ -48,12 +50,11 @@ export default function Message({ message }: { message: MessageType }) {
 }
 
 const MessageMenu = ({ message }: { message: MessageType }) => {
-    const setActionMessage = useMessage((state: MessageState) => state.setActionMessage);
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger>
-                <MoreHorizontal size={18} className=" text-neutral-900"/>
+                <MoreHorizontal size={18} className=" text-neutral-900" />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                 <DropdownMenuLabel>
@@ -65,7 +66,6 @@ const MessageMenu = ({ message }: { message: MessageType }) => {
                 <DropdownMenuItem
                     onClick={() => {
                         document.getElementById("trigger-edit")?.click();
-                        setActionMessage(message);
                     }}
                 >
                     Edit
@@ -73,7 +73,6 @@ const MessageMenu = ({ message }: { message: MessageType }) => {
                 <DropdownMenuItem
                     onClick={() => {
                         document.getElementById("trigger-delete")?.click();
-                        setActionMessage(message);
                     }}
                 >
                     Delete

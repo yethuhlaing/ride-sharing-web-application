@@ -1,33 +1,26 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowDown } from "lucide-react";
-import LoadMoreMessages from "./LoadMoreMessages";
 import Message from "./Message";
 import { ChatRoomType, MessageType } from "@/libs/type";
-import { useMessage } from "@/store/message";
-import { getUserData } from "@/actions/action";
+import { fetchMoreMessages } from "@/actions/action";
 import { DeleteAlert, EditAlert } from "./MessageAction";
 import { supabasebrowser } from '@/supabase/browser';
-import toast from "react-hot-toast";
 
 type ChatMessagesType = {
+    ChatMessages: MessageType[]
     chatRoom: ChatRoomType,
 }
-export default function ChatMessages({ chatRoom }: ChatMessagesType) {
+export default function ChatMessages({ chatRoom, ChatMessages }: ChatMessagesType) {
     const scrollRef = useRef() as React.MutableRefObject<HTMLDivElement>;    
     const [userScrolled, setUserScrolled] = useState(false);
     const [notification, setNotification] = useState(0);
-
-    const {
-        messages,
-        addMessage,
-        optimisticIds,
-        optimisticDeleteMessage,
-        optimisticUpdateMessage,
-    } = useMessage((state) => state);
+    const [messages, setMessages] = useState<MessageType[]>(ChatMessages)
 
     useEffect(() => {
+
         const channelName = `room-${chatRoom.chat_room_id}`;
         const supabase = supabasebrowser()
         const channel = supabase.channel(channelName);
@@ -35,21 +28,7 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType) {
         channel.on("postgres_changes",
             { event: "INSERT", schema: "public", table: "Message", filter: `chat_room_id=eq.${chatRoom.chat_room_id}` },
             async (payload: any) => {
-                if (!optimisticIds.includes(payload.new.id)) {
-                    try {
-                        const senderData = await getUserData(payload.new.sender_id);
-                        if (senderData) {
-                            const newMessage = {
-                                ...payload.new,
-                                sender: senderData,
-                            };
-                            addMessage(newMessage);
-                        }
-                    } catch (error: any) {
-                        console.log(error)
-                        toast.error(error)
-                    }
-                }
+                setMessages(current => [...current, payload.new])
 
                 const scrollContainer = scrollRef.current;
                 if (
@@ -68,7 +47,7 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType) {
                 { event: "DELETE", schema: "public", table: "Message" },
                 (payload: any) => {
                     console.log(payload)
-                    optimisticDeleteMessage(payload.old.id);
+                    // optimisticDeleteMessage(payload.old.id);
                 }
             )
             .on(
@@ -76,7 +55,7 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType) {
                 { event: "UPDATE", schema: "public", table: "Message" },
                 (payload: any) => {
                     console.log(payload)
-                    optimisticUpdateMessage(payload.new as MessageType);
+                    // optimisticUpdateMessage(payload.new as MessageType);
                 }
             )
         channel.subscribe((status: any) => {
@@ -120,7 +99,13 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType) {
         setNotification(0);
         scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     };
+    const handleLoadMore = async () => {
+        if (messages.length === 0) return
 
+        const oldestMessageTimestamp = messages[0].createdAt
+        const olderMessages = await fetchMoreMessages(oldestMessageTimestamp)
+        setMessages((current) => [...olderMessages, ...current])
+    }
     return (
         <>
             <div
@@ -129,16 +114,21 @@ export default function ChatMessages({ chatRoom }: ChatMessagesType) {
                 onScroll={handleOnScroll}
             >
                 <div className="flex-1 pb-5 ">
-                    <LoadMoreMessages />
+                    <Button variant="outline" className="w-full" onClick={handleLoadMore}>
+                        Load More
+                    </Button>
                 </div>
                 <div className="space-y-3 lg:space-y-4 px-2">
                     {messages.map((message: MessageType, index: any) => {
-                        return <Message key={index} message={message} />;
+                        return (
+                             <>
+                                <Message key={index} message={message} />
+                                <DeleteAlert actionMessage={message} />
+                                <EditAlert actionMessage={message} />
+                            </>
+                        );
                     })}
                 </div>
-
-                <DeleteAlert />
-                <EditAlert />
             </div>
             {userScrolled && (
                 <div className="absolute left-35 bottom-20 w-full">

@@ -23,7 +23,7 @@ export default function CookieConsent() {
 
     useEffect(() => {
         // We want this to only run once the client loads
-        // or else it causes a hydration error
+            // or else it causes a hydration error
         setConsentGiven(cookieConsentGiven());
     }, []);
 

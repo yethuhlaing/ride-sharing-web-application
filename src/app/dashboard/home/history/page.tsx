@@ -5,7 +5,7 @@ import { BookingType} from '@/libs/type';
 
 import ListPublishs from './ListPublishs';
 import ListBooking from './ListBooking';
-import Loading from '@/components/loading/loading';
+import LoadingComponent from '@/components/specific/LoadingComponent';
 
 export default  async function History() {
 
@@ -17,11 +17,11 @@ export default  async function History() {
 
     return (
         <div className='flex flex-row flex-wrap space-y-2 md:space-y-0 space-x-0 md:space-x-6 justify-center w-full h-full'>
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<LoadingComponent />}>
                 <ListBooking bookings={bookings} />
             </Suspense>
-            <Suspense fallback={<Loading />}>
-                <ListPublishs rides={rides} />
+            <Suspense fallback={<LoadingComponent />}>
+                <ListPublishs rides={rides || []} />
             </Suspense>
         </div>
     )

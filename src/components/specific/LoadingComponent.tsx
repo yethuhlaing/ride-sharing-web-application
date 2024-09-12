@@ -3,9 +3,9 @@ import React from 'react'
 
 function LoadingComponent() {
     return (
-       <div className='flex justify-center items-center'>
-            <Loader2 className="mr-2 w-6 h-6 animate-spin" />
-       </div>
+        <div className='w-full h-full flex justify-center items-center'>
+            <Loader2 className="mr-2 w-6 h-6 animate-spin mx-auto" />
+        </div>
     )
 }
 

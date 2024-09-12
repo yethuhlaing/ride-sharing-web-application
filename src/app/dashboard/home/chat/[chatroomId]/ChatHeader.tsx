@@ -8,16 +8,17 @@ import React, { useEffect, useState } from "react";
 import defaultImage from "$/public/assets/avatar.png"
 import { DeleteChatRoom } from "./MessageAction";
 import { supabasebrowser } from "@/supabase/browser";
+import Link from "next/link";
 
 
 export default function ChatHeader({chatRoom} : { chatRoom: ChatRoomType}) {
     const [onlineUsers, setOnlineUsers] = useState(0);
     const { getUser } = useKindeBrowserClient();
     const user = getUser();
-
     useEffect(() => {
         if (!user) return;
         const channelName = `room-${chatRoom.passenger_id}-${chatRoom.driver_id}`;
+        console.log(channelName)
         const supabase = supabasebrowser()
         const channel = supabase.channel(channelName);
 
@@ -34,6 +35,7 @@ export default function ChatHeader({chatRoom} : { chatRoom: ChatRoomType}) {
         channel
             .on('presence', { event: 'sync' }, handleSync)
             .subscribe(async (status: any) => {
+                console.log(status)
                 if (status === 'SUBSCRIBED') {
                     await channel.track({
                         online_at: new Date().toISOString(),
@@ -54,9 +56,9 @@ export default function ChatHeader({chatRoom} : { chatRoom: ChatRoomType}) {
     return (                
         <div className="relative flex flex-row justify-start items-center min-h-14 border px-4 rounded-lg">
             <div className="lg:hidden pr-4">
-                <a href={'/dashboard/home/chat'}>
+                <Link href={'/dashboard/home/chat'}>
                     <ArrowLeft />
-                </a>
+                </Link>
             </div>
             <ChatRoomAvatar passengerProfileImage={chatRoom.passenger?.profileImage ?? defaultImage} driverProfileImage={chatRoom.driver?.profileImage ?? defaultImage} />
             <div className="flex flex-col lg:px-14 px-12 items-start py-2">

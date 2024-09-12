@@ -222,6 +222,6 @@ export const navItems = [
     { name: 'Profile', href: '/dashboard/home/profile', icon: UserRound },
     { name: 'Billing', href: '/dashboard/home/billing', icon: CreditCard },
     { name: 'History', href: '/dashboard/home/history', icon: BookMarked },
-    { name: 'Chat', href: '/dashboard/home/chat', icon: MessageCircleMore },
+    // { name: 'Chat', href: '/dashboard/home/chat', icon: MessageCircleMore },
     { name: 'Review', href: '/dashboard/home/review', icon: Star },
 ];
