@@ -36,7 +36,6 @@ export default function CookieConsent() {
         localStorage.setItem('cookie_consent', 'no');
         setConsentGiven('no');
     };
-    console.log(consentGiven)
     return (
         <div className="fixed bottom-[15px] right-[15px]">
             {consentGiven === 'undecided' && (

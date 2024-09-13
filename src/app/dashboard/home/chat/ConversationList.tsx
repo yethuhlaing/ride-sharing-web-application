@@ -31,6 +31,7 @@ export default function ConversationList({ chatRooms }: {chatRooms: ChatRoomType
                     ))}
                 </div>
             </CardContent>
+
         </Card>
     )
 }

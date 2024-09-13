@@ -22,7 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useRef } from "react";
 import toast from "react-hot-toast";
-import { MessageState, MessageType } from "@/libs/type";
+import { MessageType } from "@/libs/type";
 import { deleteChatRoomWithId, deleteMessageWithId, updateMessageWithId } from "@/actions/action";
 import { CopyX } from 'lucide-react';
 import { revalidatePath } from "next/cache";
@@ -32,10 +32,8 @@ export function DeleteChatRoom({ style, chat_room_id } : any){
     const handleDeleteChatRoom = async () => {
         try {
             await deleteChatRoomWithId(chat_room_id as string)
-            revalidatePath('/chat','page')
             toast.success("Successfully delete the conversation");
         } catch (error) {
-            console.log(error)
             toast.error("Failed to Delete conversation");
         }
     };
@@ -75,7 +73,7 @@ export function DeleteAlert({ actionMessage } : {
     const handleDeleteMessage = async () => {
     
         try {
-            await deleteMessageWithId(actionMessage?.message_id as string)
+            await deleteMessageWithId(actionMessage?.message_id as string, actionMessage.chat_room_id)
             toast.success("Successfully delete a message");
         } catch (error) {
             console.log(error)
@@ -119,15 +117,13 @@ export function EditAlert({ actionMessage }: {
         const content = inputRef.current.value.trim();
         if (content) {
             try {
-                await updateMessageWithId(actionMessage?.message_id as string, content )
+                await updateMessageWithId(actionMessage?.message_id as string, content, actionMessage.chat_room_id )
                 toast.success("Update Successfully");
+                document.getElementById("trigger-edit")?.click();
             } catch (error) {
                 console.log(error)
                 toast.error("Failed to Update message");
             }
-      
-        
-            document.getElementById("trigger-edit")?.click();
         } else {
             document.getElementById("trigger-edit")?.click();
             document.getElementById("trigger-delete")?.click();

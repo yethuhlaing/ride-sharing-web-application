@@ -8,6 +8,7 @@ import { ChatRoomType, MessageType } from "@/libs/type";
 import { fetchMoreMessages } from "@/actions/action";
 import { DeleteAlert, EditAlert } from "./MessageAction";
 import { supabasebrowser } from '@/supabase/browser';
+import { LIMIT_MESSAGE } from "@/libs/data";
 
 type ChatMessagesType = {
     ChatMessages: MessageType[]
@@ -18,14 +19,13 @@ export default function ChatMessages({ chatRoom, ChatMessages }: ChatMessagesTyp
     const [userScrolled, setUserScrolled] = useState(false);
     const [notification, setNotification] = useState(0);
     const [messages, setMessages] = useState<MessageType[]>(ChatMessages)
+    const [hasMore, setHasMore ] = useState<Boolean>(false)
+    const channelName = `room-${chatRoom.chat_room_id}`;
+    const supabase = supabasebrowser()
 
     useEffect(() => {
-
-        const channelName = `room-${chatRoom.chat_room_id}`;
-        const supabase = supabasebrowser()
-        const channel = supabase.channel(channelName);
-
-        channel.on("postgres_changes",
+        const channel = supabase.channel(channelName)
+        .on("postgres_changes",
             { event: "INSERT", schema: "public", table: "Message", filter: `chat_room_id=eq.${chatRoom.chat_room_id}` },
             async (payload: any) => {
                 setMessages(current => [...current, payload.new])
@@ -42,23 +42,23 @@ export default function ChatMessages({ chatRoom, ChatMessages }: ChatMessagesTyp
                 }
             }
         )
-            .on(
-                "postgres_changes",
-                { event: "DELETE", schema: "public", table: "Message" },
-                (payload: any) => {
-                    console.log(payload)
-                    // optimisticDeleteMessage(payload.old.id);
-                }
-            )
-            .on(
-                "postgres_changes",
-                { event: "UPDATE", schema: "public", table: "Message" },
-                (payload: any) => {
-                    console.log(payload)
-                    // optimisticUpdateMessage(payload.new as MessageType);
-                }
-            )
-        channel.subscribe((status: any) => {
+        .on(
+            "postgres_changes",
+            { event: "DELETE", schema: "public", table: "Message" },
+            (payload: any) => {
+                console.log(payload)
+                // optimisticDeleteMessage(payload.old.id);
+            }
+        )
+        .on(
+            "postgres_changes",
+            { event: "UPDATE", schema: "public", table: "Message" },
+            (payload: any) => {
+                console.log(payload)
+                // optimisticUpdateMessage(payload.new as MessageType);
+            }
+        )
+        .subscribe((status: any) => {
             if (status === 'SUBSCRIBED') {
                 console.log(`Successfully subscribed to ${channelName}`);
             } else if (status === 'CHANNEL_ERROR') {
@@ -67,16 +67,17 @@ export default function ChatMessages({ chatRoom, ChatMessages }: ChatMessagesTyp
         });
 
         return () => {
-            channel.unsubscribe()
+            supabase.removeChannel(channel)
         };
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [supabase, messages, setMessages]); 
 
     useEffect(() => {
+        setHasMore(messages.length >= LIMIT_MESSAGE)
         const scrollContainer = scrollRef.current;
         if (scrollContainer && !userScrolled) {
             scrollContainer.scrollTop = scrollContainer.scrollHeight;
         }
-    }, [messages]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [messages]); 
 
     const handleOnScroll = () => {
         const scrollContainer = scrollRef.current;
@@ -103,7 +104,7 @@ export default function ChatMessages({ chatRoom, ChatMessages }: ChatMessagesTyp
         if (messages.length === 0) return
 
         const oldestMessageTimestamp = messages[0].createdAt
-        const olderMessages = await fetchMoreMessages(oldestMessageTimestamp)
+        const olderMessages = await fetchMoreMessages(oldestMessageTimestamp) as MessageType[]
         setMessages((current) => [...olderMessages, ...current])
     }
     return (
@@ -113,12 +114,15 @@ export default function ChatMessages({ chatRoom, ChatMessages }: ChatMessagesTyp
                 ref={scrollRef}
                 onScroll={handleOnScroll}
             >
-                <div className="flex-1 pb-5 ">
-                    <Button variant="outline" className="w-full" onClick={handleLoadMore}>
-                        Load More
-                    </Button>
+                <div className="flex-1">
+                    { hasMore && (
+                        <Button variant="outline" className="w-full" onClick={handleLoadMore}>
+                            Load More
+                        </Button>
+                    )}
                 </div>
-                <div className="space-y-3 lg:space-y-4 px-2">
+
+                <div className="flex flex-col space-y-1 px-2">
                     {messages.map((message: MessageType, index: any) => {
                         return (
                              <>

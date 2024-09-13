@@ -18,7 +18,6 @@ export default function ChatHeader({chatRoom} : { chatRoom: ChatRoomType}) {
     useEffect(() => {
         if (!user) return;
         const channelName = `room-${chatRoom.passenger_id}-${chatRoom.driver_id}`;
-        console.log(channelName)
         const supabase = supabasebrowser()
         const channel = supabase.channel(channelName);
 
@@ -35,7 +34,6 @@ export default function ChatHeader({chatRoom} : { chatRoom: ChatRoomType}) {
         channel
             .on('presence', { event: 'sync' }, handleSync)
             .subscribe(async (status: any) => {
-                console.log(status)
                 if (status === 'SUBSCRIBED') {
                     await channel.track({
                         online_at: new Date().toISOString(),
@@ -65,10 +63,11 @@ export default function ChatHeader({chatRoom} : { chatRoom: ChatRoomType}) {
                 <h1 className="lg:text-sm text-xs font-bold  text-neutral-900">{chatRoom.name}</h1>
                 <div className="flex items-center gap-1">
                     <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <h1 className="text-xs text-gray-400">{onlineUsers} onlines</h1>
+                    <h1 className="text-xs text-gray-400">{onlineUsers} {onlineUsers === 1 ? 'online' : 'onlines'}</h1>
                 </div>
             </div>
-            <DeleteChatRoom style={"absolute right-2"} chat_room_id={chatRoom.chat_room_id} />
+            {/* Disabled for deleting the ChatRoom since it deletes for both sides */}
+            {/* <DeleteChatRoom style={"absolute right-2"} chat_room_id={chatRoom.chat_room_id} /> */}
         </div>
     );
 }

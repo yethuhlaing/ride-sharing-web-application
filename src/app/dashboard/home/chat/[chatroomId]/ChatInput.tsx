@@ -1,25 +1,25 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
-import { MessageType } from '@/libs/type';
+import React, {  useState } from 'react'
 import toast from 'react-hot-toast';
-import { v4 as uuidv4 } from 'uuid';
-import { supabasebrowser } from '@/supabase/browser';
 import { Button } from '@/components/ui/button';
 import { SendHorizonal } from 'lucide-react';
-import { useMessage } from '@/context/MessageContext';
 import { createMessages } from '@/actions/action';
 
 
-function ChatInput({ senderId, chatRoomId }: any) {
+function ChatInput({ sender_name, sender_id, sender_profile, chat_room_id }: {
+    sender_name: string,
+    sender_id: string,
+    sender_profile: string,
+    chat_room_id: string
+}) {
     const [newMessage, setNewMessage] = useState('')
-
 
     const handleSendMessage = async (content: string) => {
 
         if (!content.trim()) return 
         try {
-            await createMessages(content, senderId, chatRoomId )
+            await createMessages(content, sender_id, sender_name, sender_profile, chat_room_id)
             setNewMessage("");
         } catch (error: any) {
             console.log(error)

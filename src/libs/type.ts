@@ -115,23 +115,11 @@ export type MessageType = {
     message_id: string;
     content: string;
     createdAt: Date;
-    sender_id: string;
     is_edit: boolean;
     chat_room_id: string;
-    sender?: UserType;
+    sender_id: string;
+    sender_name: string
+    sender_profile: string  
     chatRoom?: ChatRoomType;
 }
 
-export type MessageState = {
-    hasMore: boolean;
-    page: number;
-    messages: MessageType[];
-    actionMessage: MessageType | undefined;
-    optimisticIds: string[];
-    addMessage: (message: MessageType) => void; // eslint-disable-line no-unused-vars
-    setActionMessage: (message: MessageType | undefined) => void; // eslint-disable-line no-unused-vars
-    optimisticDeleteMessage: (messageId: string) => void; // eslint-disable-line no-unused-vars
-    optimisticUpdateMessage: (message: MessageType) => void; // eslint-disable-line no-unused-vars
-    setOptimisticIds: (id: string) => void; // eslint-disable-line no-unused-vars
-    setMesssages: (messages: MessageType[]) => void; // eslint-disable-line no-unused-vars
-}

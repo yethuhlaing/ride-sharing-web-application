@@ -542,6 +542,9 @@ export async function getChatRoomWithUserId(user_id: string) {
                 { driver_id: user_id },
                 { passenger_id: user_id }
             ]
+        },
+        orderBy: {
+            createdAt: 'desc'
         }
     });
     return chatRooms
@@ -570,14 +573,19 @@ export async function deleteChatRoomWithId(chatRoomId: string) {
         redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
     }
     try {
-        const deletedChatRoom = await prisma.chatRoom.delete({
+        // Delete related messages first
+        await prisma.message.deleteMany({
+            where: {
+                chat_room_id: chatRoomId,
+            },
+        });
+        await prisma.chatRoom.delete({
             where: {
                 chat_room_id: chatRoomId,
             },
         });
 
-        console.log('ChatRoom deleted:', deletedChatRoom);
-        revalidatePath('/chat', 'page')
+        revalidatePath(`/dashboard/home/chat/${chatRoomId}`, 'page')
     } catch (error) {
         console.error('Error deleting ChatRoom:', error);
     }
@@ -636,31 +644,29 @@ export async function createChatRoom(chatRoomname: string, driver_id: string, pa
     }
 }
 
-export async function createMessages(content: string, senderId: string, chatRoomId: string ) {
+export async function createMessages(content: string, sender_id: string, sender_name: string, sender_profile: string, chat_room_id: string ) {
     const { isAuthenticated } = getKindeServerSession();
     const isUserAuthenticated = await isAuthenticated();
     if (!isUserAuthenticated) {
         redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
     }
     try {
-        const message = await prisma.message.create({
+        await prisma.message.create({
             data: {
                 content,
-                sender_id: senderId,
-                chat_room_id: chatRoomId,                
-            },
-            include: {
-                sender: true,  // Include sender data
+                sender_id,
+                sender_name,
+                sender_profile,
+                chat_room_id              
             },
         });
-        console.log(message)
-        revalidatePath(`/dashboard/home/chat/${chatRoomId}`)
+        revalidatePath(`/dashboard/home/chat/${chat_room_id}`, 'page')
     } catch (error) {
         console.error('Error creating message:', error);
     }
 }
 
-export async function deleteMessageWithId(message_id: string){
+export async function deleteMessageWithId(message_id: string, chat_room_id: string){
     const { isAuthenticated } = getKindeServerSession();
     const isUserAuthenticated = await isAuthenticated();
     if (!isUserAuthenticated) {
@@ -672,8 +678,9 @@ export async function deleteMessageWithId(message_id: string){
                 message_id: message_id,
             },
         });
+        revalidatePath(`/dashboard/home/chat/${chat_room_id}`, "page")
+
         console.log(deletedMessage)
-        revalidatePath('/chat', 'page')
 
     } catch (error: any) {
         console.error('Error deleting message:', error);
@@ -682,7 +689,7 @@ export async function deleteMessageWithId(message_id: string){
 
 }
 
-export async function updateMessageWithId(message_id: string, content: string) {
+export async function updateMessageWithId(message_id: string, content: string, chat_room_id: string) {
     const { isAuthenticated } = getKindeServerSession();
     const isUserAuthenticated = await isAuthenticated();
     if (!isUserAuthenticated) {
@@ -698,6 +705,8 @@ export async function updateMessageWithId(message_id: string, content: string) {
                 is_edit: true,
             },
         });
+        revalidatePath(`/dashboard/home/chat/${chat_room_id}`, "page")
+
         console.log('Message updated:', updatedMessage);
     } catch (error) {
         console.error('Error updating message:', error);
@@ -720,6 +729,26 @@ export async function deleteRide(rideId: string) {
         console.error('Error deleting ride:', error);
     }
 }
+export async function getSenderData(user_id: string) {
+
+    const { isAuthenticated } = getKindeServerSession();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) {
+        redirect(process.env.KINDE_POST_LOGIN_REDIRECT_URL!)
+    }
+    const messages = await prisma.user.findUnique({
+        select: {
+            user_id: true,
+            profileImage: true,
+            fullName: true
+        },
+        where: {
+            user_id: user_id
+        }
+    });
+    return messages;
+}
+
 export async function getMessagesWithChatRoomId(limit: number, chatRoomId: string) {
     
     const { isAuthenticated } = getKindeServerSession();
@@ -729,14 +758,13 @@ export async function getMessagesWithChatRoomId(limit: number, chatRoomId: strin
     }
     const messages = await prisma.message.findMany({
         include: {
-            sender: true,
             chatRoom: true
         },
         where: {
             chat_room_id: chatRoomId
         },
         orderBy: {
-            createdAt: 'desc',  // Assuming `createdAt` field exists in your model
+            createdAt: 'asc',  // Assuming `createdAt` field exists in your model
         },
         take: limit,
     });
@@ -779,10 +807,7 @@ export async function getMessageWithPage(page: number ){
         skip: from,
         take: to - from + 1,
         orderBy: {
-            createdAt: 'desc',
-        },
-        include: {
-            sender: true,
+            createdAt: 'asc',
         },
     });
     return messages

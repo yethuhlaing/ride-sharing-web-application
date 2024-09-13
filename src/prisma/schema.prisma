@@ -29,7 +29,6 @@ model User {
   bookings          Booking[]
   rides             Ride[]          @relation("DriverRides")
   reviews           Review[]
-  messages          Message[]       @relation("UserMessages")
   driverChatRooms   ChatRoom[]      @relation("DriverChatRooms")
   passengerChatRooms ChatRoom[]     @relation("PassengerChatRooms")
 }
@@ -113,12 +112,13 @@ model ChatRoom {
 }
 
 model Message {
-  message_id    String   @id @default(uuid())
-  content       String
-  is_edit       Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  sender_id     String
-  chat_room_id  String
-  sender        User     @relation("UserMessages", fields: [sender_id], references: [user_id])
-  chatRoom      ChatRoom @relation("ChatRoomMessages", fields: [chat_room_id], references: [chat_room_id])
+  message_id      String   @id @default(uuid())
+  content         String
+  is_edit         Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  chat_room_id    String
+  sender_id       String
+  sender_name     String
+  sender_profile  String  
+  chatRoom        ChatRoom @relation("ChatRoomMessages", fields: [chat_room_id], references: [chat_room_id])
 }
